@@ -5,9 +5,15 @@ live_design! {
     import makepad_widgets::frame::*
     import makepad_widgets::radio_button::RadioButton
 
+    import crate::shared::styles::*
     import crate::home::home_screen::HomeScreen
 
-    ICON_CHAT = dep("crate://self/resources/chat.svg")
+    HOME_ICON = dep("crate://self/resources/home.svg")
+    DISCOVER_ICON = dep("crate://self/resources/discover.svg")
+    INFO_ICON = dep("crate://self/resources/info.svg")
+    CART_ICON = dep("crate://self/resources/cart.svg")
+    MY_TAOBAO_ICON = dep("crate://self/resources/my_taobao.svg")
+
 
     H3_TEXT_REGULAR = {
         font_size: 9.0,
@@ -19,8 +25,8 @@ live_design! {
         layout: {align: {x: 0.0, y: 0.0}}
         draw_radio: {
             radio_type: Tab,
-            color_active: #fff,
-            color_inactive: #fff,
+            color_active: (BACKGROUND_COLOR),
+            color_inactive: (BACKGROUND_COLOR),
         }
         draw_label: {
             color_selected: #0b0,
@@ -33,7 +39,7 @@ live_design! {
     App = {{App}} {
         ui: <DesktopWindow> {
             window: {position: vec2(0, 0), inner_size: vec2(400, 800)},
-            pass: {clear_color: #2A}
+            pass: {clear_color: (BACKGROUND_COLOR)}
             block_signal_event: true;
 
             <Frame> {
@@ -48,6 +54,7 @@ live_design! {
                     tab2_frame = <HomeScreen> {visible: false}
                     tab3_frame = <HomeScreen> {visible: false}
                     tab4_frame = <HomeScreen> {visible: false}
+                    tab5_frame = <HomeScreen> {visible: false}
                 }
 
                 mobile_menu = <Box> {
@@ -57,14 +64,14 @@ live_design! {
                         instance radius: 0.0,
                         instance border_width: 1.0,
                         instance border_color: #aaa,
-                        color: #fff
+                        color: (BACKGROUND_COLOR)
                     }
 
                     mobile_modes = <Frame> {
                         tab1 = <AppTab> {
-                            label: "Chat"
+                            label: "Home"
                             draw_icon: {
-                                svg_file: (ICON_CHAT),
+                                svg_file: (HOME_ICON),
                                 fn get_color(self) -> vec4 {
                                     return mix(
                                         #000,
@@ -79,9 +86,9 @@ live_design! {
                         }
                         tab2 = <AppTab> {
                             state: {selected = {default: on}}
-                            label: "Contacts",
+                            label: "Discover",
                             draw_icon: {
-                                svg_file: (ICON_CHAT),
+                                svg_file: (DISCOVER_ICON),
                                 fn get_color(self) -> vec4 {
                                     return mix(
                                         #000,
@@ -95,9 +102,9 @@ live_design! {
                             layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
                         }
                         tab3 = <AppTab> {
-                            label: "Discover",
+                            label: "Info",
                             draw_icon: {
-                                svg_file: (ICON_CHAT),
+                                svg_file: (INFO_ICON),
                                 fn get_color(self) -> vec4 {
                                     return mix(
                                         #000,
@@ -111,9 +118,25 @@ live_design! {
                             layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
                         }
                         tab4 = <AppTab> {
-                            label: "Me",
+                            label: "Cart",
                             draw_icon: {
-                                svg_file: (ICON_CHAT),
+                                svg_file: (CART_ICON),
+                                fn get_color(self) -> vec4 {
+                                    return mix(
+                                        #000,
+                                        #0b0,
+                                        self.selected
+                                    )
+                                }
+                            }
+                            walk: {width: Fill}
+                            icon_walk: {width: 20, height: 20}
+                            layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
+                        }
+                        tab5 = <AppTab> {
+                            label: "My Taobao",
+                            draw_icon: {
+                                svg_file: (MY_TAOBAO_ICON),
                                 fn get_color(self) -> vec4 {
                                     return mix(
                                         #000,
@@ -150,7 +173,6 @@ impl LiveHook for App {
         // shared
         crate::shared::styles::live_design(cx);
         crate::shared::helpers::live_design(cx);
-        crate::shared::header::live_design(cx);
 
         // home - chats
         crate::home::home_screen::live_design(cx);
@@ -171,6 +193,7 @@ impl AppMain for App {
             mobile_modes.tab2,
             mobile_modes.tab3,
             mobile_modes.tab4,
+            mobile_modes.tab5,
         ))
         .selected_to_visible(
             cx,
@@ -181,21 +204,8 @@ impl AppMain for App {
                 application_pages.tab2_frame,
                 application_pages.tab3_frame,
                 application_pages.tab4_frame,
+                application_pages.tab5_frame,
             ),
         );
-
-        // for action in actions {
-        //     match action.action() {
-        //         StackViewAction::ShowMoments => {
-        //             ui.get_stack_navigation(id!(navigation))
-        //                 .show_stack_view_by_id(LiveId::from_str("moments_stack_view").unwrap(), cx);  
-        //         },
-        //         StackViewAction::ShowAddContact => {
-        //             ui.get_stack_navigation(id!(navigation))
-        //                 .show_stack_view_by_id(LiveId::from_str("add_contact_stack_view").unwrap(), cx);
-        //         },
-        //         _ => {}
-        //     }
-        // }
     }
 }

@@ -11,18 +11,7 @@ live_design! {
         font: {path: dep("crate://makepad-widgets/resources/IBMPlexSans-Text.ttf")}
     }
 
-    TEXT_SUB = {
-        font_size: (FONT_SIZE_SUB),
-        font: {path: dep("crate://makepad-widgets/resources/IBMPlexSans-SemiBold.ttf")}
-    }
-
-    TEXT_P = {
-        font_size: (FONT_SIZE_P),
-        height_factor: 1.65,
-        font: {path: dep("crate://makepad-widgets/resources/IBMPlexSans-Text.ttf")}
-    }
-
-    COLOR_PROFILE_CIRCLE = #xfff8ee
+    BACKGROUND_COLOR = #f5f5f5
+    ORANGE_COLOR = #ee7630
     COLOR_DIVIDER = #x00000018
-    COLOR_DIVIDER_DARK = #x00000044
 }

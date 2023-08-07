@@ -2,6 +2,7 @@ use makepad_widgets::*;
 
 live_design! {
     import makepad_widgets::frame::*;
+    import crate::shared::styles::*;
 
     Divider = <Frame> {
         walk: {width: Fill, height: Fit}
