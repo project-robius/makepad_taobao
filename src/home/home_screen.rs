@@ -24,7 +24,15 @@ live_design! {
     CREDIT_CARDS_IMG = dep("crate://self/resources/credit_cards.png")
     SHIPPING_ESTIMATE_IMG = dep("crate://self/resources/shipping_estimate.png")
 
-    CATALOG_FLIP_FLOPS_IMG = dep("crate://self/resources/catalog_flip_flops.png")
+    CATALOG_FLIP_FLOPS_IMG = dep("crate://self/resources/catalog/flip_flops.png")
+    CATALOG_COSMETICS_IMG = dep("crate://self/resources/catalog/cosmetics.png")
+    CATALOG_LIVING_FURNITURE_IMG = dep("crate://self/resources/catalog/living_furniture.png")
+    CATALOG_SEUL_COLLECTION_IMG = dep("crate://self/resources/catalog/seul_collection.png")
+    CATALOG_MEAL_IMG = dep("crate://self/resources/catalog/meal.png")
+    CATALOG_PROTEIN_IMG = dep("crate://self/resources/catalog/protein.png")
+    CATALOG_RING_IMG = dep("crate://self/resources/catalog/ring.png")
+    CATALOG_ROUTER_IMG = dep("crate://self/resources/catalog/router.png")
+
     BUY_IT_BANNER_IMG = dep("crate://self/resources/buy_it_banner.png")
 
     IconWithText = <Frame> {
@@ -293,7 +301,7 @@ live_design! {
             radius: 8.
         }
 
-        <Image> {
+        image = <Image> {
             walk: {width: 184, height: 184}
             image: (CATALOG_FLIP_FLOPS_IMG)
 
@@ -319,7 +327,7 @@ live_design! {
         info = <Frame> {
             walk: {width: Fill, height: Fit}
             layout: {flow: Down, padding: 5., spacing: 3.}
-            <Label> {
+            title = <Label> {
                 walk: {width: Fill, height: Fit}
                 label: "Men flip flops 2023"
                 draw_label: {
@@ -328,7 +336,7 @@ live_design! {
                 }
             }
 
-            <Label> {
+            subtitle = <Label> {
                 walk: {width: Fill, height: Fit}
                 label: "500+ people pay"
                 draw_label: {
@@ -337,7 +345,7 @@ live_design! {
                 }
             }
 
-            <Image> {
+            image = <Image> {
                 walk: {width: 176, height: 42}
                 layout: {flow: Down, spacing: 2., padding: 5.}
                 image: (BUY_IT_BANNER_IMG)
@@ -394,13 +402,54 @@ live_design! {
         }
     }
 
-    CatalogPair = <Frame> {
+    CatalogPair1 = <Frame> {
         walk: {width: Fill, height: Fit}
         layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
 
         left = <CatalogItem> {}
         <FillerX> {}
-        right = <CatalogItemWithOffer> {}
+        right = <CatalogItemWithOffer> {
+            image = { image: (CATALOG_COSMETICS_IMG) }
+        }
+    }
+
+    CatalogPair2 = <Frame> {
+        walk: {width: Fill, height: Fit}
+        layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
+
+        left = <CatalogItemWithOffer> {
+            image = { image: (CATALOG_LIVING_FURNITURE_IMG) }
+        }
+        <FillerX> {}
+        right = <CatalogItemWithOffer> {
+            image = { image: (CATALOG_SEUL_COLLECTION_IMG) }
+        }
+    }
+
+    CatalogPair3 = <Frame> {
+        walk: {width: Fill, height: Fit}
+        layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
+
+        left = <CatalogItem> {
+            image = { image: (CATALOG_MEAL_IMG) }
+        }
+        <FillerX> {}
+        right = <CatalogItem> {
+            image = { image: (CATALOG_PROTEIN_IMG) }
+        }
+    }
+
+    CatalogPair4 = <Frame> {
+        walk: {width: Fill, height: Fit}
+        layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
+
+        left = <CatalogItemWithOffer> {
+            image = { image: (CATALOG_RING_IMG) }
+        }
+        <FillerX> {}
+        right = <CatalogItem> {
+            image = { image: (CATALOG_ROUTER_IMG) }
+        }
     }
 
     HomeContent = {{HomeContent}} {
@@ -411,7 +460,11 @@ live_design! {
 
             options = <Options> {}
             payments = <Payment> {}
-            catalog_pair = <CatalogPair> {}
+
+            catalog_pair_1 = <CatalogPair1> {}
+            catalog_pair_2 = <CatalogPair2> {}
+            catalog_pair_3 = <CatalogPair3> {}
+            catalog_pair_4 = <CatalogPair4> {}
         }
     }
 
@@ -434,7 +487,8 @@ live_design! {
 
 #[derive(Debug, Clone)]
 pub struct CatalogItemInfo {
-    pub name: String,
+    pub title: String,
+    pub subtitle: String,
     pub price: String,
 }
 
@@ -459,28 +513,74 @@ impl LiveHook for HomeContent {
     fn after_new_from_doc(&mut self, _cx: &mut Cx) {
         self.data = vec![
             CatalogItemInfo {
-                name: "Men flip flops 2023".to_string(),
+                title: "Men flip flops 2023".to_string(),
+                subtitle: "500+ people paying".to_string(),
                 price: "58".to_string(),
             },
             CatalogItemInfo {
-                name: "Men flip flops 2024".to_string(),
+                title: "Chocolate grand earth shades".to_string(),
+                subtitle: "10000+ people paying".to_string(),
+                price: "8.9".to_string(),
+            },
+            CatalogItemInfo {
+                title: "Ice silk anti sofa cushion summer mat".to_string(),
+                subtitle: "50+ people paying".to_string(),
+                price: "20.9".to_string(),
+            },
+            CatalogItemInfo {
+                title: "Carot milk pan baby non stick pan".to_string(),
+                subtitle: "100+ people paying".to_string(),
+                price: "89".to_string(),
+            },
+            CatalogItemInfo {
+                title: "Crispy Cheese Banana Flavor Internet Celebrity".to_string(),
+                subtitle: "200+ people paying".to_string(),
+                price: "18.5".to_string(),
+            },
+            CatalogItemInfo {
+                title: "Concentrated whey protein from Germany".to_string(),
+                subtitle: "200+ people paying".to_string(),
+                price: "20.3".to_string(),
+            },
+            CatalogItemInfo {
+                title: "Incredible Ring".to_string(),
+                subtitle: "500+ people paying".to_string(),
+                price: "100".to_string(),
+            },
+            CatalogItemInfo {
+                title: "Router AX6000".to_string(),
+                subtitle: "13 people paying".to_string(),
+                price: "266".to_string(),
+            },
+            CatalogItemInfo {
+                title: "Men flip flops 2023".to_string(),
+                subtitle: "500+ people paying".to_string(),
                 price: "58".to_string(),
             },
             CatalogItemInfo {
-                name: "Men flip flops 2025".to_string(),
-                price: "58".to_string(),
+                title: "Chocolate grand earth shades".to_string(),
+                subtitle: "10000+ people paying".to_string(),
+                price: "8.9".to_string(),
             },
             CatalogItemInfo {
-                name: "Men flip flops 2026".to_string(),
-                price: "58".to_string(),
+                title: "Ice silk anti sofa cushion summer mat".to_string(),
+                subtitle: "50+ people paying".to_string(),
+                price: "20.9".to_string(),
             },
             CatalogItemInfo {
-                name: "Men flip flops 2027".to_string(),
-                price: "58".to_string(),
+                title: "Carot milk pan baby non stick pan".to_string(),
+                subtitle: "100+ people paying".to_string(),
+                price: "89".to_string(),
             },
             CatalogItemInfo {
-                name: "Men flip flops 2028".to_string(),
-                price: "58".to_string(),
+                title: "Crispy Cheese Banana Flavor Internet Celebrity".to_string(),
+                subtitle: "200+ people paying".to_string(),
+                price: "18.5".to_string(),
+            },
+            CatalogItemInfo {
+                title: "Concentrated whey protein from Germany".to_string(),
+                subtitle: "200+ people paying".to_string(),
+                price: "20.3".to_string(),
             },
         ];
     }
@@ -516,29 +616,36 @@ impl Widget for HomeContent {
 
 impl HomeContent {
     pub fn draw_walk(&mut self, cx: &mut Cx2d, walk: Walk) {
-        let items_count: u64 = (self.data.len() / 2 as usize) as u64;
+        let pairs_count: u64 = (self.data.len() / 2 as usize) as u64;
 
         cx.begin_turtle(walk, self.layout);
 
-        self.list_view.set_item_range(0, items_count + 2, 1);
+        self.list_view.set_item_range(0, pairs_count + 1, 1);
 
         while self.list_view.draw_widget(cx).hook_widget().is_some() {
             while let Some(item_id) = self.list_view.next_visible_item(cx) {
                 let template = match item_id {
                     0 => id!(options),
                     1 => id!(payments),
-                    _ => id!(catalog_pair),
+                    x if (x - 2) % 4 == 0 => id!(catalog_pair_1),
+                    x if (x - 2) % 4 == 1 => id!(catalog_pair_2),
+                    x if (x - 2) % 4 == 2 => id!(catalog_pair_3),
+                    _ => id!(catalog_pair_4),
                 };
                 let item = self.list_view.get_item(cx, item_id, template[0]).unwrap();
 
-                if item_id > 1 {
-                    //let data = &self.data[(item_id - 3) as usize];
+                if item_id > 1 && item_id < pairs_count + 2 {
+                    let data_left = &self.data[((item_id - 2) * 2) as usize];
+                    let data_right = &self.data[((item_id - 2) * 2 + 1) as usize];
+
                     if let Some(mut catalog_pair) = item.borrow_mut::<Frame>() {
-                        // group_widget.set_header_label(&group[0].name[0..1]);
-                        // group_widget.set_contacts(group.to_vec());
+                        catalog_pair.get_label(id!(left.info.title)).set_label(&data_left.title);
+                        catalog_pair.get_label(id!(left.info.subtitle)).set_label(&data_left.subtitle);
+
+                        catalog_pair.get_label(id!(right.info.title)).set_label(&data_right.title);
+                        catalog_pair.get_label(id!(right.info.subtitle)).set_label(&data_right.subtitle);
                     }
                 }
-
                 item.draw_widget_all(cx);
             }
         }
