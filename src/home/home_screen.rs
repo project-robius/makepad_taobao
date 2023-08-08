@@ -616,7 +616,7 @@ impl Widget for HomeContent {
 
 impl HomeContent {
     pub fn draw_walk(&mut self, cx: &mut Cx2d, walk: Walk) {
-        let pairs_count: u64 = (self.data.len() / 2 as usize) as u64;
+        let pairs_count: u64 = (self.data.len() / 2_usize) as u64;
 
         cx.begin_turtle(walk, self.layout);
 
