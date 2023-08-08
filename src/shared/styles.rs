@@ -13,5 +13,6 @@ live_design! {
 
     BACKGROUND_COLOR = #f5f5f5
     ORANGE_COLOR = #ee7630
+    LIGHT_ORANGE_COLOR = #f2d1bd
     COLOR_DIVIDER = #x00000018
 }
