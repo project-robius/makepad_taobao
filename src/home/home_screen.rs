@@ -9,6 +9,7 @@ live_design! {
 
     import crate::shared::styles::*;
     import crate::shared::helpers::*;
+    import crate::home::search_terms::SearchTerms;
 
     WORLDWIDE_ICON = dep("crate://self/resources/worldwide.png")
     MEMBERSHIP_CODE_ICON = dep("crate://self/resources/membership_code.png")
@@ -127,66 +128,68 @@ live_design! {
             walk: {width: 3.0, height: Fill}
         }
 
-        input = <TextInput> {
-            walk: {width: Fill, height: Fit}
-            layout: {
-                clip_x: true,
-                clip_y: true,
-                align: {y: 0.5},
-                padding: {bottom: 13.}
-            },
-            text: "Ping An fruit box"
-            label_walk: {
-                margin: 0.0
-            }
-            draw_bg: {
-                color: #fff
-            }
-            draw_label: {
-                text_style:<REGULAR_TEXT>{font_size: 10.0},
+        input = <SearchTerms> {}
 
-                fn get_color(self) -> vec4 {
-                    return #ccc
-                }
-            }
+        // input = <TextInput> {
+        //     walk: {width: Fill, height: Fit}
+        //     layout: {
+        //         clip_x: true,
+        //         clip_y: true,
+        //         align: {y: 0.5},
+        //         padding: {bottom: 13.}
+        //     },
+        //     text: "Ping An fruit box"
+        //     label_walk: {
+        //         margin: 0.0
+        //     }
+        //     draw_bg: {
+        //         color: #fff
+        //     }
+        //     draw_label: {
+        //         text_style:<REGULAR_TEXT>{font_size: 10.0},
 
-            // TODO find a way to override colors
-            draw_cursor: {
-                instance focus: 0.0
-                uniform border_radius: 0.5
-                fn pixel(self) -> vec4 {
-                    let sdf = Sdf2d::viewport(self.pos * self.rect_size);
-                    sdf.box(
-                        0.,
-                        0.,
-                        self.rect_size.x,
-                        self.rect_size.y,
-                        self.border_radius
-                    )
-                    sdf.fill(mix((ORANGE_COLOR), (ORANGE_COLOR), self.focus));
-                    return sdf.result
-                }
-            }
+        //         fn get_color(self) -> vec4 {
+        //             return #ccc
+        //         }
+        //     }
 
-            // TODO find a way to override colors
-            draw_select: {
-                instance hover: 0.0
-                instance focus: 0.0
-                uniform border_radius: 2.0
-                fn pixel(self) -> vec4 {
-                    let sdf = Sdf2d::viewport(self.pos * self.rect_size);
-                    sdf.box(
-                        0.,
-                        0.,
-                        self.rect_size.x,
-                        self.rect_size.y,
-                        self.border_radius
-                    )
-                    sdf.fill(mix((ORANGE_COLOR), (ORANGE_COLOR), self.focus));
-                    return sdf.result
-                }
-            }
-        }
+        //     // TODO find a way to override colors
+        //     draw_cursor: {
+        //         instance focus: 0.0
+        //         uniform border_radius: 0.5
+        //         fn pixel(self) -> vec4 {
+        //             let sdf = Sdf2d::viewport(self.pos * self.rect_size);
+        //             sdf.box(
+        //                 0.,
+        //                 0.,
+        //                 self.rect_size.x,
+        //                 self.rect_size.y,
+        //                 self.border_radius
+        //             )
+        //             sdf.fill(mix((ORANGE_COLOR), (ORANGE_COLOR), self.focus));
+        //             return sdf.result
+        //         }
+        //     }
+
+        //     // TODO find a way to override colors
+        //     draw_select: {
+        //         instance hover: 0.0
+        //         instance focus: 0.0
+        //         uniform border_radius: 2.0
+        //         fn pixel(self) -> vec4 {
+        //             let sdf = Sdf2d::viewport(self.pos * self.rect_size);
+        //             sdf.box(
+        //                 0.,
+        //                 0.,
+        //                 self.rect_size.x,
+        //                 self.rect_size.y,
+        //                 self.border_radius
+        //             )
+        //             sdf.fill(mix((ORANGE_COLOR), (ORANGE_COLOR), self.focus));
+        //             return sdf.result
+        //         }
+        //     }
+        // }
 
         <Image> {
             walk: {width: 24, height: 24}
