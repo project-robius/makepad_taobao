@@ -45,10 +45,10 @@ live_design! {
                     layout: {padding: 0.0}
 
                     tab1_frame = <HomeScreen> {visible: true}
-                    tab2_frame = <HomeScreen> {visible: false}
-                    tab3_frame = <HomeScreen> {visible: false}
-                    tab4_frame = <HomeScreen> {visible: false}
-                    tab5_frame = <HomeScreen> {visible: false}
+                    tab2_frame = <Frame> {visible: false}
+                    tab3_frame = <Frame> {visible: false}
+                    tab4_frame = <Frame> {visible: false}
+                    tab5_frame = <Frame> {visible: false}
                 }
 
                 mobile_menu = <Box> {

@@ -18,7 +18,7 @@ live_design! {
 
         label = <Label> {
             walk: {width: Fill, height: Fit, margin: { top: 10.0 } }
-            label: "Ping an fruit box"
+            label: "通讯录"
 
             draw_label: {
                 color: #333,
@@ -73,9 +73,9 @@ impl LiveHook for SearchTerms {
 
     fn after_new_from_doc(&mut self, cx: &mut Cx) {
         self.terms = vec![
-            "Ping an fruit box".to_string(),
-            "Ping second".to_string(),
-            "Ping third".to_string(),
+            "平安果包装盒".to_string(),
+            "火锅底料".to_string(),
+            "園适合的帽子冬季".to_string(),
         ];
         self.current_term_index = 0;
 
