@@ -207,7 +207,7 @@ live_design! {
     }
 
     CatalogItem = <Box> {
-        walk: {width: 184, height: Fit}
+        walk: {width: 166, height: Fit}
         layout: {flow: Down, align: {x: 0.5, y: 0.0}, spacing: 2.0}
 
         draw_bg: {
@@ -216,7 +216,7 @@ live_design! {
         }
 
         image = <Image> {
-            walk: {width: 184, height: 184}
+            walk: {width: 166, height: 166}
             image: (CATALOG_FLIP_FLOPS_IMG)
 
             // Override to have the upper corners rounded
@@ -246,7 +246,7 @@ live_design! {
                 label: "男士人字拖 2023"
                 draw_label: {
                     color: #000
-                    text_style: <REGULAR_TEXT> {font_size: 13.0},
+                    text_style: <REGULAR_TEXT> {font_size: 12.0},
                 }
             }
 
@@ -255,12 +255,12 @@ live_design! {
                 label: "500+人付费"
                 draw_label: {
                     color: #888
-                    text_style: <REGULAR_TEXT> {font_size: 9.0},
+                    text_style: <REGULAR_TEXT> {font_size: 8.0},
                 }
             }
 
             image = <Image> {
-                walk: {width: 176, height: 42}
+                walk: {width: 166, height: 36}
                 layout: {flow: Down, spacing: 2., padding: 5.}
                 image: (BUY_IT_BANNER_IMG)
                 <Frame> {
@@ -271,7 +271,7 @@ live_design! {
                         label: "¥"
                         draw_label: {
                             color: #fff
-                            text_style: <REGULAR_TEXT> {font_size: 12.0},
+                            text_style: <REGULAR_TEXT> {font_size: 10.0},
                         }
                     }
                     <Label> {
@@ -279,7 +279,7 @@ live_design! {
                         label: "58"
                         draw_label: {
                             color: #fff
-                            text_style: <REGULAR_TEXT> {font_size: 16.0},
+                            text_style: <REGULAR_TEXT> {font_size: 14.0},
                         }
                     }
                 }
@@ -288,7 +288,7 @@ live_design! {
                     label: "USD 8.11"
                     draw_label: {
                         color: #fff
-                        text_style: <REGULAR_TEXT> {font_size: 9.0},
+                        text_style: <REGULAR_TEXT> {font_size: 8.0},
                     }
                 }
             }
@@ -309,7 +309,7 @@ live_design! {
                     label: "每300减40"
                     draw_label: {
                         color: (ORANGE_COLOR)
-                        text_style: <REGULAR_TEXT> {font_size: 9.0},
+                        text_style: <REGULAR_TEXT> {font_size: 8.0},
                     }
                 }
             }
@@ -319,7 +319,6 @@ live_design! {
     CatalogPair1 = <Frame> {
         walk: {width: Fill, height: Fit}
         layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
-
         left = <CatalogItem> {}
         <FillerX> {}
         right = <CatalogItemWithOffer> {

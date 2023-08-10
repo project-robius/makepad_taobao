@@ -32,7 +32,7 @@ live_design! {
 
     App = {{App}} {
         ui: <DesktopWindow> {
-            window: {position: vec2(0, 0), inner_size: vec2(400, 800)},
+            window: {position: vec2(0, 0), inner_size: vec2(360, 800)},
             pass: {clear_color: (BACKGROUND_COLOR)}
             block_signal_event: true;
 
