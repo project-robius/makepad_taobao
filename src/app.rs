@@ -14,12 +14,6 @@ live_design! {
     CART_ICON = dep("crate://self/resources/cart.svg")
     MY_TAOBAO_ICON = dep("crate://self/resources/my_taobao.svg")
 
-
-    H3_TEXT_REGULAR = {
-        font_size: 9.0,
-        font: {path: dep("crate://makepad-widgets/resources/IBMPlexSans-Text.ttf")}
-    }
-
     AppTab = <RadioButton> {
         walk: {height: Fill, width: Fit}
         layout: {align: {x: 0.0, y: 0.0}}
@@ -32,7 +26,7 @@ live_design! {
             color_selected: #0b0,
             color_unselected: #000,
             color_unselected_hover: #111,
-            text_style: <H3_TEXT_REGULAR> {}
+            text_style: <APP_NAVIGATION_FONT> {}
         }
     }
 
@@ -69,7 +63,7 @@ live_design! {
 
                     mobile_modes = <Frame> {
                         tab1 = <AppTab> {
-                            label: "Home"
+                            label: "首页"
                             draw_icon: {
                                 svg_file: (HOME_ICON),
                                 fn get_color(self) -> vec4 {
@@ -86,7 +80,7 @@ live_design! {
                         }
                         tab2 = <AppTab> {
                             state: {selected = {default: on}}
-                            label: "Discover",
+                            label: "发现",
                             draw_icon: {
                                 svg_file: (DISCOVER_ICON),
                                 fn get_color(self) -> vec4 {
@@ -102,7 +96,7 @@ live_design! {
                             layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
                         }
                         tab3 = <AppTab> {
-                            label: "Info",
+                            label: "消息",
                             draw_icon: {
                                 svg_file: (INFO_ICON),
                                 fn get_color(self) -> vec4 {
@@ -118,7 +112,7 @@ live_design! {
                             layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
                         }
                         tab4 = <AppTab> {
-                            label: "Cart",
+                            label: "购物车",
                             draw_icon: {
                                 svg_file: (CART_ICON),
                                 fn get_color(self) -> vec4 {
@@ -134,7 +128,7 @@ live_design! {
                             layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
                         }
                         tab5 = <AppTab> {
-                            label: "My Taobao",
+                            label: "我的淘宝",
                             draw_icon: {
                                 svg_file: (MY_TAOBAO_ICON),
                                 fn get_color(self) -> vec4 {

@@ -18,7 +18,7 @@ live_design! {
 
         label = <Label> {
             walk: {width: Fill, height: Fit, margin: { top: 10.0 } }
-            label: "Ping an fruit box"
+            label: "通讯录"
 
             draw_label: {
                 color: #333,
@@ -73,9 +73,9 @@ impl LiveHook for SearchTerms {
 
     fn after_new_from_doc(&mut self, cx: &mut Cx) {
         self.terms = vec![
-            "Ping an fruit box".to_string(),
-            "Ping second".to_string(),
-            "Ping third".to_string(),
+            "平安果包装盒".to_string(),
+            "火锅底料".to_string(),
+            "園适合的帽子冬季".to_string(),
         ];
         self.current_term_index = 0;
 
@@ -91,27 +91,27 @@ impl Widget for SearchTerms {
         event: &Event,
         dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
     ) {
-        if let Some(_ne) = self.next_frame.is_event(event) {
-            // Control animations when they are done
-            if !self.state_handle_event(cx, event).is_animating() {
-                if self.state.is_in_state(cx, id!(carrousel.show)) {
-                    self.animate_state(cx, id!(carrousel.keep));
-                } else if self.state.is_in_state(cx, id!(carrousel.keep)) {
-                    self.animate_state(cx, id!(carrousel.hide));
-                } else if self.state.is_in_state(cx, id!(carrousel.hide)) {
-                    // Show new term
-                    self.current_term_index += 1;
-                    if self.current_term_index >= self.terms.len() as i32 {
-                        self.current_term_index = 0;
-                    }
-                    self.get_label(id!(label)).set_label(&self.terms[self.current_term_index as usize]);
+        // if let Some(_ne) = self.next_frame.is_event(event) {
+        //     // Control animations when they are done
+        //     if !self.state_handle_event(cx, event).is_animating() {
+        //         if self.state.is_in_state(cx, id!(carrousel.show)) {
+        //             self.animate_state(cx, id!(carrousel.keep));
+        //         } else if self.state.is_in_state(cx, id!(carrousel.keep)) {
+        //             self.animate_state(cx, id!(carrousel.hide));
+        //         } else if self.state.is_in_state(cx, id!(carrousel.hide)) {
+        //             // Show new term
+        //             self.current_term_index += 1;
+        //             if self.current_term_index >= self.terms.len() as i32 {
+        //                 self.current_term_index = 0;
+        //             }
+        //             self.get_label(id!(label)).set_label(&self.terms[self.current_term_index as usize]);
 
-                    self.animate_state(cx, id!(carrousel.show));
-                }
-            }
-            self.get_label(id!(label)).redraw(cx);
-            self.next_frame = cx.new_next_frame();
-        }
+        //             self.animate_state(cx, id!(carrousel.show));
+        //         }
+        //     }
+        //     self.get_label(id!(label)).redraw(cx);
+        //     self.next_frame = cx.new_next_frame();
+        // }
     }
 
     fn get_walk(&self) -> Walk {

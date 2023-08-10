@@ -52,43 +52,20 @@ live_design! {
         }
     }
 
-    IconWithTwoLineText = <Frame> {
-        walk: {width: Fit, height: Fit}
-        layout: {flow: Down, align: {x: 0.5, y: 0.5}, spacing: 5.0}
-
-        image = <Image> {
-            walk: {width: 40, height: 40}
-        }
-        caption = <Label> {
-            walk: {width: Fit, height: Fit}
-            draw_label: {
-                color: #000
-                text_style: <REGULAR_TEXT> {font_size: 8.0},
-            }
-        }
-        caption2 = <Label> {
-            walk: {width: Fit, height: Fit}
-            draw_label: {
-                color: #000
-                text_style: <REGULAR_TEXT> {font_size: 8.0},
-            }
-        }
-    }
-
     TopBar = <Frame> {
         walk: {width: Fill, height: Fit}
         layout: {flow: Right, align: {x: 0.0, y: 0.5}, spacing: 10.0, padding: {left: 10., right: 10.}}
 
         <IconWithText> {
             image = { image: (WORLDWIDE_ICON) }
-            caption = { label: "WW" }
+            caption = { label: "全球" }
         }
 
         <FillerX> {}
 
         <Label> {
             walk: {width: Fit, height: Fit}
-            label: "Recommend"
+            label: "推荐"
             draw_label: {
                 color: #000
                 text_style: <REGULAR_TEXT> {},
@@ -96,7 +73,7 @@ live_design! {
         }
         <Label> {
             walk: {width: Fit, height: Fit}
-            label: "Special Offer"
+            label: "特价"
             draw_label: {
                 color: #000
                 text_style: <REGULAR_TEXT> {},
@@ -107,7 +84,7 @@ live_design! {
 
         <IconWithText> {
             image = { image: (MEMBERSHIP_CODE_ICON) }
-            caption = { label: "M Code" }
+            caption = { label: "会员码" }
         }
     }
 
@@ -130,67 +107,6 @@ live_design! {
 
         input = <SearchTerms> {}
 
-        // input = <TextInput> {
-        //     walk: {width: Fill, height: Fit}
-        //     layout: {
-        //         clip_x: true,
-        //         clip_y: true,
-        //         align: {y: 0.5},
-        //         padding: {bottom: 13.}
-        //     },
-        //     text: "Ping An fruit box"
-        //     label_walk: {
-        //         margin: 0.0
-        //     }
-        //     draw_bg: {
-        //         color: #fff
-        //     }
-        //     draw_label: {
-        //         text_style:<REGULAR_TEXT>{font_size: 10.0},
-
-        //         fn get_color(self) -> vec4 {
-        //             return #ccc
-        //         }
-        //     }
-
-        //     // TODO find a way to override colors
-        //     draw_cursor: {
-        //         instance focus: 0.0
-        //         uniform border_radius: 0.5
-        //         fn pixel(self) -> vec4 {
-        //             let sdf = Sdf2d::viewport(self.pos * self.rect_size);
-        //             sdf.box(
-        //                 0.,
-        //                 0.,
-        //                 self.rect_size.x,
-        //                 self.rect_size.y,
-        //                 self.border_radius
-        //             )
-        //             sdf.fill(mix((ORANGE_COLOR), (ORANGE_COLOR), self.focus));
-        //             return sdf.result
-        //         }
-        //     }
-
-        //     // TODO find a way to override colors
-        //     draw_select: {
-        //         instance hover: 0.0
-        //         instance focus: 0.0
-        //         uniform border_radius: 2.0
-        //         fn pixel(self) -> vec4 {
-        //             let sdf = Sdf2d::viewport(self.pos * self.rect_size);
-        //             sdf.box(
-        //                 0.,
-        //                 0.,
-        //                 self.rect_size.x,
-        //                 self.rect_size.y,
-        //                 self.border_radius
-        //             )
-        //             sdf.fill(mix((ORANGE_COLOR), (ORANGE_COLOR), self.focus));
-        //             return sdf.result
-        //         }
-        //     }
-        // }
-
         <Image> {
             walk: {width: 24, height: 24}
             image: (CAMERA_ICON)
@@ -209,7 +125,7 @@ live_design! {
 
             <Label> {
                 walk: {width: Fit, height: Fit}
-                label: "Search"
+                label: "搜索"
                 draw_label: {
                     color: #fff
                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -222,42 +138,37 @@ live_design! {
         walk: {width: Fill, height: Fit}
         layout: {flow: Right, align: {x: 0.0, y: 0.5}, spacing: 10.0, padding: {left: 40., right: 40.}}
 
-        <IconWithTwoLineText> {
+        <IconWithText> {
             image = { image: (TAOBAO_COINS_IMG) }
-            caption = { label: "Taobao" }
-            caption2 = { label: "Coins" }
+            caption = { label: "淘宝币" }
         }
 
         <FillerX> {}
 
-        <IconWithTwoLineText> {
+        <IconWithText> {
             image = { image: (HELP_CENTER_IMG) }
-            caption = { label: "Help" }
-            caption2 = { label: "Center" }
+            caption = { label: "帮助中心" }
         }
 
         <FillerX> {}
 
-        <IconWithTwoLineText> {
+        <IconWithText> {
             image = { image: (LOGISTICS_IMG) }
-            caption = { label: "Logistics" }
-            caption2 = { label: "Center" }
+            caption = { label: "物流中心" }
         }
 
         <FillerX> {}
 
-        <IconWithTwoLineText> {
+        <IconWithText> {
             image = { image: (PAYMENTS_IMG) }
-            caption = { label: "Payments" }
-            caption2 = { label: "Center" }
+            caption = { label: "支付中心" }
         }
 
         <FillerX> {}
 
-        <IconWithTwoLineText> {
+        <IconWithText> {
             image = { image: (GLOBAL_DEALS_IMG) }
-            caption = { label: "Global" }
-            caption2 = { label: "Deals" }
+            caption = { label: "全球优惠" }
         }
     }
 
@@ -271,7 +182,7 @@ live_design! {
 
         <Label> {
             walk: {width: Fit, height: Fit, margin: {top: 20., bottom: 20.}}
-            label: "Payment Support"
+            label: "支付支持"
             draw_label: {
                 color: #000
                 text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -291,7 +202,7 @@ live_design! {
 
         <IconWithText> {
             image = { image: (SHIPPING_ESTIMATE_IMG), walk: {width: 32, height: 32} }
-            caption = { label: "Ship Est" }
+            caption = { label: "货运价格估计" }
         }
     }
 
@@ -332,7 +243,7 @@ live_design! {
             layout: {flow: Down, padding: 5., spacing: 3.}
             title = <Label> {
                 walk: {width: Fill, height: Fit}
-                label: "Men flip flops 2023"
+                label: "男士人字拖 2023"
                 draw_label: {
                     color: #000
                     text_style: <REGULAR_TEXT> {font_size: 13.0},
@@ -341,7 +252,7 @@ live_design! {
 
             subtitle = <Label> {
                 walk: {width: Fill, height: Fit}
-                label: "500+ people pay"
+                label: "500+人付费"
                 draw_label: {
                     color: #888
                     text_style: <REGULAR_TEXT> {font_size: 9.0},
@@ -395,7 +306,7 @@ live_design! {
                 }
                 <Label> {
                     walk: {width: Fit, height: Fit}
-                    label: "Subtract 40 e/300"
+                    label: "每300减40"
                     draw_label: {
                         color: (ORANGE_COLOR)
                         text_style: <REGULAR_TEXT> {font_size: 9.0},
@@ -516,73 +427,73 @@ impl LiveHook for HomeContent {
     fn after_new_from_doc(&mut self, _cx: &mut Cx) {
         self.data = vec![
             CatalogItemInfo {
-                title: "Men flip flops 2023".to_string(),
-                subtitle: "500+ people paying".to_string(),
+                title: "男士人字拖 2023".to_string(),
+                subtitle: "500+人付费".to_string(),
                 price: "58".to_string(),
             },
             CatalogItemInfo {
-                title: "Chocolate grand earth shades".to_string(),
-                subtitle: "10000+ people paying".to_string(),
+                title: "巧克力大地色调".to_string(),
+                subtitle: "10000+人付费".to_string(),
                 price: "8.9".to_string(),
             },
             CatalogItemInfo {
-                title: "Ice silk anti sofa cushion summer mat".to_string(),
-                subtitle: "50+ people paying".to_string(),
+                title: "冰丝防沙发垫夏季垫t".to_string(),
+                subtitle: "50+人付费".to_string(),
                 price: "20.9".to_string(),
             },
             CatalogItemInfo {
-                title: "Carot milk pan baby non stick pan".to_string(),
-                subtitle: "100+ people paying".to_string(),
+                title: "胡萝卜奶锅婴儿不粘锅".to_string(),
+                subtitle: "100+人付费".to_string(),
                 price: "89".to_string(),
             },
             CatalogItemInfo {
-                title: "Crispy Cheese Banana Flavor Internet Celebrity".to_string(),
-                subtitle: "200+ people paying".to_string(),
+                title: "脆皮芝士香蕉味网红".to_string(),
+                subtitle: "200+人付费".to_string(),
                 price: "18.5".to_string(),
             },
             CatalogItemInfo {
-                title: "Concentrated whey protein from Germany".to_string(),
-                subtitle: "200+ people paying".to_string(),
+                title: "德国浓缩乳清蛋白y".to_string(),
+                subtitle: "200+人付费".to_string(),
                 price: "20.3".to_string(),
             },
             CatalogItemInfo {
-                title: "Incredible Ring".to_string(),
-                subtitle: "500+ people paying".to_string(),
+                title: "不可思议的戒指".to_string(),
+                subtitle: "500+人付费".to_string(),
                 price: "100".to_string(),
             },
             CatalogItemInfo {
-                title: "Router AX6000".to_string(),
-                subtitle: "13 people paying".to_string(),
+                title: "路由器AX6000".to_string(),
+                subtitle: "13人付费".to_string(),
                 price: "266".to_string(),
             },
             CatalogItemInfo {
-                title: "Men flip flops 2023".to_string(),
-                subtitle: "500+ people paying".to_string(),
+                title: "男士人字拖 2023".to_string(),
+                subtitle: "500+人付费".to_string(),
                 price: "58".to_string(),
             },
             CatalogItemInfo {
-                title: "Chocolate grand earth shades".to_string(),
-                subtitle: "10000+ people paying".to_string(),
+                title: "巧克力大地色调".to_string(),
+                subtitle: "10000+人付费".to_string(),
                 price: "8.9".to_string(),
             },
             CatalogItemInfo {
-                title: "Ice silk anti sofa cushion summer mat".to_string(),
-                subtitle: "50+ people paying".to_string(),
+                title: "冰丝防沙发垫夏季垫t".to_string(),
+                subtitle: "50+人付费".to_string(),
                 price: "20.9".to_string(),
             },
             CatalogItemInfo {
-                title: "Carot milk pan baby non stick pan".to_string(),
-                subtitle: "100+ people paying".to_string(),
+                title: "胡萝卜奶锅婴儿不粘锅".to_string(),
+                subtitle: "100+人付费".to_string(),
                 price: "89".to_string(),
             },
             CatalogItemInfo {
-                title: "Crispy Cheese Banana Flavor Internet Celebrity".to_string(),
-                subtitle: "200+ people paying".to_string(),
+                title: "脆皮芝士香蕉味网红".to_string(),
+                subtitle: "200+人付费".to_string(),
                 price: "18.5".to_string(),
             },
             CatalogItemInfo {
-                title: "Concentrated whey protein from Germany".to_string(),
-                subtitle: "200+ people paying".to_string(),
+                title: "德国浓缩乳清蛋白".to_string(),
+                subtitle: "200+人付费".to_string(),
                 price: "20.3".to_string(),
             },
         ];
