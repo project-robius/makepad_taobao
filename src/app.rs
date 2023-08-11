@@ -169,7 +169,9 @@ impl LiveHook for App {
         crate::shared::helpers::live_design(cx);
 
         // home
+        crate::home::helpers::live_design(cx);
         crate::home::home_screen::live_design(cx);
+        crate::home::home_content::live_design(cx);
         crate::home::search_terms::live_design(cx);
     }
 }
