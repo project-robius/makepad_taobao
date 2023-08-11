@@ -89,7 +89,7 @@ impl Widget for SearchTerms {
         &mut self,
         cx: &mut Cx,
         event: &Event,
-        dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
+        _dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
     ) {
         if let Some(_ne) = self.next_frame.is_event(event) {
             // Control animations when they are done
