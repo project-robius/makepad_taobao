@@ -3,13 +3,14 @@ use makepad_widgets::*;
 live_design! {
     import makepad_widgets::frame::*;
     import makepad_widgets::label::*;
+    import makepad_widgets::image::*;
     import makepad_widgets::text_input::TextInput;
     import makepad_widgets::list_view::ListView;
     import makepad_draw::shader::std::*;
 
     import crate::shared::styles::*;
     import crate::shared::helpers::*;
-    import crate::home::helpers::IconWithText;
+    import crate::home::helpers::*;
     import crate::home::search_terms::SearchTerms;
     import crate::home::home_content::HomeContent;
 
@@ -23,7 +24,7 @@ live_design! {
         layout: {flow: Right, align: {x: 0.0, y: 0.5}, spacing: 10.0, padding: {left: 10., right: 10.}}
 
         <IconWithText> {
-            image = { image: (WORLDWIDE_ICON) }
+            image = { source: (WORLDWIDE_ICON) }
             caption = { label: "全球" }
         }
 
@@ -49,7 +50,7 @@ live_design! {
         <FillerX> {}
 
         <IconWithText> {
-            image = { image: (MEMBERSHIP_CODE_ICON) }
+            image = { source: (MEMBERSHIP_CODE_ICON) }
             caption = { label: "会员码" }
         }
     }
@@ -64,7 +65,7 @@ live_design! {
 
         <Image> {
             walk: {width: 24, height: 24}
-            image: (SCAN_ICON)
+            source: (SCAN_ICON)
         }
 
         <LineH> {
@@ -75,7 +76,7 @@ live_design! {
 
         <Image> {
             walk: {width: 24, height: 24}
-            image: (CAMERA_ICON)
+            source: (CAMERA_ICON)
         }
 
         <Box> {

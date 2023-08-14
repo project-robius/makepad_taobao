@@ -3,6 +3,7 @@ use makepad_widgets::*;
 live_design! {
     import makepad_widgets::frame::*;
     import makepad_widgets::label::*;
+    import makepad_widgets::image::*;
     import crate::shared::styles::*;
     
     IconWithText = <Frame> {

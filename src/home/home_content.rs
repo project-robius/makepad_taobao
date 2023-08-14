@@ -4,12 +4,13 @@ use crate::home::catalog_data::*;
 live_design! {
     import makepad_widgets::frame::*;
     import makepad_widgets::label::*;
+    import makepad_widgets::image::*;
     import makepad_widgets::list_view::ListView;
     import makepad_draw::shader::std::*;
 
     import crate::shared::styles::*;
     import crate::shared::helpers::*;
-    import crate::home::helpers::IconWithText;
+    import crate::home::helpers::*;
 
     TAOBAO_COINS_IMG = dep("crate://self/resources/taobao_coins.png")
     HELP_CENTER_IMG = dep("crate://self/resources/help_center.png")
@@ -34,35 +35,35 @@ live_design! {
       layout: {flow: Right, align: {x: 0.0, y: 0.5}, spacing: 10.0, padding: {left: 40., right: 40.}}
 
       <IconWithText> {
-          image = { image: (TAOBAO_COINS_IMG) }
+          image = { source: (TAOBAO_COINS_IMG) }
           caption = { label: "淘宝币" }
       }
 
       <FillerX> {}
 
       <IconWithText> {
-          image = { image: (HELP_CENTER_IMG) }
+          image = { source: (HELP_CENTER_IMG) }
           caption = { label: "帮助中心" }
       }
 
       <FillerX> {}
 
       <IconWithText> {
-          image = { image: (LOGISTICS_IMG) }
+          image = { source: (LOGISTICS_IMG) }
           caption = { label: "物流中心" }
       }
 
       <FillerX> {}
 
       <IconWithText> {
-          image = { image: (PAYMENTS_IMG) }
+          image = { source: (PAYMENTS_IMG) }
           caption = { label: "支付中心" }
       }
 
       <FillerX> {}
 
       <IconWithText> {
-          image = { image: (GLOBAL_DEALS_IMG) }
+          image = { source: (GLOBAL_DEALS_IMG) }
           caption = { label: "全球优惠" }
       }
   }
@@ -86,7 +87,7 @@ live_design! {
 
       <Image> {
           walk: {width: 118, height: 18}
-          image: (CREDIT_CARDS_IMG)
+          source: (CREDIT_CARDS_IMG)
       }
 
       <FillerX> {}
@@ -96,7 +97,7 @@ live_design! {
       }
 
       <IconWithText> {
-          image = { image: (SHIPPING_ESTIMATE_IMG), walk: {width: 32, height: 32} }
+          image = { source: (SHIPPING_ESTIMATE_IMG), walk: {width: 32, height: 32} }
           caption = { label: "货运价格估计" }
       }
   }
@@ -112,7 +113,7 @@ live_design! {
 
         image = <Image> {
             walk: {width: 166, height: 166}
-            image: (CATALOG_FLIP_FLOPS_IMG)
+            source: (CATALOG_FLIP_FLOPS_IMG)
 
             // Override to have the upper corners rounded
             draw_bg: {
@@ -154,7 +155,7 @@ live_design! {
                 }
             }
 
-            image = <Image> {
+            image = <ImageFrame> {
                 walk: {width: 160, height: 40}
                 layout: {flow: Down, spacing: 2., padding: 5.}
                 image: (BUY_IT_BANNER_IMG)
@@ -217,7 +218,7 @@ live_design! {
         left = <CatalogItem> {}
         <FillerX> {}
         right = <CatalogItemWithOffer> {
-            image = { image: (CATALOG_COSMETICS_IMG) }
+            image = { source: (CATALOG_COSMETICS_IMG) }
         }
     }
 
@@ -226,11 +227,11 @@ live_design! {
         layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
 
         left = <CatalogItemWithOffer> {
-            image = { image: (CATALOG_LIVING_FURNITURE_IMG) }
+            image = { source: (CATALOG_LIVING_FURNITURE_IMG) }
         }
         <FillerX> {}
         right = <CatalogItemWithOffer> {
-            image = { image: (CATALOG_SEUL_COLLECTION_IMG) }
+            image = { source: (CATALOG_SEUL_COLLECTION_IMG) }
         }
     }
 
@@ -239,11 +240,11 @@ live_design! {
         layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
 
         left = <CatalogItem> {
-            image = { image: (CATALOG_MEAL_IMG) }
+            image = { source: (CATALOG_MEAL_IMG) }
         }
         <FillerX> {}
         right = <CatalogItem> {
-            image = { image: (CATALOG_PROTEIN_IMG) }
+            image = { source: (CATALOG_PROTEIN_IMG) }
         }
     }
 
@@ -252,11 +253,11 @@ live_design! {
         layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
 
         left = <CatalogItemWithOffer> {
-            image = { image: (CATALOG_RING_IMG) }
+            image = { source: (CATALOG_RING_IMG) }
         }
         <FillerX> {}
         right = <CatalogItem> {
-            image = { image: (CATALOG_ROUTER_IMG) }
+            image = { source: (CATALOG_ROUTER_IMG) }
         }
     }
 
