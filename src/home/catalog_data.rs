@@ -1,3 +1,5 @@
+use std::iter;
+
 #[derive(Debug, Clone)]
 pub struct CatalogDataItem {
     pub title: String,
@@ -18,7 +20,7 @@ impl CatalogData {
 }
 
 fn catalog_data() -> Vec<CatalogDataItem> {
-    vec![
+    let data = vec![
         CatalogDataItem {
             title: "男士人字拖 2023".to_string(),
             subtitle: "500+人付费".to_string(),
@@ -89,6 +91,8 @@ fn catalog_data() -> Vec<CatalogDataItem> {
             subtitle: "200+人付费".to_string(),
             price: "20.3".to_string(),
         },
-    ]
+    ];
+
+    iter::repeat(data).take(100).flatten().collect()
 }
 
