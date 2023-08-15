@@ -129,6 +129,7 @@ version = "0.3.0"
 dependencies = [
  "makepad-futures",
  "makepad-futures-legacy",
+ "makepad-image-formats",
  "makepad-objc-sys",
  "makepad-shader-compiler",
  "makepad-wasm-bridge",
