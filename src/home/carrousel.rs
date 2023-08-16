@@ -11,7 +11,7 @@ live_design! {
     CARROUSEL_3_IMG = dep("crate://self/resources/catalog/carrousel_3.png")
     
     Carrousel = {{Carrousel}} {
-        walk: {width: 166, height: Fit, margin: 10.}
+        walk: {width: 166, height: Fit}
         layout: {flow: Right, align: {x: 0.0, y: 0.5}}
 
         layout: {
