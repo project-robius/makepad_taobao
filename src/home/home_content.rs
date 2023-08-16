@@ -11,6 +11,7 @@ live_design! {
     import crate::shared::styles::*;
     import crate::shared::helpers::*;
     import crate::home::helpers::*;
+    import crate::home::carrousel::*;
 
     TAOBAO_COINS_IMG = dep("crate://self/resources/taobao_coins.png")
     HELP_CENTER_IMG = dep("crate://self/resources/help_center.png")
@@ -269,6 +270,7 @@ live_design! {
 
             options = <Options> {}
             payments = <Payment> {}
+            carrousel = <Carrousel> {}
 
             catalog_pair_1 = <CatalogPair1> {}
             catalog_pair_2 = <CatalogPair2> {}
@@ -334,13 +336,14 @@ impl HomeContent {
 
         cx.begin_turtle(walk, self.layout);
 
-        self.list_view.set_item_range(0, pairs_count + 1, 1);
+        self.list_view.set_item_range(0, pairs_count + 2, 1);
 
         while self.list_view.draw_widget(cx).hook_widget().is_some() {
             while let Some(item_id) = self.list_view.next_visible_item(cx) {
                 let template = match item_id {
                     0 => id!(options),
                     1 => id!(payments),
+                    2 => id!(carrousel),
                     x if (x - 2) % 4 == 0 => id!(catalog_pair_1),
                     x if (x - 2) % 4 == 1 => id!(catalog_pair_2),
                     x if (x - 2) % 4 == 2 => id!(catalog_pair_3),
@@ -348,9 +351,9 @@ impl HomeContent {
                 };
                 let item = self.list_view.get_item(cx, item_id, template[0]).unwrap();
 
-                if item_id > 1 && item_id < pairs_count + 2 {
-                    let data_left = &self.data[((item_id - 2) * 2) as usize];
-                    let data_right = &self.data[((item_id - 2) * 2 + 1) as usize];
+                if item_id > 2 && item_id < pairs_count + 3 {
+                    let data_left = &self.data[((item_id - 2) * 3) as usize];
+                    let data_right = &self.data[((item_id - 2) * 3 + 1) as usize];
 
                     if let Some(mut catalog_pair) = item.borrow_mut::<Frame>() {
                         catalog_pair.get_label(id!(left.info.title)).set_label(&data_left.title);
