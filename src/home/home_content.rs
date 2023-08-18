@@ -11,6 +11,7 @@ live_design! {
     import crate::shared::styles::*;
     import crate::shared::helpers::*;
     import crate::home::helpers::*;
+    import crate::home::carrousel::*;
 
     TAOBAO_COINS_IMG = dep("crate://self/resources/taobao_coins.png")
     HELP_CENTER_IMG = dep("crate://self/resources/help_center.png")
@@ -29,6 +30,15 @@ live_design! {
     CATALOG_PROTEIN_IMG = dep("crate://self/resources/catalog/protein.png")
     CATALOG_RING_IMG = dep("crate://self/resources/catalog/ring.png")
     CATALOG_ROUTER_IMG = dep("crate://self/resources/catalog/router.png")
+
+    FEATURED_1_IMG = dep("crate://self/resources/featured/featured_1.png")
+    FEATURED_2_IMG = dep("crate://self/resources/featured/featured_2.png")
+    FEATURED_3_IMG = dep("crate://self/resources/featured/featured_3.png")
+    FEATURED_4_IMG = dep("crate://self/resources/featured/featured_4.png")
+    FEATURED_5_IMG = dep("crate://self/resources/featured/featured_5.png")
+    FEATURED_6_IMG = dep("crate://self/resources/featured/featured_6.png")
+    FEATURED_7_IMG = dep("crate://self/resources/featured/featured_7.png")
+    FEATURED_8_IMG = dep("crate://self/resources/featured/featured_8.png")
 
     Options = <Frame> {
       walk: {width: Fill, height: Fit}
@@ -261,6 +271,149 @@ live_design! {
         }
     }
 
+    Featured1 = <Frame> {
+        walk: {width: Fill, height: Fit, margin: 10.}
+        layout: {flow: Right, align: {x: 0.0, y: 0.0}, spacing: 10.0}
+
+        <Carrousel> {}
+        <Frame> {
+            walk: {width: Fill, height: Fit}
+            layout: {flow: Down, spacing: 0}
+            <FeaturedBoxWithHighlightBox> {
+                header = {
+                    label = {
+                        label: "淘宝直播"
+                    }
+                    highlight = {
+                        label = {
+                            label: "直播中"
+                        }
+                    }
+                }
+                content = {
+                    image_container_1 = {
+                        image = {
+                            source: (FEATURED_1_IMG)
+                            walk: {width: 60, height: 56}
+                        }
+                        label = {
+                            label: "爆款直降"
+                        }
+                    }
+
+                    image_container_2 = {
+                        image = {
+                            source: (FEATURED_2_IMG)
+                            walk: {width: 46, height: 60}
+                        }
+                        label = {
+                            label: "优质好货"
+                        }
+                    }
+                }
+            }
+            <FeaturedBox> {
+                header = {
+                    label = {
+                        label: "聚划算"
+                    }
+                }
+                content = {
+                    image_container_1 = {
+                        image = {
+                            source: (FEATURED_3_IMG)
+                            walk: {width: 60, height: 62}
+                        }
+                        label = {
+                            label: "爆款直降"
+                        }
+                    }
+    
+                    image_container_2 = {
+                        image = {
+                            source: (FEATURED_4_IMG)
+                            walk: {width: 60, height: 49}
+                        }
+                        label = {
+                            label: "抢大红包"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Featured2 = <Frame> {
+        walk: {width: Fill, height: Fit, margin: 10.}
+        layout: {flow: Right, align: {x: 0.0, y: 0.0}, spacing: 10.0}
+
+        <FeaturedBoxWithHighlightLabel> {
+            header = {
+                label = {
+                    label: "百亿补贴"
+                }
+                highlight = {
+                    label: "品牌正品"
+                }
+            }
+            content = {
+                image_container_1 = {
+                    image = {
+                        source: (FEATURED_5_IMG)
+                        walk: {width: 54, height: 60}
+                    }
+                    label = {
+                        label: "爆款直降"
+                    }
+                }
+
+                image_container_2 = {
+                    image = {
+                        source: (FEATURED_6_IMG)
+                        walk: {width: 60, height: 36}
+                    }
+                    label = {
+                        label: "优质好货"
+                    }
+                }
+            }
+        }
+        <FeaturedBoxWithHighlightLabel> {
+            header = {
+                label = {
+                    label: "有好货"
+                }
+                highlight = {
+                    label: "用过才好说"
+                    draw_label: {
+                        color: #x93edea
+                    }
+                }
+            }
+            content = {
+                image_container_1 = {
+                    image = {
+                        source: (FEATURED_7_IMG)
+                        walk: {width: 54, height: 62}
+                    }
+                    label = {
+                        label: "爆款直降"
+                    }
+                }
+
+                image_container_2 = {
+                    image = {
+                        source: (FEATURED_8_IMG)
+                        walk: {width: 60, height: 28}
+                    }
+                    label = {
+                        label: "优质好货"
+                    }
+                }
+            }
+        }
+    }
+
     HomeContent = {{HomeContent}} {
         layout: {flow: Down}
         list_view: <ListView> {
@@ -269,6 +422,8 @@ live_design! {
 
             options = <Options> {}
             payments = <Payment> {}
+            featured_1 = <Featured1> {}
+            featured_2 = <Featured2> {}
 
             catalog_pair_1 = <CatalogPair1> {}
             catalog_pair_2 = <CatalogPair2> {}
@@ -297,6 +452,7 @@ impl LiveHook for HomeContent {
 
     fn after_new_from_doc(&mut self, _cx: &mut Cx) {
         self.data = CatalogData::new().items;
+        println!("arranca");
     }
 }
 
@@ -334,13 +490,15 @@ impl HomeContent {
 
         cx.begin_turtle(walk, self.layout);
 
-        self.list_view.set_item_range(0, pairs_count + 1, 1);
+        self.list_view.set_item_range(0, pairs_count + 3, 1);
 
         while self.list_view.draw_widget(cx).hook_widget().is_some() {
             while let Some(item_id) = self.list_view.next_visible_item(cx) {
                 let template = match item_id {
                     0 => id!(options),
                     1 => id!(payments),
+                    2 => id!(featured_1),
+                    3 => id!(featured_2),
                     x if (x - 2) % 4 == 0 => id!(catalog_pair_1),
                     x if (x - 2) % 4 == 1 => id!(catalog_pair_2),
                     x if (x - 2) % 4 == 2 => id!(catalog_pair_3),
@@ -348,9 +506,9 @@ impl HomeContent {
                 };
                 let item = self.list_view.get_item(cx, item_id, template[0]).unwrap();
 
-                if item_id > 1 && item_id < pairs_count + 2 {
-                    let data_left = &self.data[((item_id - 2) * 2) as usize];
-                    let data_right = &self.data[((item_id - 2) * 2 + 1) as usize];
+                if item_id > 2 && item_id < pairs_count + 4 {
+                    let data_left = &self.data[((item_id - 3) * 3) as usize];
+                    let data_right = &self.data[((item_id - 3) * 3 + 1) as usize];
 
                     if let Some(mut catalog_pair) = item.borrow_mut::<Frame>() {
                         catalog_pair.get_label(id!(left.info.title)).set_label(&data_left.title);
