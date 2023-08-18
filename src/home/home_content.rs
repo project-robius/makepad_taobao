@@ -222,9 +222,12 @@ live_design! {
         }
     }
 
-    CatalogPair1 = <Frame> {
+    CatalogPairBase = <Frame> {
         walk: {width: Fill, height: Fit}
         layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
+    }
+
+    CatalogPair1 = <CatalogPairBase> {
         left = <CatalogItem> {}
         <FillerX> {}
         right = <CatalogItemWithOffer> {
@@ -232,10 +235,7 @@ live_design! {
         }
     }
 
-    CatalogPair2 = <Frame> {
-        walk: {width: Fill, height: Fit}
-        layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
-
+    CatalogPair2 = <CatalogPairBase> {
         left = <CatalogItemWithOffer> {
             image = { source: (CATALOG_LIVING_FURNITURE_IMG) }
         }
@@ -245,10 +245,7 @@ live_design! {
         }
     }
 
-    CatalogPair3 = <Frame> {
-        walk: {width: Fill, height: Fit}
-        layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
-
+    CatalogPair3 = <CatalogPairBase> {
         left = <CatalogItem> {
             image = { source: (CATALOG_MEAL_IMG) }
         }
@@ -258,10 +255,7 @@ live_design! {
         }
     }
 
-    CatalogPair4 = <Frame> {
-        walk: {width: Fill, height: Fit}
-        layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
-
+    CatalogPair4 = <CatalogPairBase> {
         left = <CatalogItemWithOffer> {
             image = { source: (CATALOG_RING_IMG) }
         }
@@ -452,7 +446,6 @@ impl LiveHook for HomeContent {
 
     fn after_new_from_doc(&mut self, _cx: &mut Cx) {
         self.data = CatalogData::new().items;
-        println!("arranca");
     }
 }
 
