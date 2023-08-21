@@ -12,8 +12,6 @@ live_design! {
     
     Carrousel = {{Carrousel}} {
         walk: {width: 166, height: Fit}
-        layout: {flow: Right, align: {x: 0.0, y: 0.5}}
-
         layout: {
             flow: Overlay,
             align: {x: 0.0, y: 0.0},
@@ -43,14 +41,46 @@ live_design! {
             }
         }
 
+        <Frame> {
+            walk: {width: Fill, height: Fit, margin: {top: 205.}}
+            layout: {
+                flow: Right,
+                align: {x: 0.5, y: 0.0},
+                spacing: 5.0,
+            }
+
+            indicator1 = <Box> {
+                walk: {width: 10.0, height: 10.0}
+                draw_bg: {
+                    color: #f60,
+                    radius: 2.5
+                }
+            }
+
+            indicator2 = <Box> {
+                walk: {width: 20.0, height: 10.0}
+                draw_bg: {
+                    color: #f60,
+                    radius: 2.5
+                }
+            }
+
+            indicator3 = <Box> {
+                walk: {width: 10.0, height: 10.0}
+                draw_bg: {
+                    color: #f60,
+                    radius: 2.5
+                }
+            }
+        }
+
         offset: 0
 
         state: {
             carrousel = {
                 default: display,
                 display = {
-                    from: {all: Forward {duration: 1.0}}
-                    // Bug: Constants are not working as part of an live state value
+                    from: {all: Forward {duration: 0.4}}
                     apply: {offset: 0.0}
                 }
 
@@ -68,6 +98,11 @@ live_design! {
     }
 }
 
+enum CarrouselDirection {
+    Forward,
+    Backward,
+}
+
 #[derive(Live)]
 pub struct Carrousel {
     #[deref]
@@ -83,10 +118,19 @@ pub struct Carrousel {
     next_frame: NextFrame,
 
     #[rust]
+    last_abs: f64,
+
+    #[rust]
     images: Vec<LiveId>,
 
     #[rust(0)]
     current_image_index: i32,
+
+    #[rust(1)]
+    previous_image_index: i32,
+
+    #[rust(CarrouselDirection::Forward)]
+    direction: CarrouselDirection,
 }
 
 impl LiveHook for Carrousel {
@@ -116,36 +160,42 @@ impl Widget for Carrousel {
         _dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
     ) {
         if let Some(_ne) = self.next_frame.is_event(event) {
-            // Control animations when they are done
             if self.state_handle_event(cx, event).is_animating() {
+                // Update images position as main animation progresses
                 if self.state.is_in_state(cx, id!(carrousel.display)) {
-                    let image_id = self.images[self.current_image_index as usize]; 
-                    let mut image = self.get_frame(&[image_id]);
-                    image.apply_over(cx, live!{walk: {margin: {left: (self.offset) }}});
+                    let current_image_id = self.images[self.current_image_index as usize]; 
+                    let mut current_image = self.get_frame(&[current_image_id]);
 
-                    let mut prev_index = self.current_image_index - 1;
-                    if prev_index < 0 {
-                        prev_index = self.images.len() as i32 - 1;
+                    let prev_image_id = self.images[self.previous_image_index as usize];
+                    let mut prev_image = self.get_frame(&[prev_image_id]);
+                    
+                    match self.direction {
+                        CarrouselDirection::Forward => {
+                            current_image.apply_over(cx, live!{walk: {margin: {left: (self.offset) }}});
+                            prev_image.apply_over(cx, live!{walk: {margin: {left: (self.offset - 166.0) }}})
+                        },
+                        CarrouselDirection::Backward => {
+                            current_image.apply_over(cx, live!{walk: {margin: {left: (-self.offset) }}});
+                            prev_image.apply_over(cx, live!{walk: {margin: {left: (166.0 - self.offset) }}})
+                        }   
                     }
-                    let prev_image_id = self.images[prev_index as usize];
-                    image = self.get_frame(&[prev_image_id]);
-                    image.apply_over(cx, live!{walk: {margin: {left: (self.offset - 166.0) }}})
                 }
             } else {
                 if self.state.is_in_state(cx, id!(carrousel.restart)) {
+                    // Fires the animation of the carrousel again
                     self.animate_state(cx, id!(carrousel.display));
                 } else if self.state.is_in_state(cx, id!(carrousel.display)) {
+                    // Beings the period of time where the carrousel is stopped
                     self.animate_state(cx, id!(carrousel.keep));
 
-                    let mut prev_index = self.current_image_index - 1;
-                    if prev_index < 0 {
-                        prev_index = self.images.len() as i32 - 1;
-                    }
-
-                    let image_id = self.images[prev_index as usize];
+                    let image_id = self.images[self.previous_image_index as usize];
                     let image = self.get_frame(&[image_id]);
                     image.set_visible(false);
                 } else if self.state.is_in_state(cx, id!(carrousel.keep)) {
+                    // Ends the period of time where the carrousel is stopped,
+                    // prepares the next image
+                    self.direction = CarrouselDirection::Forward;
+                    self.previous_image_index = self.current_image_index;
                     self.current_image_index += 1;
                     if self.current_image_index >= self.images.len() as i32 {
                         self.current_image_index = 0;
@@ -159,9 +209,52 @@ impl Widget for Carrousel {
                     
                     image.set_visible(true);
                 }
-            } 
+            }
+            // TODO check if this is necessary
             self.redraw(cx);
             self.next_frame = cx.new_next_frame();
+        }
+
+        self.adjust_indicators_width(cx);
+
+        match event.hits(cx, self.frame.area()) {
+            Hit::FingerDown(fe) => {
+                self.last_abs = fe.abs.x;
+            }
+            Hit::FingerUp(fe) => {
+                if fe.is_over {
+                    if (fe.abs.x - self.last_abs).abs() > 10.0 {
+                        self.previous_image_index = self.current_image_index;
+                        let initial_offset;
+
+                        if fe.abs.x > self.last_abs {
+                            self.direction = CarrouselDirection::Backward;
+                            self.current_image_index -= 1;
+                            if self.current_image_index < 0 {
+                                self.current_image_index = self.images.len() as i32 - 1;
+                            }
+                            initial_offset = 166.0;
+                        } else {
+                            self.direction = CarrouselDirection::Forward;
+                            self.current_image_index += 1;
+                            if self.current_image_index >= self.images.len() as i32 {
+                                self.current_image_index = 0;
+                            }
+                            initial_offset = -166.0;
+                        }
+
+                        let image_id = self.images[self.current_image_index as usize]; 
+                        let mut image = self.get_frame(&[image_id]);
+                        image.apply_over(cx, live!{walk: {margin: {left: (initial_offset) }}});
+                        self.animate_state(cx, id!(carrousel.restart));
+                        image.set_visible(true);
+
+                        // TODO check if this is necessary
+                        self.redraw(cx);
+                    }
+                }
+            },
+            _ => {}
         }
     }
 
@@ -179,5 +272,23 @@ impl Widget for Carrousel {
 
     fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
         self.frame.draw_walk_widget(cx, walk)
+    }
+}
+
+impl Carrousel {
+    fn adjust_indicators_width(&mut self, cx: &mut Cx) {
+        let mut indicators_list = vec![
+            self.get_frame(id!(indicator1)),
+            self.get_frame(id!(indicator2)),
+            self.get_frame(id!(indicator3)),
+        ];
+
+        for (i, indicator) in indicators_list.iter_mut().enumerate() {
+            if i == self.current_image_index as usize {
+                indicator.apply_over(cx, live!{walk: {width: 20.0}});
+            } else {
+                indicator.apply_over(cx, live!{walk: {width: 10.0}});
+            }
+        }
     }
 }
