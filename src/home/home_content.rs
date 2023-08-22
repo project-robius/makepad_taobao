@@ -1,5 +1,7 @@
-use makepad_widgets::*;
 use crate::home::catalog_data::*;
+use crate::home::home_content::icon_atlas::HashMap;
+use crate::shared::clickable_frame::ClickableFrameAction;
+use makepad_widgets::*;
 
 live_design! {
     import makepad_widgets::frame::*;
@@ -9,6 +11,7 @@ live_design! {
     import makepad_draw::shader::std::*;
 
     import crate::shared::styles::*;
+    import crate::shared::clickable_frame::*;
     import crate::shared::helpers::*;
     import crate::home::helpers::*;
     import crate::home::carrousel::*;
@@ -112,7 +115,7 @@ live_design! {
       }
   }
 
-    CatalogItem = <Box> {
+    CatalogItem = <ClickableFrame> {
         walk: {width: 166, height: Fit}
         layout: {flow: Down, align: {x: 0.5, y: 0.0}, spacing: 2.0}
 
@@ -322,7 +325,7 @@ live_design! {
                             label: "爆款直降"
                         }
                     }
-    
+
                     image_container_2 = {
                         image = {
                             source: (FEATURED_4_IMG)
@@ -437,6 +440,8 @@ pub struct HomeContent {
     list_view: ListView,
     #[rust]
     data: Vec<CatalogDataItem>,
+    #[rust]
+    catalog_item_view_map: HashMap<u64, u64>,
 }
 
 impl LiveHook for HomeContent {
@@ -456,11 +461,10 @@ impl Widget for HomeContent {
         event: &Event,
         dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
     ) {
-        let _actions = self.list_view.handle_widget_event(cx, event);
-
-        for action in _actions {
-            dispatch_action(cx, action);
-        }
+        let widget_uid = self.widget_uid();
+        self.handle_event_with(cx, event, &mut |cx, action| {
+            dispatch_action(cx, WidgetActionItem::new(action.into(), widget_uid));
+        });
     }
 
     fn get_walk(&self) -> Walk {
@@ -478,6 +482,31 @@ impl Widget for HomeContent {
 }
 
 impl HomeContent {
+    fn handle_event_with(
+        &mut self,
+        cx: &mut Cx,
+        event: &Event,
+        dispatch_action: &mut dyn FnMut(&mut Cx, CatalogItemListAction),
+    ) {
+        let mut actions = Vec::new();
+        self.list_view
+            .handle_widget_event_with(cx, event, &mut |_, action| {
+                if let Some(catalog_item_id) = self.catalog_item_view_map.get(&action.widget_uid.0)
+                {
+                    actions.push((catalog_item_id, action));
+                }
+            });
+
+        for (catalog_item_id, action) in actions {
+            match action.action() {
+                ClickableFrameAction::Click => {
+                    dispatch_action(cx, CatalogItemListAction::Click(*catalog_item_id))
+                }
+                _ => (),
+            }
+        }
+    }
+
     pub fn draw_walk(&mut self, cx: &mut Cx2d, walk: Walk) {
         let pairs_count: u64 = (self.data.len() / 2_usize) as u64;
 
@@ -503,12 +532,25 @@ impl HomeContent {
                     let data_left = &self.data[((item_id - 3) * 3) as usize];
                     let data_right = &self.data[((item_id - 3) * 3 + 1) as usize];
 
-                    if let Some(mut catalog_pair) = item.borrow_mut::<Frame>() {
-                        catalog_pair.get_label(id!(left.info.title)).set_label(&data_left.title);
-                        catalog_pair.get_label(id!(left.info.subtitle)).set_label(&data_left.subtitle);
+                    self.catalog_item_view_map
+                        .insert(item.get_widget(id!(left)).widget_uid().0, data_left.id);
+                    self.catalog_item_view_map
+                        .insert(item.get_widget(id!(right)).widget_uid().0, data_right.id);
 
-                        catalog_pair.get_label(id!(right.info.title)).set_label(&data_right.title);
-                        catalog_pair.get_label(id!(right.info.subtitle)).set_label(&data_right.subtitle);
+                    if let Some(mut catalog_pair) = item.borrow_mut::<Frame>() {
+                        catalog_pair
+                            .get_label(id!(left.info.title))
+                            .set_label(&data_left.title);
+                        catalog_pair
+                            .get_label(id!(left.info.subtitle))
+                            .set_label(&data_left.subtitle);
+
+                        catalog_pair
+                            .get_label(id!(right.info.title))
+                            .set_label(&data_right.title);
+                        catalog_pair
+                            .get_label(id!(right.info.subtitle))
+                            .set_label(&data_right.subtitle);
                     }
                 }
                 item.draw_widget_all(cx);
@@ -517,4 +559,12 @@ impl HomeContent {
 
         cx.end_turtle();
     }
+}
+
+pub type CatalogItemId = u64;
+
+#[derive(Debug, Clone, WidgetAction)]
+pub enum CatalogItemListAction {
+    Click(CatalogItemId),
+    None,
 }
