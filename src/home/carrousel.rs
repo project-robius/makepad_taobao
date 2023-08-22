@@ -18,6 +18,7 @@ live_design! {
         }
 
         image1 = <Frame> {
+            visible: false,
             walk: {width: Fit, height: Fit}
             <Image> {
                 walk: {width: 166, height: 226}
@@ -26,6 +27,7 @@ live_design! {
         }
 
         image2 = <Frame> {
+            visible: false,
             walk: {width: Fit, height: Fit}
             <Image> {
                 walk: {width: 166, height: 226}
@@ -34,6 +36,7 @@ live_design! {
         }
 
         image3 = <Frame> {
+            visible: false,
             walk: {width: Fit, height: Fit}
             <Image> {
                 walk: {width: 166, height: 226}
@@ -98,6 +101,7 @@ live_design! {
     }
 }
 
+#[derive(Clone, Copy)]
 enum CarrouselDirection {
     Forward,
     Backward,
@@ -121,7 +125,10 @@ pub struct Carrousel {
     last_abs: f64,
 
     #[rust]
-    images: Vec<LiveId>,
+    image_containers: Vec<FrameRef>,
+
+    #[rust]
+    indicators_widgets: Vec<FrameRef>,
 
     #[rust(0)]
     current_image_index: i32,
@@ -139,13 +146,20 @@ impl LiveHook for Carrousel {
     }
 
     fn after_new_from_doc(&mut self, cx: &mut Cx) {
-        self.images = vec![
-            id!(image1)[0], id!(image2)[0], id!(image3)[0]
+        self.image_containers = vec![
+            self.get_frame(id!(image1)),
+            self.get_frame(id!(image2)),
+            self.get_frame(id!(image3)),
         ];
 
-        self.get_frame(id!(image1)).set_visible(true);
-        self.get_frame(id!(image2)).set_visible(false);
-        self.get_frame(id!(image3)).set_visible(false);
+        self.indicators_widgets = vec![
+            self.get_frame(id!(indicator1)),
+            self.get_frame(id!(indicator2)),
+            self.get_frame(id!(indicator3)),
+        ];
+
+        let (_, current_image) = self.get_active_images_containers();
+        current_image.set_visible(true);
 
         self.next_frame = cx.new_next_frame();
         self.animate_state(cx, id!(carrousel.keep));
@@ -159,103 +173,9 @@ impl Widget for Carrousel {
         event: &Event,
         _dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
     ) {
-        if let Some(_ne) = self.next_frame.is_event(event) {
-            if self.state_handle_event(cx, event).is_animating() {
-                // Update images position as main animation progresses
-                if self.state.is_in_state(cx, id!(carrousel.display)) {
-                    let current_image_id = self.images[self.current_image_index as usize]; 
-                    let mut current_image = self.get_frame(&[current_image_id]);
-
-                    let prev_image_id = self.images[self.previous_image_index as usize];
-                    let mut prev_image = self.get_frame(&[prev_image_id]);
-                    
-                    match self.direction {
-                        CarrouselDirection::Forward => {
-                            current_image.apply_over(cx, live!{walk: {margin: {left: (self.offset) }}});
-                            prev_image.apply_over(cx, live!{walk: {margin: {left: (self.offset - 166.0) }}})
-                        },
-                        CarrouselDirection::Backward => {
-                            current_image.apply_over(cx, live!{walk: {margin: {left: (-self.offset) }}});
-                            prev_image.apply_over(cx, live!{walk: {margin: {left: (166.0 - self.offset) }}})
-                        }   
-                    }
-                }
-            } else {
-                if self.state.is_in_state(cx, id!(carrousel.restart)) {
-                    // Fires the animation of the carrousel again
-                    self.animate_state(cx, id!(carrousel.display));
-                } else if self.state.is_in_state(cx, id!(carrousel.display)) {
-                    // Beings the period of time where the carrousel is stopped
-                    self.animate_state(cx, id!(carrousel.keep));
-
-                    let image_id = self.images[self.previous_image_index as usize];
-                    let image = self.get_frame(&[image_id]);
-                    image.set_visible(false);
-                } else if self.state.is_in_state(cx, id!(carrousel.keep)) {
-                    // Ends the period of time where the carrousel is stopped,
-                    // prepares the next image
-                    self.direction = CarrouselDirection::Forward;
-                    self.previous_image_index = self.current_image_index;
-                    self.current_image_index += 1;
-                    if self.current_image_index >= self.images.len() as i32 {
-                        self.current_image_index = 0;
-                    }
-
-                    let image_id = self.images[self.current_image_index as usize]; 
-                    let mut image = self.get_frame(&[image_id]);
-
-                    image.apply_over(cx, live!{walk: {margin: {left: 166.0 }}});
-                    self.animate_state(cx, id!(carrousel.restart));
-                    
-                    image.set_visible(true);
-                }
-            }
-            // TODO check if this is necessary
-            self.redraw(cx);
-            self.next_frame = cx.new_next_frame();
-        }
-
+        self.control_animation(cx, event);
         self.adjust_indicators_width(cx);
-
-        match event.hits(cx, self.frame.area()) {
-            Hit::FingerDown(fe) => {
-                self.last_abs = fe.abs.x;
-            }
-            Hit::FingerUp(fe) => {
-                if fe.is_over {
-                    if (fe.abs.x - self.last_abs).abs() > 10.0 {
-                        self.previous_image_index = self.current_image_index;
-                        let initial_offset;
-
-                        if fe.abs.x > self.last_abs {
-                            self.direction = CarrouselDirection::Backward;
-                            self.current_image_index -= 1;
-                            if self.current_image_index < 0 {
-                                self.current_image_index = self.images.len() as i32 - 1;
-                            }
-                            initial_offset = 166.0;
-                        } else {
-                            self.direction = CarrouselDirection::Forward;
-                            self.current_image_index += 1;
-                            if self.current_image_index >= self.images.len() as i32 {
-                                self.current_image_index = 0;
-                            }
-                            initial_offset = -166.0;
-                        }
-
-                        let image_id = self.images[self.current_image_index as usize]; 
-                        let mut image = self.get_frame(&[image_id]);
-                        image.apply_over(cx, live!{walk: {margin: {left: (initial_offset) }}});
-                        self.animate_state(cx, id!(carrousel.restart));
-                        image.set_visible(true);
-
-                        // TODO check if this is necessary
-                        self.redraw(cx);
-                    }
-                }
-            },
-            _ => {}
-        }
+        self.handle_mouse_event(cx, event);
     }
 
     fn get_walk(&self) -> Walk {
@@ -276,18 +196,115 @@ impl Widget for Carrousel {
 }
 
 impl Carrousel {
-    fn adjust_indicators_width(&mut self, cx: &mut Cx) {
-        let mut indicators_list = vec![
-            self.get_frame(id!(indicator1)),
-            self.get_frame(id!(indicator2)),
-            self.get_frame(id!(indicator3)),
-        ];
+    fn control_animation(&mut self, cx: &mut Cx, event: &Event) {
+        if let Some(_ne) = self.next_frame.is_event(event) {
+            if self.state_handle_event(cx, event).is_animating() {
+                // Update images position as main animation progresses
+                if self.state.is_in_state(cx, id!(carrousel.display)) {
+                    let direction = self.direction;
+                    let offset = self.offset;
 
-        for (i, indicator) in indicators_list.iter_mut().enumerate() {
+                    let (mut prev_image, mut current_image) = self.get_active_images_containers();
+
+                    match direction {
+                        CarrouselDirection::Forward => {
+                            Self::set_horizontal_margin(&mut current_image, offset, cx);
+                            Self::set_horizontal_margin(&mut prev_image, offset - 166.0, cx);
+                        },
+                        CarrouselDirection::Backward => {
+                            Self::set_horizontal_margin(&mut current_image, -offset, cx);
+                            Self::set_horizontal_margin(&mut prev_image, 166.0 - offset, cx);
+                        }   
+                    }
+                }
+            } else {
+                if self.state.is_in_state(cx, id!(carrousel.restart)) {
+                    // Fires the animation of the carrousel again
+                    self.animate_state(cx, id!(carrousel.display));
+                } else if self.state.is_in_state(cx, id!(carrousel.display)) {
+                    // Begins the period of time where the carrousel is stopped
+                    self.animate_state(cx, id!(carrousel.keep));
+                    let (previous_image, _) = self.get_active_images_containers();
+                    previous_image.set_visible(false);
+                } else if self.state.is_in_state(cx, id!(carrousel.keep)) {
+                    // Ends the period of time where the carrousel is stopped,
+                    // prepares the next image
+                    self.setup_next_animation(CarrouselDirection::Forward);
+
+                    let (_, mut current_image) = self.get_active_images_containers();
+                    Self::set_horizontal_margin(&mut current_image, 166.0, cx);
+                    current_image.set_visible(true);
+                    
+                    self.animate_state(cx, id!(carrousel.restart));
+                }
+            }
+            self.next_frame = cx.new_next_frame();
+        }
+    }
+
+    fn get_active_images_containers(&mut self) -> (FrameRef, FrameRef) {
+        let prev_index = self.previous_image_index as usize;
+        let curr_index = self.current_image_index as usize;
+        (
+            self.image_containers[prev_index].clone(),
+            self.image_containers[curr_index].clone()
+        )
+    }
+
+    fn set_horizontal_margin(image_ref: &mut FrameRef, offset: f64, cx: &mut Cx) {
+        image_ref.apply_over(cx, live!{walk: {margin: {left: (offset) }}});
+    }
+
+    fn adjust_indicators_width(&mut self, cx: &mut Cx) {
+        for (i, indicator) in self.indicators_widgets.iter_mut().enumerate() {
             if i == self.current_image_index as usize {
                 indicator.apply_over(cx, live!{walk: {width: 20.0}});
             } else {
                 indicator.apply_over(cx, live!{walk: {width: 10.0}});
+            }
+        }
+    }
+
+    fn handle_mouse_event(&mut self, cx: &mut Cx, event: &Event) {
+        match event.hits(cx, self.frame.area()) {
+            Hit::FingerDown(fe) => {
+                self.last_abs = fe.abs.x;
+            }
+            Hit::FingerUp(fe) => {
+                if fe.is_over {
+                    if (fe.abs.x - self.last_abs).abs() > 10.0 {
+                        self.previous_image_index = self.current_image_index;
+                        let initial_offset;
+
+                        if fe.abs.x > self.last_abs {
+                            self.setup_next_animation(CarrouselDirection::Backward);
+                            initial_offset = 166.0;
+                        } else {
+                            self.setup_next_animation(CarrouselDirection::Forward);
+                            initial_offset = -166.0;
+                        }
+
+                        let (_, mut current_image) = self.get_active_images_containers();
+                        Self::set_horizontal_margin(&mut current_image, initial_offset, cx);
+                        current_image.set_visible(true);
+
+                        self.animate_state(cx, id!(carrousel.restart));
+                    }
+                }
+            },
+            _ => {}
+        }
+    }
+
+    fn setup_next_animation(&mut self, direction: CarrouselDirection) {
+        self.direction = direction;
+        self.previous_image_index = self.current_image_index;
+        match direction {
+            CarrouselDirection::Forward => {
+                self.current_image_index = (self.current_image_index + 1).rem_euclid(self.image_containers.len() as i32);
+            },
+            CarrouselDirection::Backward => {
+                self.current_image_index = (self.current_image_index - 1).rem_euclid(self.image_containers.len() as i32);
             }
         }
     }
