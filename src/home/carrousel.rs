@@ -1,6 +1,8 @@
 use makepad_widgets::*;
 use makepad_widgets::widget::WidgetCache;
 
+const IMAGE_WIDTH: f64 = 166.0;
+
 live_design! {
     import makepad_widgets::frame::*;
     import makepad_widgets::image::*;
@@ -9,37 +11,36 @@ live_design! {
     CARROUSEL_1_IMG = dep("crate://self/resources/catalog/carrousel_1.png")
     CARROUSEL_2_IMG = dep("crate://self/resources/catalog/carrousel_2.png")
     CARROUSEL_3_IMG = dep("crate://self/resources/catalog/carrousel_3.png")
+
+    IMAGE_WIDTH: 166.0
     
     Carrousel = {{Carrousel}} {
-        walk: {width: 166, height: Fit}
+        walk: {width: (IMAGE_WIDTH), height: Fit}
         layout: {
             flow: Overlay,
             align: {x: 0.0, y: 0.0},
         }
 
         image1 = <Frame> {
-            visible: false,
             walk: {width: Fit, height: Fit}
             <Image> {
-                walk: {width: 166, height: 226}
+                walk: {width: (IMAGE_WIDTH), height: 226}
                 source: (CARROUSEL_1_IMG)
             }
         }
 
         image2 = <Frame> {
-            visible: false,
             walk: {width: Fit, height: Fit}
             <Image> {
-                walk: {width: 166, height: 226}
+                walk: {width: (IMAGE_WIDTH), height: 226}
                 source: (CARROUSEL_2_IMG)
             }
         }
 
         image3 = <Frame> {
-            visible: false,
             walk: {width: Fit, height: Fit}
             <Image> {
-                walk: {width: 166, height: 226}
+                walk: {width: (IMAGE_WIDTH), height: 226}
                 source: (CARROUSEL_3_IMG)
             }
         }
@@ -133,7 +134,7 @@ pub struct Carrousel {
     #[rust(0)]
     current_image_index: i32,
 
-    #[rust(1)]
+    #[rust(0)]
     previous_image_index: i32,
 
     #[rust(CarrouselDirection::Forward)]
@@ -158,8 +159,7 @@ impl LiveHook for Carrousel {
             self.get_frame(id!(indicator3)),
         ];
 
-        let (_, current_image) = self.get_active_images_containers();
-        current_image.set_visible(true);
+        self.reset_images_visibility();
 
         self.next_frame = cx.new_next_frame();
         self.animate_state(cx, id!(carrousel.keep));
@@ -226,11 +226,11 @@ impl Carrousel {
             match direction {
                 CarrouselDirection::Forward => {
                     Self::set_horizontal_margin(&mut current_image, offset, cx);
-                    Self::set_horizontal_margin(&mut prev_image, offset - 166.0, cx);
+                    Self::set_horizontal_margin(&mut prev_image, offset - IMAGE_WIDTH, cx);
                 },
                 CarrouselDirection::Backward => {
                     Self::set_horizontal_margin(&mut current_image, -offset, cx);
-                    Self::set_horizontal_margin(&mut prev_image, 166.0 - offset, cx);
+                    Self::set_horizontal_margin(&mut prev_image, IMAGE_WIDTH - offset, cx);
                 }
             }
         }
@@ -251,7 +251,7 @@ impl Carrousel {
             self.setup_next_animation(CarrouselDirection::Forward);
 
             let (_, mut current_image) = self.get_active_images_containers();
-            Self::set_horizontal_margin(&mut current_image, 166.0, cx);
+            Self::set_horizontal_margin(&mut current_image, IMAGE_WIDTH, cx);
             current_image.set_visible(true);
 
             self.animate_state(cx, id!(carrousel.restart));
@@ -283,15 +283,15 @@ impl Carrousel {
 
                     let initial_offset = if fe.abs.x > self.last_abs {
                         self.setup_next_animation(CarrouselDirection::Backward);
-                        166.0
+                        IMAGE_WIDTH
                     } else {
                         self.setup_next_animation(CarrouselDirection::Forward);
-                        -166.0
+                        -IMAGE_WIDTH
                     };
 
                     let (_, mut current_image) = self.get_active_images_containers();
                     Self::set_horizontal_margin(&mut current_image, initial_offset, cx);
-                    current_image.set_visible(true);
+                    self.reset_images_visibility();
 
                     self.animate_state(cx, id!(carrousel.restart));
                 }
@@ -309,6 +309,16 @@ impl Carrousel {
             },
             CarrouselDirection::Backward => {
                 self.current_image_index = (self.current_image_index - 1).rem_euclid(self.image_containers.len() as i32);
+            }
+        }
+    }
+
+    fn reset_images_visibility(&mut self) {
+        for (i, image) in self.image_containers.iter().enumerate() {
+            if i == self.current_image_index as usize || i == self.previous_image_index as usize {
+                image.set_visible(true);
+            } else {
+                image.set_visible(false);
             }
         }
     }
