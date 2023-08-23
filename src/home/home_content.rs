@@ -165,36 +165,45 @@ live_design! {
                 }
             }
 
-            image = <ImageFrame> {
+            <Frame> {
                 walk: {width: 160, height: 40}
-                layout: {flow: Down, spacing: 2., padding: 5.}
-                image: (BUY_IT_BANNER_IMG)
+                layout: {flow: Overlay}
+
+                <Image> {
+                    walk: {width: Fill, height: Fill}
+                    source: (BUY_IT_BANNER_IMG)
+                }
+
                 <Frame> {
-                    walk: {width: Fit, height: Fit}
-                    layout: {flow: Right, spacing: 1., align: {x: 0.0, y: 1.0}}
-                    <Label> {
-                        walk: {width: Fit, height: Fit, margin: {bottom: 2.}}
-                        label: "¥"
-                        draw_label: {
-                            color: #fff
-                            text_style: <REGULAR_TEXT> {font_size: 10.0},
+                    walk: {width: Fill, height: Fill}
+                    layout: {flow: Down, spacing: 2., padding: 5.}
+                    <Frame> {
+                        walk: {width: Fit, height: Fit}
+                        layout: {flow: Right, spacing: 1., align: {x: 0.0, y: 1.0}}
+                        <Label> {
+                            walk: {width: Fit, height: Fit, margin: {bottom: 2.}}
+                            label: "¥"
+                            draw_label: {
+                                color: #fff
+                                text_style: <REGULAR_TEXT> {font_size: 10.0},
+                            }
+                        }
+                        <Label> {
+                            walk: {width: Fit, height: Fit}
+                            label: "58"
+                            draw_label: {
+                                color: #fff
+                                text_style: <REGULAR_TEXT> {font_size: 14.0},
+                            }
                         }
                     }
                     <Label> {
                         walk: {width: Fit, height: Fit}
-                        label: "58"
+                        label: "USD 8.11"
                         draw_label: {
                             color: #fff
-                            text_style: <REGULAR_TEXT> {font_size: 14.0},
+                            text_style: <REGULAR_TEXT> {font_size: 8.0},
                         }
-                    }
-                }
-                <Label> {
-                    walk: {width: Fit, height: Fit}
-                    label: "USD 8.11"
-                    draw_label: {
-                        color: #fff
-                        text_style: <REGULAR_TEXT> {font_size: 8.0},
                     }
                 }
             }
