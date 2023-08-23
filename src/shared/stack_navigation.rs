@@ -57,7 +57,7 @@ live_design! {
 
     Header = <Frame> {
         walk: {width: Fill , height: Fit, margin: 0}
-        layout: {padding: {bottom: 15., top: 50.}, align: {x: 0.5, y: 0.0}, spacing: 0.0, flow: Overlay}
+        layout: {padding: {bottom: 15., top: 40.}, align: {x: 0.5, y: 0.0}, spacing: 0.0, flow: Overlay}
         show_bg: true
         draw_bg: {
             color: #f2
