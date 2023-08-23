@@ -1,9 +1,170 @@
 use makepad_widgets::widget::WidgetCache;
 use makepad_widgets::*;
 
-// TODO: Implement Header
 live_design! {
+    import makepad_draw::shader::std::*;
+    import makepad_draw::shader::draw_icon::*;
     import makepad_widgets::frame::*;
+    import makepad_widgets::image::*;
+    import makepad_widgets::label::Label;
+    import makepad_widgets::button::Button;
+
+    import crate::shared::helpers::*;
+
+    CURVED_ARROW_IMG = dep("crate://self/resources/curved_arrow.png")
+    MEATBALLS_MENU_IMG = dep("crate://self/resources/meatballs_menu.png")
+    BACK_ICON = dep("crate://self/resources/back.svg")
+    SEARCH_ICON = dep("crate://self/resources/search.svg")
+    CART_ICON = dep("crate://self/resources/cart.svg")
+
+    SearchBar = <Box> {
+        walk: {width: Fill, height: Fit, margin: 10.0}
+        layout: {flow: Right, align: {x: 0.0, y: 0.5}, padding: {left: 5., right: 5.}}
+        draw_bg: {
+            color: #fff,
+            radius: 10.
+        }
+
+        <Button> {
+            walk: {width: Fit, height: Fit}
+            icon_walk: {width: 16, height: 16}
+            draw_bg: {
+                fn pixel(self) -> vec4 {
+                    let sdf = Sdf2d::viewport(self.pos * self.rect_size);
+                    return sdf.result
+                }
+            }
+            draw_icon: {
+                svg_file: (SEARCH_ICON)
+                fn get_color(self) -> vec4 {
+                    return #8b
+                }
+            }
+        }
+
+        <Label> {
+            walk: {width: Fit, height: Fit}
+            label: "搜索"
+            draw_label: {
+                color: #8b
+                text_style:  {font_size: 10.0},
+            }
+        }
+
+        <FillerX> {}
+
+    }
+
+    Header = <Frame> {
+        walk: {width: Fill , height: Fit, margin: 0}
+        layout: {padding: {bottom: 15., top: 50.}, align: {x: 0.5, y: 0.0}, spacing: 0.0, flow: Overlay}
+        show_bg: true
+        draw_bg: {
+            color: #f2
+        }
+
+        content = <Frame> {
+            walk: {width: Fill, height: Fit}
+            layout: {flow: Down, spacing: 8.}
+
+            search_container = <Frame> {
+                walk: {width: Fill, height: Fit}
+                layout: {flow: Right, align: { y: 0.5}}
+
+                back_button = <Button> {
+                    walk: {width: 32, height: 32}
+                    icon_walk: {width: 14, height: 14}
+                    draw_bg: {
+                        fn pixel(self) -> vec4 {
+                            let sdf = Sdf2d::viewport(self.pos * self.rect_size);
+                            return sdf.result
+                        }
+                    }
+                    draw_icon: {
+                        svg_file: (BACK_ICON)
+                        fn get_color(self) -> vec4 {
+                            return #0
+                        }
+                    }
+                }
+
+                <SearchBar> {}
+
+                curved_arrow = <Image> {
+                    walk: {width: 32, height: 32}
+                    source: (CURVED_ARROW_IMG)
+                }
+
+                <Button> {
+                    walk: {width: Fit, height: Fit}
+                    icon_walk: {width: 16, height: 16}
+                    draw_bg: {
+                        fn pixel(self) -> vec4 {
+                            let sdf = Sdf2d::viewport(self.pos * self.rect_size);
+                            return sdf.result
+                        }
+                    }
+                    draw_icon: {
+                        svg_file: (CART_ICON)
+                        fn get_color(self) -> vec4 {
+                            return #0
+                        }
+                    }
+                }
+
+                meatballs_menu = <Image> {
+                    walk: {width: 32, height: 32}
+                    source: (MEATBALLS_MENU_IMG)
+                }
+            }
+
+            navigation_container = <Frame> {
+                walk: {width: Fill, height: Fit}
+                layout: {flow: Right}
+
+                <FillerX> {}
+                <Label> {
+                    walk: {width: Fit, height: Fit}
+                    label: "搜索"
+                    draw_label: {
+                        color: #0
+                        text_style:  {font_size: 14.0},
+                    }
+                }
+                <FillerX> {}
+
+                <Label> {
+                    walk: {width: Fit, height: Fit}
+                    label: "搜索"
+                    draw_label: {
+                        color: #0
+                        text_style:  {font_size: 14.0},
+                    }
+                }
+                <FillerX> {}
+
+                <Label> {
+                    walk: {width: Fit, height: Fit}
+                    label: "搜索"
+                    draw_label: {
+                        color: #0
+                        text_style:  {font_size: 14.0},
+                    }
+                }
+                <FillerX> {}
+
+                <Label> {
+                    walk: {width: Fit, height: Fit}
+                    label: "搜索"
+                    draw_label: {
+                        color: #0
+                        text_style:  {font_size: 14.0},
+                    }
+                }
+                <FillerX> {}
+            }
+        }
+    }
 
     StackNavigationView = {{StackNavigationView}} {
         visible: false
@@ -13,6 +174,9 @@ live_design! {
         draw_bg: {
             color: #fff
         }
+
+        // TODO: Implement Header
+        header = <Header> {}
 
         // TBD Adjust this based on actual screen size
         offset: 1000.0
@@ -106,7 +270,7 @@ impl StackNavigationView {
         }
 
         let actions = self.frame.handle_widget_event(cx, event);
-        if self.get_button(id!(left_button)).clicked(&actions) {
+        if self.get_button(id!(back_button)).clicked(&actions) {
             self.animate_state(cx, id!(slide.hide));
         }
 

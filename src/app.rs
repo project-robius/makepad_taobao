@@ -154,15 +154,7 @@ live_design! {
                 }
 
                 catalog_item_stack_view = <StackNavigationView> {
-                    header = {
-                        content = {
-                            title_container = {
-                                title = {
-                                    label: " "
-                                }
-                            }
-                        }
-                    }
+
                     catalog_item_screen = <CatalogItemScreen> {}
                 }
             }
@@ -243,10 +235,8 @@ impl AppMain for App {
                         .get_catalog_item(id!(catalog_item));
                     catalog_item_ref.set_catalog_item_id(id);
 
-                    stack_navigation.show_stack_view_by_id(
-                        LiveId::from_str("catalog_item_stack_view").unwrap(),
-                        cx,
-                    );
+                    stack_navigation
+                        .show_stack_view_by_id(LiveId::from_str("catalog_item_stack_view"), cx);
                 }
                 _ => {}
             }

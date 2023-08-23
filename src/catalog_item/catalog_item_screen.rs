@@ -11,7 +11,8 @@ live_design! {
 
     import crate::shared::styles::*;
     import crate::shared::helpers::*;
-    import crate::shared::search_bar::SearchBar;
+
+    CURVED_ARROW_IMG = dep("crate://self/resources/curved_arrow.png")
 
     CatalogItem = {{CatalogItem}} {
         walk: {width: Fill, height: Fill}
