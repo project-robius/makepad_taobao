@@ -138,7 +138,7 @@ live_design! {
                         self.rect_size.y + self.radius * 2.0,
                         max(1.0, self.radius)
                     )
-                    sdf.fill_keep(self.get_color())
+                    sdf.fill_keep(self.get_color(self.image_scale, self.image_pan))
                     sdf.stroke(#fff, 1);
                     return sdf.result
                 }
