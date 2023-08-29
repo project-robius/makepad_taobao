@@ -16,6 +16,7 @@ live_design! {
 
     CATALOG_RING_IMG = dep("crate://self/resources/catalog/ring.png")
     AVATAR_IMG = dep("crate://self/resources/default_avatar.png")
+    STAR_IMG = dep("crate://self/resources/star.png")
 
     Section = <Box> {
         walk: {width: Fill, height: Fit}
@@ -26,6 +27,34 @@ live_design! {
             radius: 5.
         }
     }
+
+    RecomendedItem = <Frame> {
+        walk: {width: Fit, height: Fit}
+        layout: {flow: Down, spacing: 10.}
+        <Image> {
+            walk: {width: 100, height: 100}
+            source: (CATALOG_RING_IMG)
+        }
+        <Label> {
+            walk: {width: Fill, height: Fit}
+            label: "每每减每2023每减每减每"
+            draw_label: {
+                color: #0
+                text_style: <REGULAR_TEXT> {font_size: 10},
+                wrap: Word
+            }
+        }
+        <Label> {
+            walk: {width: Fit, height: Fit}
+            label: "¥50"
+            draw_label: {
+                color: #f15603
+                text_style: <TITLE_TEXT> {font_size: 14.0},
+            }
+        }
+    }
+
+
     CatalogItem = {{CatalogItem}} {
         frame: <Frame> {
             walk: {width: Fill, height: Fit}
@@ -535,11 +564,258 @@ live_design! {
                                     }
                                 }
                             }
+                        }
 
+                    }
+                }
+
+                <Section> {
+                    layout: {padding: 0}
+                    <Frame> {
+                        walk: {width: Fill, height: Fit}
+                        layout: {flow: Down, spacing: 20., padding: {top: 20, left: 15, right: 15, bottom: 25}}
+                        show_bg: true
+                        draw_bg: {
+                            instance radius: 5.
+
+                            fn get_color(self) -> vec4 {
+                                return #a6213e
+                            }
+                            fn pixel(self) -> vec4 {
+                                let sdf = Sdf2d::viewport(self.pos * self.rect_size);
+                                sdf.box(
+                                    1,
+                                    1,
+                                    self.rect_size.x - 2.0,
+                                    // This calculation is to make sure the bottom part is not rounded
+                                    self.rect_size.y + self.radius * 2.0,
+                                    max(1.0, self.radius)
+                                )
+                                sdf.fill_keep(self.get_color())
+                                sdf.stroke(#a6213e, 1);
+                                return sdf.result
+                            }
+                        }
+
+                        <Frame> {
+                            walk: {width: Fill, height: Fit}
+                            layout: {flow: Right, spacing: 5.}
+                            // TODO: Make rounded
+                            <Image> {
+                                walk: {width: 50, height: 50}
+                                source: (CATALOG_RING_IMG)
+                            }
+
+                            <Frame> {
+                                walk: {width: Fill, height: Fit}
+                                layout: {flow: Down, spacing: 10.}
+
+                                <Label> {
+                                    label: "减减减减",
+                                    draw_label: {
+                                        color: #f
+                                        text_style: <TITLE_TEXT> {font_size: 10},
+                                    }
+                                }
+
+                                <Frame> {
+                                    walk: {width: Fill, height: Fit}
+                                    layout: {flow: Right, spacing: 5., align: {y: 0.5}}
+
+                                    <Box> {
+                                        walk: {width: Fit, height: Fit}
+                                        layout: {padding: {right: 6., left: 6., top: 3, bottom: 3}}
+                                        draw_bg: {
+                                            color: #fa0322,
+                                            radius: 4.
+                                        }
+                                        <Label> {
+                                            walk: {width: Fit, height: Fit}
+                                            label: "每每"
+                                            draw_label: {
+                                                color: #fff
+                                                text_style: <TITLE_TEXT> {font_size: 10.0},
+                                            }
+                                        }
+                                    }
+
+                                    <Box> {
+                                        walk: {width: Fit, height: Fit}
+                                        layout: {spacing: 5., align: {y: 0.5}, padding: {right: 6., left: 6., top: 3, bottom: 3}}
+                                        draw_bg: {
+                                            color: #43,
+                                            radius: 4.
+                                        }
+                                        <Label> {
+                                            walk: {width: Fit, height: Fit}
+                                            label: "每每"
+                                            draw_label: {
+                                                color: #f
+                                                text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                            }
+                                        }
+                                        <Frame> {
+                                            walk: {width: Fit, height: Fit}
+                                            layout: {align: {y: 0.5}}
+
+                                            <Image> {
+                                                walk: {width: 10, height: 10}
+                                                source: (STAR_IMG)
+                                            }
+                                            <Image> {
+                                                walk: {width: 10, height: 10}
+                                                source: (STAR_IMG)
+                                            }
+                                            <Image> {
+                                                walk: {width: 10, height: 10}
+                                                source: (STAR_IMG)
+                                            }
+                                            <Image> {
+                                                walk: {width: 10, height: 10}
+                                                source: (STAR_IMG)
+                                            }
+                                            <Image> {
+                                                walk: {width: 10, height: 10}
+                                                source: (STAR_IMG)
+                                            }
+                                        }
+                                    }
+                                    <Label> {
+                                        walk: {width: Fit, height: Fit}
+                                        label: "3.75每每"
+                                        draw_label: {
+                                            color: #f
+                                            text_style: <REGULAR_TEXT> {font_size: 8.0},
+                                        }
+                                    }
+                                }
+
+                                <Frame> {
+                                    walk: {width: Fill, height: Fit}
+                                    layout: {flow: Right, spacing: 5., align: {y: 0.5}}
+
+                                    <Label> {
+                                        walk: {width: Fit, height: Fit}
+                                        label: "每每3.75"
+                                        draw_label: {
+                                            color: #f
+                                            text_style: <REGULAR_TEXT> {font_size: 8.0},
+                                        }
+                                    }
+                                    <Label> {
+                                        walk: {width: Fit, height: Fit}
+                                        label: "每每3.75"
+                                        draw_label: {
+                                            color: #f
+                                            text_style: <REGULAR_TEXT> {font_size: 8.0},
+                                        }
+                                    }
+                                    <Label> {
+                                        walk: {width: Fit, height: Fit}
+                                        label: "每每3.75"
+                                        draw_label: {
+                                            color: #f
+                                            text_style: <REGULAR_TEXT> {font_size: 8.0},
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        <Frame> {
+                            walk: {width: Fill, height: Fit}
+                            layout: {flow: Right, spacing: 5., align: {x: 0.5}}
+                            <Box> {
+                                walk: {width: Fit, height: Fit}
+                                layout: {padding: {right: 12., left: 12., top: 5, bottom: 5}}
+                                draw_bg: {
+                                    color: #f,
+                                    radius: 4.
+                                }
+                                <Label> {
+                                    walk: {width: Fit, height: Fit}
+                                    label: "每每每每"
+                                    draw_label: {
+                                        color: (ORANGE_COLOR)
+                                        text_style: <TITLE_TEXT> {font_size: 14.0},
+                                    }
+                                }
+                            }
+                            <Box> {
+                                walk: {width: Fit, height: Fit}
+                                layout: {padding: {right: 12., left: 12., top: 5, bottom: 5}}
+                                draw_bg: {
+                                    color: #f,
+                                    radius: 4.
+                                }
+                                <Label> {
+                                    walk: {width: Fit, height: Fit}
+                                    label: "每每每每"
+                                    draw_label: {
+                                        color: (ORANGE_COLOR)
+                                        text_style: <TITLE_TEXT> {font_size: 14.0},
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    <Frame> {
+                        walk: {width: Fill, height: Fit}
+                        layout: {flow: Down, spacing: 10., padding: 10.}
+                        <Frame> {
+                            walk: {width: Fill, height: Fit}
+                            layout: {flow: Right, spacing: 10., align: {y: 0.5}}
+
+                            <Label> {
+                                label: "每减每 (5)"
+                                draw_label: {
+                                    color: #0
+                                    text_style: <TITLE_TEXT> {font_size: 11},
+                                }
+                            }
+
+                            <FillerX> {}
+
+                            <Label> {
+                                walk: {width: Fit, height: Fit}
+                                label: "每减 >"
+                                draw_label: {
+                                    color: (ORANGE_COLOR)
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                        }
+                    }
+
+                    <Frame> {
+                        walk: {width: Fill, height: Fit}
+                        layout: {flow: Down, spacing: 5., align: {x: 0.5}}
+
+                        <Frame> {
+                            walk: {width: Fit, height: Fit}
+                            layout: {flow: Right, spacing: 5.}
+                            <RecomendedItem> {}
+                            <RecomendedItem> {}
+                            <RecomendedItem> {}
+                        }
+                        <Frame> {
+                            walk: {width: Fit, height: Fit}
+                            layout: {flow: Right, spacing: 5.}
+                            <RecomendedItem> {}
+                            <RecomendedItem> {}
+                            <RecomendedItem> {}
                         }
                     }
                 }
             }
+        }
+    }
+
+    CatalogItemScrollable = {{CatalogItemScrollable}} {
+        list_view: <ListView> {
+            walk: {width: Fill, height: Fill}
+            layout: {flow: Down, spacing: 0.0}
+            catalog_item = <CatalogItem> {}
         }
     }
 
@@ -548,7 +824,7 @@ live_design! {
         layout: {flow: Down}
         show_bg: true,
 
-        catalog_item = <CatalogItem> {}
+        catalog_item_scrollable = <CatalogItemScrollable> {}
     }
 }
 
@@ -578,9 +854,9 @@ impl Widget for CatalogItem {
         event: &Event,
         dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
     ) {
-        let _actions = self.frame.handle_widget_event(cx, event);
+        let actions = self.frame.handle_widget_event(cx, event);
 
-        for action in _actions {
+        for action in actions {
             dispatch_action(cx, action);
         }
     }
@@ -611,5 +887,71 @@ impl CatalogItemRef {
         if let Some(mut inner) = self.borrow_mut() {
             inner.catalog_item_id = catalog_item_id;
         }
+    }
+}
+
+#[derive(Live)]
+pub struct CatalogItemScrollable {
+    #[live]
+    walk: Walk,
+    #[live]
+    layout: Layout,
+    #[live]
+    list_view: ListView,
+}
+
+impl LiveHook for CatalogItemScrollable {
+    fn before_live_design(cx: &mut Cx) {
+        register_widget!(cx, CatalogItemScrollable);
+    }
+}
+
+impl Widget for CatalogItemScrollable {
+    fn handle_widget_event_with(
+        &mut self,
+        cx: &mut Cx,
+        event: &Event,
+        dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
+    ) {
+        let actions = self.list_view.handle_widget_event(cx, event);
+
+        for action in actions {
+            dispatch_action(cx, action);
+        }
+    }
+
+    fn get_walk(&self) -> Walk {
+        self.walk
+    }
+
+    fn redraw(&mut self, cx: &mut Cx) {
+        self.list_view.redraw(cx)
+    }
+
+    fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
+        self.draw_walk(cx, walk);
+        WidgetDraw::done()
+    }
+}
+
+impl CatalogItemScrollable {
+    pub fn draw_walk(&mut self, cx: &mut Cx2d, walk: Walk) {
+        cx.begin_turtle(walk, self.layout);
+
+        self.list_view.set_item_range(0, 2, 0);
+
+        while self.list_view.draw_widget(cx).hook_widget().is_some() {
+            while let Some(item_id) = self.list_view.next_visible_item(cx) {
+                if item_id > 0 {
+                    continue;
+                }
+                let template = id!(catalog_item);
+                let item = self.list_view.get_item(cx, item_id, template[0]).unwrap();
+
+                item.draw_widget_all(cx);
+            }
+        }
+
+        cx.end_turtle();
     }
 }
