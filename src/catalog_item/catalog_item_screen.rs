@@ -1,6 +1,8 @@
 use makepad_widgets::widget::WidgetCache;
 use makepad_widgets::*;
 
+// TODO: Use the item ID to get the data dynamically
+
 live_design! {
     import makepad_draw::shader::std::*;
     import makepad_widgets::frame::*;
@@ -12,15 +14,532 @@ live_design! {
     import crate::shared::styles::*;
     import crate::shared::helpers::*;
 
-    CURVED_ARROW_IMG = dep("crate://self/resources/curved_arrow.png")
+    CATALOG_RING_IMG = dep("crate://self/resources/catalog/ring.png")
+    AVATAR_IMG = dep("crate://self/resources/default_avatar.png")
 
+    Section = <Box> {
+        walk: {width: Fill, height: Fit}
+        layout: {flow: Down, spacing: 10., padding: 10.}
+        show_bg: true
+        draw_bg: {
+            color: #fff
+            radius: 5.
+        }
+    }
     CatalogItem = {{CatalogItem}} {
-        walk: {width: Fill, height: Fill}
-        layout: {flow: Right, spacing: 10., padding: 0.}
-
         frame: <Frame> {
-            walk: {width: Fill, height: Fill}
-            layout: {flow: Down, spacing: 0.}
+            walk: {width: Fill, height: Fit}
+            layout: {flow: Down, spacing: 0., padding: 0.}
+            show_bg: true
+            draw_bg: {
+                color: (BACKGROUND_COLOR)
+            }
+
+            main_image = <Image> {
+                walk: {width: Fill, height: 300}
+                source: (CATALOG_RING_IMG)
+            }
+
+            sections = <Frame> {
+                walk: {width: Fill, height: Fit}
+                layout: {flow: Down, spacing: 10., padding: 10.}
+
+                <Section> {
+                    price_container = <Frame> {
+                        walk: {width: Fit, height: Fit}
+                        layout: {align: {y: 0.5}, flow: Right, spacing: 5.}
+                        <Label> {
+                            walk: {width: Fit, height: Fit}
+                            label: "¥50"
+                            draw_label: {
+                                color: #f15603
+                                text_style: <TITLE_TEXT> {font_size: 14.0},
+                            }
+                        }
+                        <Box> {
+                            walk: {width: Fit, height: Fit}
+                            layout: {padding: {right:10.0, left: 10., top: 5, bottom: 5}}
+                            draw_bg: {
+                                color: #f15603,
+                                radius: 7.
+                            }
+                            <Label> {
+                                walk: {width: Fit, height: Fit}
+                                label: "每每每每 ¥3000"
+                                draw_label: {
+                                    color: #fff
+                                    text_style: <TITLE_TEXT> {font_size: 14.0},
+                                }
+                            }
+                        }
+                    }
+                    <Frame> {
+                        walk: {width: Fill, height: Fit}
+                        layout: {flow: Right}
+
+                        <Box> {
+                            walk: {width: Fit, height: Fit}
+                            layout: {padding: 3.0}
+                            draw_bg: {
+                                color: #ffe9e5,
+                                radius: 2.
+                            }
+                            <Label> {
+                                walk: {width: Fit, height: Fit}
+                                label: "每300减40"
+                                draw_label: {
+                                    color: (ORANGE_COLOR)
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                        }
+
+                        <FillerX> {}
+
+                        <Label> {
+                            walk: {width: Fit, height: Fit}
+                            label: "每减 >"
+                            draw_label: {
+                                color: (ORANGE_COLOR)
+                                text_style: <REGULAR_TEXT> {font_size: 10.0},
+                            }
+                        }
+                    }
+
+                    <Frame> {
+                        walk: {width: Fill, height: Fit}
+                        layout: {flow: Right}
+
+                        <Box> {
+                            walk: {width: Fit, height: Fit}
+                            layout: {padding: {right: 6., left: 6., top: 3, bottom: 3}}
+                            draw_bg: {
+                                color: #fa0322,
+                                radius: 4.
+                            }
+                            <Label> {
+                                walk: {width: Fit, height: Fit}
+                                label: "每每"
+                                draw_label: {
+                                    color: #fff
+                                    text_style: <TITLE_TEXT> {font_size: 10.0},
+                                }
+                            }
+                        }
+
+                        <FillerX> {}
+
+                        <Label> {
+                            walk: {width: Fit, height: Fit}
+                            label: "每减 100+"
+                            draw_label: {
+                                color: #9d
+                                text_style: <REGULAR_TEXT> {font_size: 10.0},
+                            }
+                        }
+                    }
+
+                    <Label> {
+                        walk: {width: Fill, height: Fit}
+                        label: "萨帕托斯萨帕托斯萨帕托斯萨帕托斯萨帕托斯萨帕托斯萨帕托斯斯萨帕托斯"
+                        draw_label: {
+                            color: #0
+                            text_style: <TITLE_TEXT> {font_size: 10.0},
+                        }
+                    }
+                }
+
+                <Section> {
+                    layout: {spacing: 20}
+                    <Frame> {
+                        walk: {width: Fill, height: Fit}
+                        layout: {flow: Right, spacing: 20.}
+
+                        <Frame> {
+                            walk: {width: Fit, height: Fit}
+                            layout: {flow: Right, align: {x: 0, y: 0}}
+                            <Label> {
+                                label: "每减"
+                                draw_label: {
+                                    color: #9d
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                        }
+
+                        <Frame> {
+                            walk: {width: Fill, height: Fit}
+                            layout: {flow: Down, spacing: 3.}
+                            <Label> {
+                                label: "每减每减每减"
+                                draw_label: {
+                                    color: #0
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                            <Frame> {
+                                walk: {width: Fit, height: Fit}
+                                layout: {flow: Right, spacing: 3.}
+                                <Image> {
+                                    walk: {width: 30, height: 30}
+                                    source: (CATALOG_RING_IMG)
+                                }
+                                <Image> {
+                                    walk: {width: 30, height: 30}
+                                    source: (CATALOG_RING_IMG)
+                                }
+                                <Image> {
+                                    walk: {width: 30, height: 30}
+                                    source: (CATALOG_RING_IMG)
+                                }
+                            }
+                        }
+
+                        <Frame> {
+                            walk: {width: Fit, height: Fit}
+                            layout: {flow: Right, align: {x: 1, y: 1}}
+                            <Label> {
+                                label: ">"
+                                draw_label: {
+                                    color: #9d
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                        }
+                    }
+
+                    <Frame> {
+                        walk: {width: Fill, height: Fit}
+                        layout: {flow: Right, spacing: 20.}
+
+                        <Frame> {
+                            walk: {width: Fit, height: Fit}
+                            layout: {flow: Right, align: {x: 0, y: 0}}
+                            <Label> {
+                                label: "每减"
+                                draw_label: {
+                                    color: #9d
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                        }
+
+                        <Frame> {
+                            walk: {width: Fill, height: Fit}
+                            layout: {flow: Down, spacing: 5.}
+                            <Label> {
+                                label: "每减每减每减"
+                                draw_label: {
+                                    color: #0
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                            <Label> {
+                                label: "每减: 每减"
+                                draw_label: {
+                                    color: #9d
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                        }
+
+                        <Frame> {
+                            walk: {width: Fit, height: Fit}
+                            layout: {flow: Right, align: {x: 1, y: 1}}
+                            <Label> {
+                                label: ">"
+                                draw_label: {
+                                    color: #9d
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                        }
+                    }
+
+                    <Frame> {
+                        walk: {width: Fill, height: Fit}
+                        layout: {flow: Right, spacing: 20.}
+
+                        <Frame> {
+                            walk: {width: Fit, height: Fit}
+                            layout: {flow: Right, align: {x: 0, y: 0}}
+                            <Label> {
+                                label: "每减"
+                                draw_label: {
+                                    color: #9d
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                        }
+
+                        <Frame> {
+                            walk: {width: Fill, height: Fit}
+                            layout: {flow: Down, spacing: 5.}
+
+                            <Label> {
+                                label: "每减每减每减"
+                                draw_label: {
+                                    color: #0
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                        }
+
+                        <Frame> {
+                            walk: {width: Fit, height: Fit}
+                            layout: {flow: Right, align: {x: 1, y: 1}}
+                            <Label> {
+                                label: ">"
+                                draw_label: {
+                                    color: #9d
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                        }
+                    }
+                }
+
+                <Section> {
+                    layout: {spacing: 30.}
+                    <Frame> {
+                        walk: {width: Fill, height: Fit}
+                        layout: {flow: Down, spacing: 10.}
+                        <Frame> {
+                            walk: {width: Fill, height: Fit}
+                            layout: {flow: Right, spacing: 10., align: {y: 0.5}}
+
+                            <Label> {
+                                label: "每减每 (400+)"
+                                draw_label: {
+                                    color: #0
+                                    text_style: <TITLE_TEXT> {font_size: 11},
+                                }
+                            }
+
+                            <FillerX> {}
+
+                            <Label> {
+                                label: "每减每 >"
+                                draw_label: {
+                                    color: (ORANGE_COLOR)
+                                    text_style: <TITLE_TEXT> {font_size: 10},
+                                }
+                            }
+                        }
+
+                        <Frame> {
+                            walk: {width: Fill, height: Fit}
+                            layout: {flow: Right, spacing: 5}
+                            <Box> {
+                                walk: {width: Fit, height: Fit}
+                                layout: {padding: 6.0}
+                                draw_bg: {
+                                    color: #ffe9e5,
+                                    radius: 3.
+                                }
+                                <Label> {
+                                    walk: {width: Fit, height: Fit}
+                                    label: "每减 (40)"
+                                    draw_label: {
+                                        color: #0,
+                                        text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                    }
+                                }
+                            }
+                            <Box> {
+                                walk: {width: Fit, height: Fit}
+                                layout: {padding: 6.0}
+                                draw_bg: {
+                                    color: #ffe9e5,
+                                    radius: 3.
+                                }
+                                <Label> {
+                                    walk: {width: Fit, height: Fit}
+                                    label: "每减 (70)"
+                                    draw_label: {
+                                        color: #0,
+                                        text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                    }
+                                }
+                            }
+                            <Box> {
+                                walk: {width: Fit, height: Fit}
+                                layout: {padding: 6.0}
+                                draw_bg: {
+                                    color: #ffe9e5,
+                                    radius: 3.
+                                }
+                                <Label> {
+                                    walk: {width: Fit, height: Fit}
+                                    label: "每减 (90)"
+                                    draw_label: {
+                                        color: #0,
+                                        text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                    }
+                                }
+                            }
+                        }
+
+                        <Frame> {
+                            walk: {width: Fill, height: Fit}
+                            layout: {flow: Down, spacing: 10.}
+
+                            <Frame> {
+                                walk: {width: Fill, height: Fit}
+                                layout: {flow: Right, spacing: 5, align: {y: 0.5}}
+
+                                <Image> {
+                                    walk: {width: 25, height: 25}
+                                    source: (AVATAR_IMG)
+                                }
+                                <Label> {
+                                    walk: {width: Fit, height: Fit}
+                                    label: "每减减减"
+                                    draw_label: {
+                                        color: #0,
+                                        text_style: <REGULAR_TEXT> {font_size: 8.0},
+                                    }
+                                }
+                            }
+                            <Label> {
+                                walk: {width: Fit, height: Fit}
+                                label: "每减每减"
+                                draw_label: {
+                                    color: #9d
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                        }
+                        <Frame> {
+                            walk: {width: Fill, height: Fit}
+                            layout: {flow: Down, spacing: 10.}
+
+                            <Frame> {
+                                walk: {width: Fill, height: Fit}
+                                layout: {flow: Right, spacing: 5, align: {y: 0.5}}
+
+                                <Image> {
+                                    walk: {width: 25, height: 25}
+                                    source: (AVATAR_IMG)
+                                }
+                                <Label> {
+                                    walk: {width: Fit, height: Fit}
+                                    label: "每减减减"
+                                    draw_label: {
+                                        color: #0,
+                                        text_style: <REGULAR_TEXT> {font_size: 8.0},
+                                    }
+                                }
+                            }
+                            <Label> {
+                                walk: {width: Fit, height: Fit}
+                                label: "每每减每减减"
+                                draw_label: {
+                                    color: #9d
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                        }
+                    }
+
+                    <Frame> {
+                        walk: {width: Fill, height: Fit}
+                        layout: {flow: Down, spacing: 20.}
+
+                        <Frame> {
+                            walk: {width: Fill, height: Fit}
+                            layout: {flow: Right, spacing: 10., align: {y: 0.5}}
+
+                            <Label> {
+                                label: "每减每 (5)"
+                                draw_label: {
+                                    color: #0
+                                    text_style: <TITLE_TEXT> {font_size: 11},
+                                }
+                            }
+
+                            <FillerX> {}
+
+                            <Label> {
+                                label: ">",
+                                draw_label: {
+                                    color: #9d
+                                    text_style: <TITLE_TEXT> {font_size: 10},
+                                }
+                            }
+                        }
+
+                        <Frame> {
+                            walk: {width: Fill, height: Fit}
+                            layout: {flow: Down, spacing: 10., padding: {left: 20.}}
+
+                            <Frame> {
+                                walk: {width: Fill, height: Fit}
+                                layout: {flow: Right, spacing: 10.}
+
+                                <Label> {
+                                    label: "问",
+                                    draw_label: {
+                                        color: (ORANGE_COLOR)
+                                        text_style: <REGULAR_TEXT> {font_size: 10},
+                                    }
+                                }
+
+                                <Label> {
+                                    label: "每减减减 减减",
+                                    draw_label: {
+                                        color: #0
+                                        text_style: <REGULAR_TEXT> {font_size: 10},
+                                    }
+                                }
+
+                                <FillerX> {}
+
+
+                                <Label> {
+                                    label: "6减减",
+                                    draw_label: {
+                                        color: #9d
+                                        text_style: <REGULAR_TEXT> {font_size: 10},
+                                    }
+                                }
+                            }
+                            <Frame> {
+                                walk: {width: Fill, height: Fit}
+                                layout: {flow: Right, spacing: 10.}
+
+                                <Label> {
+                                    label: "问",
+                                    draw_label: {
+                                        color: (ORANGE_COLOR)
+                                        text_style: <REGULAR_TEXT> {font_size: 10},
+                                    }
+                                }
+
+                                <Label> {
+                                    label: "每减减减 减减每减减减 减减",
+                                    draw_label: {
+                                        color: #0
+                                        text_style: <REGULAR_TEXT> {font_size: 10},
+                                    }
+                                }
+
+                                <FillerX> {}
+
+
+                                <Label> {
+                                    label: "6减减",
+                                    draw_label: {
+                                        color: #9d
+                                        text_style: <REGULAR_TEXT> {font_size: 10},
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
         }
     }
 
