@@ -1,3 +1,6 @@
+use crate::catalog_item::catalog_item_screen::CatalogItemWidgetRefExt;
+use crate::home::home_content::CatalogItemListAction;
+use crate::shared::stack_navigation::StackNavigationWidgetRefExt;
 use makepad_widgets::*;
 
 live_design! {
@@ -6,7 +9,9 @@ live_design! {
     import makepad_widgets::radio_button::RadioButton
 
     import crate::shared::styles::*
+    import crate::shared::stack_navigation::*
     import crate::home::home_screen::HomeScreen
+    import crate::catalog_item::catalog_item_screen::*
 
     HOME_ICON = dep("crate://self/resources/home.svg")
     DISCOVER_ICON = dep("crate://self/resources/discover.svg")
@@ -36,114 +41,121 @@ live_design! {
             pass: {clear_color: (BACKGROUND_COLOR)}
             block_signal_event: true;
 
-            <Frame> {
-                walk: {width: Fill, height: Fill}
-                layout: {padding: 0, align: {x: 0.0, y: 0.0}, spacing: 0., flow: Down}
+            navigation = <StackNavigation> {
+                root_view = {
+                    walk: {width: Fill, height: Fill}
+                    layout: {padding: 0, align: {x: 0.0, y: 0.0}, spacing: 0., flow: Down}
 
-                application_pages = <Frame> {
-                    walk: {margin: 0.0}
-                    layout: {padding: 0.0}
+                    application_pages = <Frame> {
+                        walk: {margin: 0.0}
+                        layout: {padding: 0.0}
 
-                    tab1_frame = <HomeScreen> {visible: true}
-                    tab2_frame = <Frame> {visible: false}
-                    tab3_frame = <Frame> {visible: false}
-                    tab4_frame = <Frame> {visible: false}
-                    tab5_frame = <Frame> {visible: false}
+                        tab1_frame = <HomeScreen> {visible: true}
+                        tab2_frame = <Frame> {visible: false}
+                        tab3_frame = <Frame> {visible: false}
+                        tab4_frame = <Frame> {visible: false}
+                        tab5_frame = <Frame> {visible: false}
+                    }
+
+                    mobile_menu = <Box> {
+                        walk: {width: Fill, height: 80}
+                        layout: {flow: Right, spacing: 6.0, padding: 10}
+                        draw_bg: {
+                            instance radius: 0.0,
+                            instance border_width: 1.0,
+                            instance border_color: #aaa,
+                            color: (BACKGROUND_COLOR)
+                        }
+
+                        mobile_modes = <Frame> {
+                            tab1 = <AppTab> {
+                                label: "首页"
+                                draw_icon: {
+                                    svg_file: (HOME_ICON),
+                                    fn get_color(self) -> vec4 {
+                                        return mix(
+                                            #000,
+                                            #0b0,
+                                            self.selected
+                                        )
+                                    }
+                                }
+                                walk: {width: Fill}
+                                icon_walk: {width: 20, height: 20}
+                                layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
+                            }
+                            tab2 = <AppTab> {
+                                state: {selected = {default: on}}
+                                label: "发现",
+                                draw_icon: {
+                                    svg_file: (DISCOVER_ICON),
+                                    fn get_color(self) -> vec4 {
+                                        return mix(
+                                            #000,
+                                            #0b0,
+                                            self.selected
+                                        )
+                                    }
+                                }
+                                walk: {width: Fill}
+                                icon_walk: {width: 20, height: 20}
+                                layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
+                            }
+                            tab3 = <AppTab> {
+                                label: "消息",
+                                draw_icon: {
+                                    svg_file: (INFO_ICON),
+                                    fn get_color(self) -> vec4 {
+                                        return mix(
+                                            #000,
+                                            #0b0,
+                                            self.selected
+                                        )
+                                    }
+                                }
+                                walk: {width: Fill}
+                                icon_walk: {width: 20, height: 20}
+                                layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
+                            }
+                            tab4 = <AppTab> {
+                                label: "购物车",
+                                draw_icon: {
+                                    svg_file: (CART_ICON),
+                                    fn get_color(self) -> vec4 {
+                                        return mix(
+                                            #000,
+                                            #0b0,
+                                            self.selected
+                                        )
+                                    }
+                                }
+                                walk: {width: Fill}
+                                icon_walk: {width: 20, height: 20}
+                                layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
+                            }
+                            tab5 = <AppTab> {
+                                label: "我的淘宝",
+                                draw_icon: {
+                                    svg_file: (MY_TAOBAO_ICON),
+                                    fn get_color(self) -> vec4 {
+                                        return mix(
+                                            #000,
+                                            #0b0,
+                                            self.selected
+                                        )
+                                    }
+                                }
+                                walk: {width: Fill}
+                                icon_walk: {width: 20, height: 20}
+                                layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
+                            }
+                        }
+                    }
                 }
 
-                mobile_menu = <Box> {
-                    walk: {width: Fill, height: 80}
-                    layout: {flow: Right, spacing: 6.0, padding: 10}
-                    draw_bg: {
-                        instance radius: 0.0,
-                        instance border_width: 1.0,
-                        instance border_color: #aaa,
-                        color: (BACKGROUND_COLOR)
-                    }
+                catalog_item_stack_view = <StackNavigationView> {
 
-                    mobile_modes = <Frame> {
-                        tab1 = <AppTab> {
-                            label: "首页"
-                            draw_icon: {
-                                svg_file: (HOME_ICON),
-                                fn get_color(self) -> vec4 {
-                                    return mix(
-                                        #000,
-                                        #0b0,
-                                        self.selected
-                                    )
-                                }
-                            }
-                            walk: {width: Fill}
-                            icon_walk: {width: 20, height: 20}
-                            layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
-                        }
-                        tab2 = <AppTab> {
-                            state: {selected = {default: on}}
-                            label: "发现",
-                            draw_icon: {
-                                svg_file: (DISCOVER_ICON),
-                                fn get_color(self) -> vec4 {
-                                    return mix(
-                                        #000,
-                                        #0b0,
-                                        self.selected
-                                    )
-                                }
-                            }
-                            walk: {width: Fill}
-                            icon_walk: {width: 20, height: 20}
-                            layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
-                        }
-                        tab3 = <AppTab> {
-                            label: "消息",
-                            draw_icon: {
-                                svg_file: (INFO_ICON),
-                                fn get_color(self) -> vec4 {
-                                    return mix(
-                                        #000,
-                                        #0b0,
-                                        self.selected
-                                    )
-                                }
-                            }
-                            walk: {width: Fill}
-                            icon_walk: {width: 20, height: 20}
-                            layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
-                        }
-                        tab4 = <AppTab> {
-                            label: "购物车",
-                            draw_icon: {
-                                svg_file: (CART_ICON),
-                                fn get_color(self) -> vec4 {
-                                    return mix(
-                                        #000,
-                                        #0b0,
-                                        self.selected
-                                    )
-                                }
-                            }
-                            walk: {width: Fill}
-                            icon_walk: {width: 20, height: 20}
-                            layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
-                        }
-                        tab5 = <AppTab> {
-                            label: "我的淘宝",
-                            draw_icon: {
-                                svg_file: (MY_TAOBAO_ICON),
-                                fn get_color(self) -> vec4 {
-                                    return mix(
-                                        #000,
-                                        #0b0,
-                                        self.selected
-                                    )
-                                }
-                            }
-                            walk: {width: Fill}
-                            icon_walk: {width: 20, height: 20}
-                            layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
-                        }
-                    }
+                    catalog_item_screen = <CatalogItemScreen> {}
                 }
             }
         }
@@ -167,6 +179,8 @@ impl LiveHook for App {
         // shared
         crate::shared::styles::live_design(cx);
         crate::shared::helpers::live_design(cx);
+        crate::shared::clickable_frame::live_design(cx);
+        crate::shared::stack_navigation::live_design(cx);
 
         // home
         crate::home::helpers::live_design(cx);
@@ -174,6 +188,9 @@ impl LiveHook for App {
         crate::home::home_content::live_design(cx);
         crate::home::search_terms::live_design(cx);
         crate::home::carrousel::live_design(cx);
+
+        // catalog_item
+        crate::catalog_item::catalog_item_screen::live_design(cx);
     }
 }
 
@@ -205,5 +222,24 @@ impl AppMain for App {
                 application_pages.tab5_frame,
             ),
         );
+
+        for action in actions {
+            match action.action() {
+                CatalogItemListAction::Click(id) => {
+                    let mut stack_navigation = ui.get_stack_navigation(id!(navigation));
+
+                    // TODO: Set stack navigation data, like header title, etc
+
+                    let catalog_item_ref = stack_navigation
+                        .get_frame(id!(catalog_item_stack_view.catalog_item_screen))
+                        .get_catalog_item(id!(catalog_item));
+                    catalog_item_ref.set_catalog_item_id(id);
+
+                    stack_navigation
+                        .show_stack_view_by_id(LiveId::from_str("catalog_item_stack_view"), cx);
+                }
+                _ => {}
+            }
+        }
     }
 }
