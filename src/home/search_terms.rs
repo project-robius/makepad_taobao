@@ -112,6 +112,11 @@ impl Widget for SearchTerms {
             self.get_label(id!(label)).redraw(cx);
             self.next_frame = cx.new_next_frame();
         }
+
+        // Fixes a bug where the carrousel would not animate returning from stack navigation
+        if let Event::NextFrame(_) = event {
+            self.next_frame = cx.new_next_frame();
+        }
     }
 
     fn get_walk(&self) -> Walk {

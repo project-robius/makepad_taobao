@@ -183,7 +183,7 @@ impl Widget for Carrousel {
     }
 
     fn redraw(&mut self, cx: &mut Cx) {
-        self.frame.redraw(cx)
+        self.frame.redraw(cx);
     }
 
     fn find_widgets(&mut self, path: &[LiveId], cached: WidgetCache, results: &mut WidgetSet) {
@@ -191,7 +191,9 @@ impl Widget for Carrousel {
     }
 
     fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
-        self.frame.draw_walk_widget(cx, walk)
+        let _ = self.frame.draw_walk_widget(cx, walk);
+        self.next_frame = cx.new_next_frame();
+        WidgetDraw::done()
     }
 }
 
@@ -203,6 +205,11 @@ impl Carrousel {
             } else {
                 self.fire_next_animation(cx);
             }
+            self.next_frame = cx.new_next_frame();
+        }
+
+        // Fixes a bug where the carrousel would not animate returning from stack navigation
+        if let Event::NextFrame(_) = event {
             self.next_frame = cx.new_next_frame();
         }
     }
