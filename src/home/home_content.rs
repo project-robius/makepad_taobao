@@ -117,95 +117,99 @@ live_design! {
 
     CatalogItem = <ClickableFrame> {
         walk: {width: 166, height: Fit}
-        layout: {flow: Down, align: {x: 0.5, y: 0.0}, spacing: 2.0}
 
-        draw_bg: {
-            color: #fff,
-            radius: 8.
-        }
-
-        image = <Image> {
-            walk: {width: 166, height: 166}
-            source: (CATALOG_FLIP_FLOPS_IMG)
-
-            // Override to have the upper corners rounded
-            draw_bg: {
-                instance radius: 8.
-                fn pixel(self) -> vec4 {
-                    let sdf = Sdf2d::viewport(self.pos * self.rect_size);
-                    sdf.box(
-                        1,
-                        1,
-                        self.rect_size.x - 2.0,
-                        // This calculation is to make sure the bottom part is not rounded
-                        self.rect_size.y + self.radius * 2.0,
-                        max(1.0, self.radius)
-                    )
-                    sdf.fill_keep(self.get_color(self.image_scale, self.image_pan))
-                    sdf.stroke(#fff, 1);
-                    return sdf.result
-                }
-            }
-        }
-        info = <Frame> {
+        container = <Box> {
             walk: {width: Fill, height: Fit}
-            layout: {flow: Down, padding: 5., spacing: 3.}
-            title = <Label> {
-                walk: {width: Fill, height: Fit}
-                label: "男士人字拖 2023"
-                draw_label: {
-                    color: #000
-                    text_style: <REGULAR_TEXT> {font_size: 12.0},
-                }
+            layout: {flow: Down, align: {x: 0.5, y: 0.0}, spacing: 2.0}
+
+            draw_bg: {
+                color: #fff,
+                radius: 8.
             }
 
-            subtitle = <Label> {
-                walk: {width: Fill, height: Fit}
-                label: "500+人付费"
-                draw_label: {
-                    color: #888
-                    text_style: <REGULAR_TEXT> {font_size: 8.0},
+            image = <Image> {
+                walk: {width: 166, height: 166}
+                source: (CATALOG_FLIP_FLOPS_IMG)
+
+                // Override to have the upper corners rounded
+                draw_bg: {
+                    instance radius: 8.
+                    fn pixel(self) -> vec4 {
+                        let sdf = Sdf2d::viewport(self.pos * self.rect_size);
+                        sdf.box(
+                            1,
+                            1,
+                            self.rect_size.x - 2.0,
+                            // This calculation is to make sure the bottom part is not rounded
+                            self.rect_size.y + self.radius * 2.0,
+                            max(1.0, self.radius)
+                        )
+                        sdf.fill_keep(self.get_color())
+                        sdf.stroke(#fff, 1);
+                        return sdf.result
+                    }
                 }
             }
+            info = <Frame> {
+                walk: {width: Fill, height: Fit}
+                layout: {flow: Down, padding: 5., spacing: 3.}
+                title = <Label> {
+                    walk: {width: Fill, height: Fit}
+                    label: "男士人字拖 2023"
+                    draw_label: {
+                        color: #000
+                        text_style: <REGULAR_TEXT> {font_size: 12.0},
+                    }
+                }
 
-            <Frame> {
-                walk: {width: 160, height: 40}
-                layout: {flow: Overlay}
-
-                <Image> {
-                    walk: {width: Fill, height: Fill}
-                    source: (BUY_IT_BANNER_IMG)
+                subtitle = <Label> {
+                    walk: {width: Fill, height: Fit}
+                    label: "500+人付费"
+                    draw_label: {
+                        color: #888
+                        text_style: <REGULAR_TEXT> {font_size: 8.0},
+                    }
                 }
 
                 <Frame> {
-                    walk: {width: Fill, height: Fill}
-                    layout: {flow: Down, spacing: 2., padding: 5.}
+                    walk: {width: 160, height: 40}
+                    layout: {flow: Overlay}
+
+                    <Image> {
+                        walk: {width: Fill, height: Fill}
+                        source: (BUY_IT_BANNER_IMG)
+                    }
+
                     <Frame> {
-                        walk: {width: Fit, height: Fit}
-                        layout: {flow: Right, spacing: 1., align: {x: 0.0, y: 1.0}}
-                        <Label> {
-                            walk: {width: Fit, height: Fit, margin: {bottom: 2.}}
-                            label: "¥"
-                            draw_label: {
-                                color: #fff
-                                text_style: <REGULAR_TEXT> {font_size: 10.0},
+                        walk: {width: Fill, height: Fill}
+                        layout: {flow: Down, spacing: 2., padding: 5.}
+                        <Frame> {
+                            walk: {width: Fit, height: Fit}
+                            layout: {flow: Right, spacing: 1., align: {x: 0.0, y: 1.0}}
+                            <Label> {
+                                walk: {width: Fit, height: Fit, margin: {bottom: 2.}}
+                                label: "¥"
+                                draw_label: {
+                                    color: #fff
+                                    text_style: <REGULAR_TEXT> {font_size: 10.0},
+                                }
+                            }
+                            <Label> {
+                                walk: {width: Fit, height: Fit}
+                                label: "58"
+                                draw_label: {
+                                    color: #fff
+                                    text_style: <REGULAR_TEXT> {font_size: 14.0},
+                                }
                             }
                         }
                         <Label> {
                             walk: {width: Fit, height: Fit}
-                            label: "58"
+                            label: "USD 8.11"
                             draw_label: {
                                 color: #fff
-                                text_style: <REGULAR_TEXT> {font_size: 14.0},
+                                text_style: <REGULAR_TEXT> {font_size: 8.0},
                             }
-                        }
-                    }
-                    <Label> {
-                        walk: {width: Fit, height: Fit}
-                        label: "USD 8.11"
-                        draw_label: {
-                            color: #fff
-                            text_style: <REGULAR_TEXT> {font_size: 8.0},
                         }
                     }
                 }
@@ -214,20 +218,22 @@ live_design! {
     }
 
     CatalogItemWithOffer = <CatalogItem> {
-        info = {
-            <Box> {
-                walk: {width: Fit, height: Fit}
-                layout: {padding: 3.0}
-                draw_bg: {
-                    color: (LIGHT_ORANGE_COLOR),
-                    radius: 2.
-                }
-                <Label> {
+        container = {
+            info = {
+                <Box> {
                     walk: {width: Fit, height: Fit}
-                    label: "每300减40"
-                    draw_label: {
-                        color: (ORANGE_COLOR)
-                        text_style: <REGULAR_TEXT> {font_size: 8.0},
+                    layout: {padding: 3.0}
+                    draw_bg: {
+                        color: (LIGHT_ORANGE_COLOR),
+                        radius: 2.
+                    }
+                    <Label> {
+                        walk: {width: Fit, height: Fit}
+                        label: "每300减40"
+                        draw_label: {
+                            color: (ORANGE_COLOR)
+                            text_style: <REGULAR_TEXT> {font_size: 8.0},
+                        }
                     }
                 }
             }
@@ -243,37 +249,37 @@ live_design! {
         left = <CatalogItem> {}
         <FillerX> {}
         right = <CatalogItemWithOffer> {
-            image = { source: (CATALOG_COSMETICS_IMG) }
+            container = { image = { source: (CATALOG_COSMETICS_IMG) } }
         }
     }
 
     CatalogPair2 = <CatalogPairBase> {
         left = <CatalogItemWithOffer> {
-            image = { source: (CATALOG_LIVING_FURNITURE_IMG) }
+            container = { image = { source: (CATALOG_LIVING_FURNITURE_IMG) } }
         }
         <FillerX> {}
         right = <CatalogItemWithOffer> {
-            image = { source: (CATALOG_SEUL_COLLECTION_IMG) }
+            container = { image = { source: (CATALOG_SEUL_COLLECTION_IMG) } }
         }
     }
 
     CatalogPair3 = <CatalogPairBase> {
         left = <CatalogItem> {
-            image = { source: (CATALOG_MEAL_IMG) }
+            container = { image = { source: (CATALOG_MEAL_IMG) } }
         }
         <FillerX> {}
         right = <CatalogItem> {
-            image = { source: (CATALOG_PROTEIN_IMG) }
+            container = { image = { source: (CATALOG_PROTEIN_IMG) } }
         }
     }
 
     CatalogPair4 = <CatalogPairBase> {
         left = <CatalogItemWithOffer> {
-            image = { source: (CATALOG_RING_IMG) }
+            container = { image = { source: (CATALOG_RING_IMG) } }
         }
         <FillerX> {}
         right = <CatalogItem> {
-            image = { source: (CATALOG_ROUTER_IMG) }
+            container = { image = { source: (CATALOG_ROUTER_IMG) } }
         }
     }
 
