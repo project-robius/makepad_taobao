@@ -13,10 +13,18 @@ live_design! {
     }
 }
 
+enum ClickState {
+    None,
+    Down(DVec2),
+}
+
 #[derive(Live)]
 pub struct ClickableFrame {
     #[deref]
     frame: Frame,
+
+    #[rust(ClickState::None)]
+    click_state: ClickState
 }
 
 impl LiveHook for ClickableFrame {
@@ -63,28 +71,75 @@ impl Widget for ClickableFrame {
 }
 
 impl ClickableFrame {
+    fn area(&self) -> Area {
+        self.frame.area()
+    }
+
     pub fn handle_event_with(
         &mut self,
         cx: &mut Cx,
         event: &Event,
         dispatch_action: &mut dyn FnMut(&mut Cx, ClickableFrameAction),
     ) {
-        match event.hits(cx, self.frame.area()) {
-            Hit::FingerUp(fe) => {
-                if fe.is_over {
-                    dispatch_action(cx, ClickableFrameAction::Click);
+        match event {
+            Event::MouseDown(e) => {
+                let rect = self.area().get_clipped_rect(&cx);
+                if rect.contains(e.abs) {
+                    self.click_state = ClickState::Down(e.abs);
                 }
             }
-            Hit::FingerHoverIn(_) => {
-                cx.set_cursor(MouseCursor::Hand);
-                //self.animate_state(cx, id!(hover.on));
+            Event::MouseUp(e) => {
+                if let ClickState::Down(abs) = self.click_state {
+                    let rect = self.area().get_clipped_rect(&cx);
+                    if rect.contains(e.abs) && e.abs.distance(&abs) < 10.0 {
+                        dispatch_action(cx, ClickableFrameAction::Click);
+                    }
+                }
+                self.click_state = ClickState::None;
             }
-            Hit::FingerHoverOut(_) => {
-                cx.set_cursor(MouseCursor::Arrow);
-                //self.animate_state(cx, id!(hover.off));
+
+            // NOTE This code requires that TouchState to be exported in platform/src/lib.rs 
+            Event::TouchUpdate(e) => {
+                for t in &e.touches {
+                    match t.state {
+                        TouchState::Start => {
+                            let rect = self.area().get_clipped_rect(&cx);
+                            if rect.contains(t.abs) {
+                                self.click_state = ClickState::Down(t.abs);
+                            }
+                        },
+                        TouchState::Stop => {
+                            if let ClickState::Down(abs) = self.click_state {
+                                let rect = self.area().get_clipped_rect(&cx);
+                                if rect.contains(t.abs) && t.abs.distance(&abs) < 10.0 {
+                                    dispatch_action(cx, ClickableFrameAction::Click);
+                                }
+                            }
+                            self.click_state = ClickState::None;
+                        },
+                        _ => ()
+                    }
+                }
             }
             _ => (),
         }
+
+        // match event.hits(cx, self.frame.area()) {
+        //     Hit::FingerUp(fe) => {
+        //         if fe.is_over {
+        //             dispatch_action(cx, ClickableFrameAction::Click);
+        //         }
+        //     }
+        //     Hit::FingerHoverIn(_) => {
+        //         cx.set_cursor(MouseCursor::Hand);
+        //         //self.animate_state(cx, id!(hover.on));
+        //     }
+        //     Hit::FingerHoverOut(_) => {
+        //         cx.set_cursor(MouseCursor::Arrow);
+        //         //self.animate_state(cx, id!(hover.off));
+        //     }
+        //     _ => (),
+        // }
     }
 }
 
