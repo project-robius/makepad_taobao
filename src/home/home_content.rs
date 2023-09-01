@@ -1,17 +1,17 @@
 use crate::home::catalog_data::*;
 use crate::home::home_content::icon_atlas::HashMap;
-use crate::shared::clickable_frame::ClickableFrameAction;
+use crate::shared::clickable_view::ClickableViewAction;
 use makepad_widgets::*;
 
 live_design! {
-    import makepad_widgets::frame::*;
-    import makepad_widgets::label::*;
+    import makepad_widgets::view::*;
+    import makepad_widgets::text::*;
     import makepad_widgets::image::*;
     import makepad_widgets::list_view::ListView;
     import makepad_draw::shader::std::*;
 
     import crate::shared::styles::*;
-    import crate::shared::clickable_frame::*;
+    import crate::shared::clickable_view::*;
     import crate::shared::helpers::*;
     import crate::home::helpers::*;
     import crate::home::carrousel::*;
@@ -43,41 +43,41 @@ live_design! {
     FEATURED_7_IMG = dep("crate://self/resources/featured/featured_7.png")
     FEATURED_8_IMG = dep("crate://self/resources/featured/featured_8.png")
 
-    Options = <Frame> {
+    Options = <View> {
       walk: {width: Fill, height: Fit}
       layout: {flow: Right, align: {x: 0.0, y: 0.5}, spacing: 10.0, padding: {left: 40., right: 40.}}
 
       <IconWithText> {
           image = { source: (TAOBAO_COINS_IMG) }
-          caption = { label: "淘宝币" }
+          caption = { text: "淘宝币" }
       }
 
       <FillerX> {}
 
       <IconWithText> {
           image = { source: (HELP_CENTER_IMG) }
-          caption = { label: "帮助中心" }
+          caption = { text: "帮助中心" }
       }
 
       <FillerX> {}
 
       <IconWithText> {
           image = { source: (LOGISTICS_IMG) }
-          caption = { label: "物流中心" }
+          caption = { text: "物流中心" }
       }
 
       <FillerX> {}
 
       <IconWithText> {
           image = { source: (PAYMENTS_IMG) }
-          caption = { label: "支付中心" }
+          caption = { text: "支付中心" }
       }
 
       <FillerX> {}
 
       <IconWithText> {
           image = { source: (GLOBAL_DEALS_IMG) }
-          caption = { label: "全球优惠" }
+          caption = { text: "全球优惠" }
       }
   }
 
@@ -91,7 +91,7 @@ live_design! {
 
       <Label> {
           walk: {width: Fit, height: Fit, margin: {top: 20., bottom: 20.}}
-          label: "支付支持"
+          text: "支付支持"
           draw_label: {
               color: #000
               text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -111,11 +111,11 @@ live_design! {
 
       <IconWithText> {
           image = { source: (SHIPPING_ESTIMATE_IMG), walk: {width: 32, height: 32} }
-          caption = { label: "货运价格估计" }
+          caption = { text: "货运价格估计" }
       }
   }
 
-    CatalogItem = <ClickableFrame> {
+    CatalogItem = <ClickableView> {
         walk: {width: 166, height: Fit}
 
         container = <Box> {
@@ -150,12 +150,12 @@ live_design! {
                     }
                 }
             }
-            info = <Frame> {
+            info = <View> {
                 walk: {width: Fill, height: Fit}
                 layout: {flow: Down, padding: 5., spacing: 3.}
                 title = <Label> {
                     walk: {width: Fill, height: Fit}
-                    label: "男士人字拖 2023"
+                    text: "男士人字拖 2023"
                     draw_label: {
                         color: #000
                         text_style: <REGULAR_TEXT> {font_size: 12.0},
@@ -164,14 +164,14 @@ live_design! {
 
                 subtitle = <Label> {
                     walk: {width: Fill, height: Fit}
-                    label: "500+人付费"
+                    text: "500+人付费"
                     draw_label: {
                         color: #888
                         text_style: <REGULAR_TEXT> {font_size: 8.0},
                     }
                 }
 
-                <Frame> {
+                <View> {
                     walk: {width: 160, height: 40}
                     layout: {flow: Overlay}
 
@@ -180,15 +180,15 @@ live_design! {
                         source: (BUY_IT_BANNER_IMG)
                     }
 
-                    <Frame> {
+                    <View> {
                         walk: {width: Fill, height: Fill}
                         layout: {flow: Down, spacing: 2., padding: 5.}
-                        <Frame> {
+                        <View> {
                             walk: {width: Fit, height: Fit}
                             layout: {flow: Right, spacing: 1., align: {x: 0.0, y: 1.0}}
                             <Label> {
                                 walk: {width: Fit, height: Fit, margin: {bottom: 2.}}
-                                label: "¥"
+                                text: "¥"
                                 draw_label: {
                                     color: #fff
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -196,7 +196,7 @@ live_design! {
                             }
                             <Label> {
                                 walk: {width: Fit, height: Fit}
-                                label: "58"
+                                text: "58"
                                 draw_label: {
                                     color: #fff
                                     text_style: <REGULAR_TEXT> {font_size: 14.0},
@@ -205,7 +205,7 @@ live_design! {
                         }
                         <Label> {
                             walk: {width: Fit, height: Fit}
-                            label: "USD 8.11"
+                            text: "USD 8.11"
                             draw_label: {
                                 color: #fff
                                 text_style: <REGULAR_TEXT> {font_size: 8.0},
@@ -229,7 +229,7 @@ live_design! {
                     }
                     <Label> {
                         walk: {width: Fit, height: Fit}
-                        label: "每300减40"
+                        text: "每300减40"
                         draw_label: {
                             color: (ORANGE_COLOR)
                             text_style: <REGULAR_TEXT> {font_size: 8.0},
@@ -240,7 +240,7 @@ live_design! {
         }
     }
 
-    CatalogPairBase = <Frame> {
+    CatalogPairBase = <View> {
         walk: {width: Fill, height: Fit}
         layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
     }
@@ -283,22 +283,22 @@ live_design! {
         }
     }
 
-    Featured1 = <Frame> {
+    Featured1 = <View> {
         walk: {width: Fill, height: Fit, margin: 10.}
         layout: {flow: Right, align: {x: 0.0, y: 0.0}, spacing: 10.0}
 
         <Carrousel> {}
-        <Frame> {
+        <View> {
             walk: {width: Fill, height: Fit}
             layout: {flow: Down, spacing: 0}
             <FeaturedBoxWithHighlightBox> {
                 header = {
                     label = {
-                        label: "淘宝直播"
+                        text: "淘宝直播"
                     }
                     highlight = {
                         label = {
-                            label: "直播中"
+                            text: "直播中"
                         }
                     }
                 }
@@ -309,7 +309,7 @@ live_design! {
                             walk: {width: 60, height: 56}
                         }
                         label = {
-                            label: "爆款直降"
+                            text: "爆款直降"
                         }
                     }
 
@@ -319,7 +319,7 @@ live_design! {
                             walk: {width: 46, height: 60}
                         }
                         label = {
-                            label: "优质好货"
+                            text: "优质好货"
                         }
                     }
                 }
@@ -327,7 +327,7 @@ live_design! {
             <FeaturedBox> {
                 header = {
                     label = {
-                        label: "聚划算"
+                        text: "聚划算"
                     }
                 }
                 content = {
@@ -337,7 +337,7 @@ live_design! {
                             walk: {width: 60, height: 62}
                         }
                         label = {
-                            label: "爆款直降"
+                            text: "爆款直降"
                         }
                     }
 
@@ -347,7 +347,7 @@ live_design! {
                             walk: {width: 60, height: 49}
                         }
                         label = {
-                            label: "抢大红包"
+                            text: "抢大红包"
                         }
                     }
                 }
@@ -355,17 +355,17 @@ live_design! {
         }
     }
 
-    Featured2 = <Frame> {
+    Featured2 = <View> {
         walk: {width: Fill, height: Fit, margin: 10.}
         layout: {flow: Right, align: {x: 0.0, y: 0.0}, spacing: 10.0}
 
         <FeaturedBoxWithHighlightLabel> {
             header = {
                 label = {
-                    label: "百亿补贴"
+                    text: "百亿补贴"
                 }
                 highlight = {
-                    label: "品牌正品"
+                    text: "品牌正品"
                 }
             }
             content = {
@@ -375,7 +375,7 @@ live_design! {
                         walk: {width: 54, height: 60}
                     }
                     label = {
-                        label: "爆款直降"
+                        text: "爆款直降"
                     }
                 }
 
@@ -385,7 +385,7 @@ live_design! {
                         walk: {width: 60, height: 36}
                     }
                     label = {
-                        label: "优质好货"
+                        text: "优质好货"
                     }
                 }
             }
@@ -393,10 +393,10 @@ live_design! {
         <FeaturedBoxWithHighlightLabel> {
             header = {
                 label = {
-                    label: "有好货"
+                    text: "有好货"
                 }
                 highlight = {
-                    label: "用过才好说"
+                    text: "用过才好说"
                     draw_label: {
                         color: #x93edea
                     }
@@ -409,7 +409,7 @@ live_design! {
                         walk: {width: 54, height: 62}
                     }
                     label = {
-                        label: "爆款直降"
+                        text: "爆款直降"
                     }
                 }
 
@@ -419,7 +419,7 @@ live_design! {
                         walk: {width: 60, height: 28}
                     }
                     label = {
-                        label: "优质好货"
+                        text: "优质好货"
                     }
                 }
             }
@@ -482,7 +482,7 @@ impl Widget for HomeContent {
         });
     }
 
-    fn get_walk(&self) -> Walk {
+    fn walk(&self) -> Walk {
         self.walk
     }
 
@@ -514,7 +514,7 @@ impl HomeContent {
 
         for (catalog_item_id, action) in actions {
             match action.action() {
-                ClickableFrameAction::Click => {
+                ClickableViewAction::Click => {
                     dispatch_action(cx, CatalogItemListAction::Click(*catalog_item_id))
                 }
                 _ => (),
@@ -541,31 +541,31 @@ impl HomeContent {
                     x if (x - 2) % 4 == 2 => id!(catalog_pair_3),
                     _ => id!(catalog_pair_4),
                 };
-                let item = self.list_view.get_item(cx, item_id, template[0]).unwrap();
+                let item = self.list_view.item(cx, item_id, template[0]).unwrap();
 
                 if item_id > 2 && item_id < pairs_count + 4 {
                     let data_left = &self.data[((item_id - 3) * 3) as usize];
                     let data_right = &self.data[((item_id - 3) * 3 + 1) as usize];
 
                     self.catalog_item_view_map
-                        .insert(item.get_widget(id!(left)).widget_uid().0, data_left.id);
+                        .insert(item.widget(id!(left)).widget_uid().0, data_left.id);
                     self.catalog_item_view_map
-                        .insert(item.get_widget(id!(right)).widget_uid().0, data_right.id);
+                        .insert(item.widget(id!(right)).widget_uid().0, data_right.id);
 
-                    if let Some(mut catalog_pair) = item.borrow_mut::<Frame>() {
+                    if let Some(mut catalog_pair) = item.borrow_mut::<View>() {
                         catalog_pair
-                            .get_label(id!(left.info.title))
-                            .set_label(&data_left.title);
+                            .label(id!(left.info.title))
+                            .set_text(&data_left.title);
                         catalog_pair
-                            .get_label(id!(left.info.subtitle))
-                            .set_label(&data_left.subtitle);
+                            .label(id!(left.info.subtitle))
+                            .set_text(&data_left.subtitle);
 
                         catalog_pair
-                            .get_label(id!(right.info.title))
-                            .set_label(&data_right.title);
+                            .label(id!(right.info.title))
+                            .set_text(&data_right.title);
                         catalog_pair
-                            .get_label(id!(right.info.subtitle))
-                            .set_label(&data_right.subtitle);
+                            .label(id!(right.info.subtitle))
+                            .set_text(&data_right.subtitle);
                     }
                 }
                 item.draw_widget_all(cx);

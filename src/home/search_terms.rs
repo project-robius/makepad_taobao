@@ -2,8 +2,8 @@ use makepad_widgets::*;
 use makepad_widgets::widget::WidgetCache;
 
 live_design! {
-    import makepad_widgets::frame::*;
-    import makepad_widgets::label::*;
+    import makepad_widgets::view::*;
+    import makepad_widgets::text::*;
     import makepad_widgets::text_input::TextInput;
     
     import crate::shared::styles::*;
@@ -18,7 +18,7 @@ live_design! {
 
         label = <Label> {
             walk: {width: Fill, height: Fit, margin: { top: 10.0 } }
-            label: "通讯录"
+            text: "通讯录"
 
             draw_label: {
                 color: #333,
@@ -26,7 +26,7 @@ live_design! {
             }
         }
 
-        state: {
+        animator: {
             carrousel = {
                 default: show,
                 show = {
@@ -51,13 +51,13 @@ live_design! {
 #[derive(Live)]
 pub struct SearchTerms {
     #[deref]
-    frame: Frame,
+    view: View,
 
-    #[state]
-    state: LiveState,
+    #[animator]
+    animator: Animator,
 
     #[rust]
-    next_frame: NextFrame,
+    next_view: NextFrame,
 
     #[rust]
     terms: Vec<String>,
@@ -79,8 +79,8 @@ impl LiveHook for SearchTerms {
         ];
         self.current_term_index = 0;
 
-        self.next_frame = cx.new_next_frame();
-        self.animate_state(cx, id!(carrousel.show));
+        self.next_view = cx.new_next_frame();
+        self.animator_play(cx, id!(carrousel.show));
     }
 }
 
@@ -91,47 +91,47 @@ impl Widget for SearchTerms {
         event: &Event,
         _dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
     ) {
-        if let Some(_ne) = self.next_frame.is_event(event) {
+        if let Some(_ne) = self.next_view.is_event(event) {
             // Control animations when they are done
-            if !self.state_handle_event(cx, event).is_animating() {
-                if self.state.is_in_state(cx, id!(carrousel.show)) {
-                    self.animate_state(cx, id!(carrousel.keep));
-                } else if self.state.is_in_state(cx, id!(carrousel.keep)) {
-                    self.animate_state(cx, id!(carrousel.hide));
-                } else if self.state.is_in_state(cx, id!(carrousel.hide)) {
+            if !self.animator_handle_event(cx, event).is_animating() {
+                if self.animator.animator_in_state(cx, id!(carrousel.show)) {
+                    self.animator_play(cx, id!(carrousel.keep));
+                } else if self.animator.animator_in_state(cx, id!(carrousel.keep)) {
+                    self.animator_play(cx, id!(carrousel.hide));
+                } else if self.animator.animator_in_state(cx, id!(carrousel.hide)) {
                     // Show new term
                     self.current_term_index += 1;
                     if self.current_term_index >= self.terms.len() as i32 {
                         self.current_term_index = 0;
                     }
-                    self.get_label(id!(label)).set_label(&self.terms[self.current_term_index as usize]);
+                    self.label(id!(label)).set_text(&self.terms[self.current_term_index as usize]);
 
-                    self.animate_state(cx, id!(carrousel.show));
+                    self.animator_play(cx, id!(carrousel.show));
                 }
             }
-            self.get_label(id!(label)).redraw(cx);
-            self.next_frame = cx.new_next_frame();
+            self.label(id!(label)).redraw(cx);
+            self.next_view = cx.new_next_frame();
         }
 
         // Fixes a bug where the carrousel would not animate returning from stack navigation
         if let Event::NextFrame(_) = event {
-            self.next_frame = cx.new_next_frame();
+            self.next_view = cx.new_next_frame();
         }
     }
 
-    fn get_walk(&self) -> Walk {
-        self.frame.get_walk()
+    fn walk(&self) -> Walk {
+        self.view.walk()
     }
 
     fn redraw(&mut self, cx: &mut Cx) {
-        self.frame.redraw(cx)
+        self.view.redraw(cx)
     }
 
     fn find_widgets(&mut self, path: &[LiveId], cached: WidgetCache, results: &mut WidgetSet) {
-        self.frame.find_widgets(path, cached, results);
+        self.view.find_widgets(path, cached, results);
     }
 
     fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
-        self.frame.draw_walk_widget(cx, walk)
+        self.view.draw_walk_widget(cx, walk)
     }
 }

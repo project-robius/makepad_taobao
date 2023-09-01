@@ -5,7 +5,7 @@ use makepad_widgets::*;
 
 live_design! {
     import makepad_widgets::desktop_window::DesktopWindow
-    import makepad_widgets::frame::*
+    import makepad_widgets::view::*
     import makepad_widgets::radio_button::RadioButton
 
     import crate::shared::styles::*
@@ -46,15 +46,15 @@ live_design! {
                     walk: {width: Fill, height: Fill}
                     layout: {padding: 0, align: {x: 0.0, y: 0.0}, spacing: 0., flow: Down}
 
-                    application_pages = <Frame> {
+                    application_pages = <View> {
                         walk: {margin: 0.0}
                         layout: {padding: 0.0}
 
                         tab1_frame = <HomeScreen> {visible: true}
-                        tab2_frame = <Frame> {visible: false}
-                        tab3_frame = <Frame> {visible: false}
-                        tab4_frame = <Frame> {visible: false}
-                        tab5_frame = <Frame> {visible: false}
+                        tab2_frame = <View> {visible: false}
+                        tab3_frame = <View> {visible: false}
+                        tab4_frame = <View> {visible: false}
+                        tab5_frame = <View> {visible: false}
                     }
 
                     mobile_menu = <Box> {
@@ -67,9 +67,9 @@ live_design! {
                             color: (BACKGROUND_COLOR)
                         }
 
-                        mobile_modes = <Frame> {
+                        mobile_modes = <View> {
                             tab1 = <AppTab> {
-                                label: "首页"
+                                text: "首页"
                                 draw_icon: {
                                     svg_file: (HOME_ICON),
                                     fn get_color(self) -> vec4 {
@@ -86,7 +86,7 @@ live_design! {
                             }
                             tab2 = <AppTab> {
                                 state: {selected = {default: on}}
-                                label: "发现",
+                                text: "发现",
                                 draw_icon: {
                                     svg_file: (DISCOVER_ICON),
                                     fn get_color(self) -> vec4 {
@@ -102,7 +102,7 @@ live_design! {
                                 layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
                             }
                             tab3 = <AppTab> {
-                                label: "消息",
+                                text: "消息",
                                 draw_icon: {
                                     svg_file: (INFO_ICON),
                                     fn get_color(self) -> vec4 {
@@ -118,7 +118,7 @@ live_design! {
                                 layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
                             }
                             tab4 = <AppTab> {
-                                label: "购物车",
+                                text: "购物车",
                                 draw_icon: {
                                     svg_file: (CART_ICON),
                                     fn get_color(self) -> vec4 {
@@ -134,7 +134,7 @@ live_design! {
                                 layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
                             }
                             tab5 = <AppTab> {
-                                label: "我的淘宝",
+                                text: "我的淘宝",
                                 draw_icon: {
                                     svg_file: (MY_TAOBAO_ICON),
                                     fn get_color(self) -> vec4 {
@@ -179,7 +179,7 @@ impl LiveHook for App {
         // shared
         crate::shared::styles::live_design(cx);
         crate::shared::helpers::live_design(cx);
-        crate::shared::clickable_frame::live_design(cx);
+        crate::shared::clickable_view::live_design(cx);
         crate::shared::stack_navigation::live_design(cx);
 
         // home
@@ -203,7 +203,7 @@ impl AppMain for App {
         let ui = self.ui.clone();
         let actions = ui.handle_widget_event(cx, event);
 
-        ui.get_radio_button_set(ids!(
+        ui.radio_button_set(ids!(
             mobile_modes.tab1,
             mobile_modes.tab2,
             mobile_modes.tab3,
@@ -226,13 +226,13 @@ impl AppMain for App {
         for action in actions {
             match action.action() {
                 CatalogItemListAction::Click(id) => {
-                    let mut stack_navigation = ui.get_stack_navigation(id!(navigation));
+                    let mut stack_navigation = ui.stack_navigation(id!(navigation));
 
                     // TODO: Set stack navigation data, like header title, etc
 
                     let catalog_item_ref = stack_navigation
-                        .get_frame(id!(catalog_item_stack_view.catalog_item_screen))
-                        .get_catalog_item(id!(catalog_item));
+                        .view(id!(catalog_item_stack_view.catalog_item_screen))
+                        .catalog_item(id!(catalog_item));
                     catalog_item_ref.set_catalog_item_id(id);
 
                     stack_navigation

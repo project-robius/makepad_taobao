@@ -5,8 +5,8 @@ use makepad_widgets::*;
 
 live_design! {
     import makepad_draw::shader::std::*;
-    import makepad_widgets::frame::*;
-    import makepad_widgets::label::*;
+    import makepad_widgets::view::*;
+    import makepad_widgets::text::*;
     import makepad_widgets::list_view::ListView;
     import makepad_widgets::text_input::TextInput;
     import makepad_widgets::image::*;
@@ -28,7 +28,7 @@ live_design! {
         }
     }
 
-    RecomendedItem = <Frame> {
+    RecomendedItem = <View> {
         walk: {width: Fit, height: Fit}
         layout: {flow: Down, spacing: 10.}
         <Image> {
@@ -37,7 +37,7 @@ live_design! {
         }
         <Label> {
             walk: {width: Fill, height: Fit}
-            label: "每每减每2023每减每减每"
+            text: "每每减每2023每减每减每"
             draw_label: {
                 color: #0
                 text_style: <REGULAR_TEXT> {font_size: 10},
@@ -46,7 +46,7 @@ live_design! {
         }
         <Label> {
             walk: {width: Fit, height: Fit}
-            label: "¥50"
+            text: "¥50"
             draw_label: {
                 color: #f15603
                 text_style: <TITLE_TEXT> {font_size: 14.0},
@@ -56,7 +56,7 @@ live_design! {
 
 
     CatalogItem = {{CatalogItem}} {
-        frame: <Frame> {
+        frame: <View> {
             walk: {width: Fill, height: Fit}
             layout: {flow: Down, spacing: 0., padding: 0.}
             show_bg: true
@@ -69,17 +69,17 @@ live_design! {
                 source: (CATALOG_RING_IMG)
             }
 
-            sections = <Frame> {
+            sections = <View> {
                 walk: {width: Fill, height: Fit}
                 layout: {flow: Down, spacing: 10., padding: 10.}
 
                 <Section> {
-                    price_container = <Frame> {
+                    price_container = <View> {
                         walk: {width: Fit, height: Fit}
                         layout: {align: {y: 0.5}, flow: Right, spacing: 5.}
                         <Label> {
                             walk: {width: Fit, height: Fit}
-                            label: "¥50"
+                            text: "¥50"
                             draw_label: {
                                 color: #f15603
                                 text_style: <TITLE_TEXT> {font_size: 14.0},
@@ -94,7 +94,7 @@ live_design! {
                             }
                             <Label> {
                                 walk: {width: Fit, height: Fit}
-                                label: "每每每每 ¥3000"
+                                text: "每每每每 ¥3000"
                                 draw_label: {
                                     color: #fff
                                     text_style: <TITLE_TEXT> {font_size: 14.0},
@@ -102,7 +102,7 @@ live_design! {
                             }
                         }
                     }
-                    <Frame> {
+                    <View> {
                         walk: {width: Fill, height: Fit}
                         layout: {flow: Right}
 
@@ -115,7 +115,7 @@ live_design! {
                             }
                             <Label> {
                                 walk: {width: Fit, height: Fit}
-                                label: "每300减40"
+                                text: "每300减40"
                                 draw_label: {
                                     color: (ORANGE_COLOR)
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -127,7 +127,7 @@ live_design! {
 
                         <Label> {
                             walk: {width: Fit, height: Fit}
-                            label: "每减 >"
+                            text: "每减 >"
                             draw_label: {
                                 color: (ORANGE_COLOR)
                                 text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -135,7 +135,7 @@ live_design! {
                         }
                     }
 
-                    <Frame> {
+                    <View> {
                         walk: {width: Fill, height: Fit}
                         layout: {flow: Right}
 
@@ -148,7 +148,7 @@ live_design! {
                             }
                             <Label> {
                                 walk: {width: Fit, height: Fit}
-                                label: "每每"
+                                text: "每每"
                                 draw_label: {
                                     color: #fff
                                     text_style: <TITLE_TEXT> {font_size: 10.0},
@@ -160,7 +160,7 @@ live_design! {
 
                         <Label> {
                             walk: {width: Fit, height: Fit}
-                            label: "每减 100+"
+                            text: "每减 100+"
                             draw_label: {
                                 color: #9d
                                 text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -170,7 +170,7 @@ live_design! {
 
                     <Label> {
                         walk: {width: Fill, height: Fit}
-                        label: "萨帕托斯萨帕托斯萨帕托斯萨帕托斯萨帕托斯萨帕托斯萨帕托斯斯萨帕托斯"
+                        text: "萨帕托斯萨帕托斯萨帕托斯萨帕托斯萨帕托斯萨帕托斯萨帕托斯斯萨帕托斯"
                         draw_label: {
                             color: #0
                             text_style: <TITLE_TEXT> {font_size: 10.0},
@@ -180,15 +180,15 @@ live_design! {
 
                 <Section> {
                     layout: {spacing: 20}
-                    <Frame> {
+                    <View> {
                         walk: {width: Fill, height: Fit}
                         layout: {flow: Right, spacing: 20.}
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fit, height: Fit}
                             layout: {flow: Right, align: {x: 0, y: 0}}
                             <Label> {
-                                label: "每减"
+                                text: "每减"
                                 draw_label: {
                                     color: #9d
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -196,17 +196,17 @@ live_design! {
                             }
                         }
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fill, height: Fit}
                             layout: {flow: Down, spacing: 3.}
                             <Label> {
-                                label: "每减每减每减"
+                                text: "每减每减每减"
                                 draw_label: {
                                     color: #0
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
                                 }
                             }
-                            <Frame> {
+                            <View> {
                                 walk: {width: Fit, height: Fit}
                                 layout: {flow: Right, spacing: 3.}
                                 <Image> {
@@ -224,11 +224,11 @@ live_design! {
                             }
                         }
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fit, height: Fit}
                             layout: {flow: Right, align: {x: 1, y: 1}}
                             <Label> {
-                                label: ">"
+                                text: ">"
                                 draw_label: {
                                     color: #9d
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -237,15 +237,15 @@ live_design! {
                         }
                     }
 
-                    <Frame> {
+                    <View> {
                         walk: {width: Fill, height: Fit}
                         layout: {flow: Right, spacing: 20.}
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fit, height: Fit}
                             layout: {flow: Right, align: {x: 0, y: 0}}
                             <Label> {
-                                label: "每减"
+                                text: "每减"
                                 draw_label: {
                                     color: #9d
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -253,18 +253,18 @@ live_design! {
                             }
                         }
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fill, height: Fit}
                             layout: {flow: Down, spacing: 5.}
                             <Label> {
-                                label: "每减每减每减"
+                                text: "每减每减每减"
                                 draw_label: {
                                     color: #0
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
                                 }
                             }
                             <Label> {
-                                label: "每减: 每减"
+                                text: "每减: 每减"
                                 draw_label: {
                                     color: #9d
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -272,11 +272,11 @@ live_design! {
                             }
                         }
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fit, height: Fit}
                             layout: {flow: Right, align: {x: 1, y: 1}}
                             <Label> {
-                                label: ">"
+                                text: ">"
                                 draw_label: {
                                     color: #9d
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -285,15 +285,15 @@ live_design! {
                         }
                     }
 
-                    <Frame> {
+                    <View> {
                         walk: {width: Fill, height: Fit}
                         layout: {flow: Right, spacing: 20.}
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fit, height: Fit}
                             layout: {flow: Right, align: {x: 0, y: 0}}
                             <Label> {
-                                label: "每减"
+                                text: "每减"
                                 draw_label: {
                                     color: #9d
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -301,12 +301,12 @@ live_design! {
                             }
                         }
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fill, height: Fit}
                             layout: {flow: Down, spacing: 5.}
 
                             <Label> {
-                                label: "每减每减每减"
+                                text: "每减每减每减"
                                 draw_label: {
                                     color: #0
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -314,11 +314,11 @@ live_design! {
                             }
                         }
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fit, height: Fit}
                             layout: {flow: Right, align: {x: 1, y: 1}}
                             <Label> {
-                                label: ">"
+                                text: ">"
                                 draw_label: {
                                     color: #9d
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -330,15 +330,15 @@ live_design! {
 
                 <Section> {
                     layout: {spacing: 30.}
-                    <Frame> {
+                    <View> {
                         walk: {width: Fill, height: Fit}
                         layout: {flow: Down, spacing: 10.}
-                        <Frame> {
+                        <View> {
                             walk: {width: Fill, height: Fit}
                             layout: {flow: Right, spacing: 10., align: {y: 0.5}}
 
                             <Label> {
-                                label: "每减每 (400+)"
+                                text: "每减每 (400+)"
                                 draw_label: {
                                     color: #0
                                     text_style: <TITLE_TEXT> {font_size: 11},
@@ -348,7 +348,7 @@ live_design! {
                             <FillerX> {}
 
                             <Label> {
-                                label: "每减每 >"
+                                text: "每减每 >"
                                 draw_label: {
                                     color: (ORANGE_COLOR)
                                     text_style: <TITLE_TEXT> {font_size: 10},
@@ -356,7 +356,7 @@ live_design! {
                             }
                         }
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fill, height: Fit}
                             layout: {flow: Right, spacing: 5}
                             <Box> {
@@ -368,7 +368,7 @@ live_design! {
                                 }
                                 <Label> {
                                     walk: {width: Fit, height: Fit}
-                                    label: "每减 (40)"
+                                    text: "每减 (40)"
                                     draw_label: {
                                         color: #0,
                                         text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -384,7 +384,7 @@ live_design! {
                                 }
                                 <Label> {
                                     walk: {width: Fit, height: Fit}
-                                    label: "每减 (70)"
+                                    text: "每减 (70)"
                                     draw_label: {
                                         color: #0,
                                         text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -400,7 +400,7 @@ live_design! {
                                 }
                                 <Label> {
                                     walk: {width: Fit, height: Fit}
-                                    label: "每减 (90)"
+                                    text: "每减 (90)"
                                     draw_label: {
                                         color: #0,
                                         text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -409,11 +409,11 @@ live_design! {
                             }
                         }
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fill, height: Fit}
                             layout: {flow: Down, spacing: 10.}
 
-                            <Frame> {
+                            <View> {
                                 walk: {width: Fill, height: Fit}
                                 layout: {flow: Right, spacing: 5, align: {y: 0.5}}
 
@@ -423,7 +423,7 @@ live_design! {
                                 }
                                 <Label> {
                                     walk: {width: Fit, height: Fit}
-                                    label: "每减减减"
+                                    text: "每减减减"
                                     draw_label: {
                                         color: #0,
                                         text_style: <REGULAR_TEXT> {font_size: 8.0},
@@ -432,18 +432,18 @@ live_design! {
                             }
                             <Label> {
                                 walk: {width: Fit, height: Fit}
-                                label: "每减每减"
+                                text: "每减每减"
                                 draw_label: {
                                     color: #9d
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
                                 }
                             }
                         }
-                        <Frame> {
+                        <View> {
                             walk: {width: Fill, height: Fit}
                             layout: {flow: Down, spacing: 10.}
 
-                            <Frame> {
+                            <View> {
                                 walk: {width: Fill, height: Fit}
                                 layout: {flow: Right, spacing: 5, align: {y: 0.5}}
 
@@ -453,7 +453,7 @@ live_design! {
                                 }
                                 <Label> {
                                     walk: {width: Fit, height: Fit}
-                                    label: "每减减减"
+                                    text: "每减减减"
                                     draw_label: {
                                         color: #0,
                                         text_style: <REGULAR_TEXT> {font_size: 8.0},
@@ -462,7 +462,7 @@ live_design! {
                             }
                             <Label> {
                                 walk: {width: Fit, height: Fit}
-                                label: "每每减每减减"
+                                text: "每每减每减减"
                                 draw_label: {
                                     color: #9d
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -471,16 +471,16 @@ live_design! {
                         }
                     }
 
-                    <Frame> {
+                    <View> {
                         walk: {width: Fill, height: Fit}
                         layout: {flow: Down, spacing: 20.}
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fill, height: Fit}
                             layout: {flow: Right, spacing: 10., align: {y: 0.5}}
 
                             <Label> {
-                                label: "每减每 (5)"
+                                text: "每减每 (5)"
                                 draw_label: {
                                     color: #0
                                     text_style: <TITLE_TEXT> {font_size: 11},
@@ -490,7 +490,7 @@ live_design! {
                             <FillerX> {}
 
                             <Label> {
-                                label: ">",
+                                text: ">",
                                 draw_label: {
                                     color: #9d
                                     text_style: <TITLE_TEXT> {font_size: 10},
@@ -498,16 +498,16 @@ live_design! {
                             }
                         }
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fill, height: Fit}
                             layout: {flow: Down, spacing: 10., padding: {left: 20.}}
 
-                            <Frame> {
+                            <View> {
                                 walk: {width: Fill, height: Fit}
                                 layout: {flow: Right, spacing: 10.}
 
                                 <Label> {
-                                    label: "问",
+                                    text: "问",
                                     draw_label: {
                                         color: (ORANGE_COLOR)
                                         text_style: <REGULAR_TEXT> {font_size: 10},
@@ -515,7 +515,7 @@ live_design! {
                                 }
 
                                 <Label> {
-                                    label: "每减减减 减减",
+                                    text: "每减减减 减减",
                                     draw_label: {
                                         color: #0
                                         text_style: <REGULAR_TEXT> {font_size: 10},
@@ -526,19 +526,19 @@ live_design! {
 
 
                                 <Label> {
-                                    label: "6减减",
+                                    text: "6减减",
                                     draw_label: {
                                         color: #9d
                                         text_style: <REGULAR_TEXT> {font_size: 10},
                                     }
                                 }
                             }
-                            <Frame> {
+                            <View> {
                                 walk: {width: Fill, height: Fit}
                                 layout: {flow: Right, spacing: 10.}
 
                                 <Label> {
-                                    label: "问",
+                                    text: "问",
                                     draw_label: {
                                         color: (ORANGE_COLOR)
                                         text_style: <REGULAR_TEXT> {font_size: 10},
@@ -546,7 +546,7 @@ live_design! {
                                 }
 
                                 <Label> {
-                                    label: "每减减减 减减每减减减 减减",
+                                    text: "每减减减 减减每减减减 减减",
                                     draw_label: {
                                         color: #0
                                         text_style: <REGULAR_TEXT> {font_size: 10},
@@ -557,7 +557,7 @@ live_design! {
 
 
                                 <Label> {
-                                    label: "6减减",
+                                    text: "6减减",
                                     draw_label: {
                                         color: #9d
                                         text_style: <REGULAR_TEXT> {font_size: 10},
@@ -571,7 +571,7 @@ live_design! {
 
                 <Section> {
                     layout: {padding: 0}
-                    <Frame> {
+                    <View> {
                         walk: {width: Fill, height: Fit}
                         layout: {flow: Down, spacing: 20., padding: {top: 20, left: 15, right: 15, bottom: 25}}
                         show_bg: true
@@ -597,7 +597,7 @@ live_design! {
                             }
                         }
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fill, height: Fit}
                             layout: {flow: Right, spacing: 5.}
                             // TODO: Make rounded
@@ -606,19 +606,19 @@ live_design! {
                                 source: (CATALOG_RING_IMG)
                             }
 
-                            <Frame> {
+                            <View> {
                                 walk: {width: Fill, height: Fit}
                                 layout: {flow: Down, spacing: 10.}
 
                                 <Label> {
-                                    label: "减减减减",
+                                    text: "减减减减",
                                     draw_label: {
                                         color: #f
                                         text_style: <TITLE_TEXT> {font_size: 10},
                                     }
                                 }
 
-                                <Frame> {
+                                <View> {
                                     walk: {width: Fill, height: Fit}
                                     layout: {flow: Right, spacing: 5., align: {y: 0.5}}
 
@@ -631,7 +631,7 @@ live_design! {
                                         }
                                         <Label> {
                                             walk: {width: Fit, height: Fit}
-                                            label: "每每"
+                                            text: "每每"
                                             draw_label: {
                                                 color: #fff
                                                 text_style: <TITLE_TEXT> {font_size: 10.0},
@@ -648,13 +648,13 @@ live_design! {
                                         }
                                         <Label> {
                                             walk: {width: Fit, height: Fit}
-                                            label: "每每"
+                                            text: "每每"
                                             draw_label: {
                                                 color: #f
                                                 text_style: <REGULAR_TEXT> {font_size: 10.0},
                                             }
                                         }
-                                        <Frame> {
+                                        <View> {
                                             walk: {width: Fit, height: Fit}
                                             layout: {align: {y: 0.5}}
 
@@ -682,7 +682,7 @@ live_design! {
                                     }
                                     <Label> {
                                         walk: {width: Fit, height: Fit}
-                                        label: "3.75每每"
+                                        text: "3.75每每"
                                         draw_label: {
                                             color: #f
                                             text_style: <REGULAR_TEXT> {font_size: 8.0},
@@ -690,13 +690,13 @@ live_design! {
                                     }
                                 }
 
-                                <Frame> {
+                                <View> {
                                     walk: {width: Fill, height: Fit}
                                     layout: {flow: Right, spacing: 5., align: {y: 0.5}}
 
                                     <Label> {
                                         walk: {width: Fit, height: Fit}
-                                        label: "每每3.75"
+                                        text: "每每3.75"
                                         draw_label: {
                                             color: #f
                                             text_style: <REGULAR_TEXT> {font_size: 8.0},
@@ -704,7 +704,7 @@ live_design! {
                                     }
                                     <Label> {
                                         walk: {width: Fit, height: Fit}
-                                        label: "每每3.75"
+                                        text: "每每3.75"
                                         draw_label: {
                                             color: #f
                                             text_style: <REGULAR_TEXT> {font_size: 8.0},
@@ -712,7 +712,7 @@ live_design! {
                                     }
                                     <Label> {
                                         walk: {width: Fit, height: Fit}
-                                        label: "每每3.75"
+                                        text: "每每3.75"
                                         draw_label: {
                                             color: #f
                                             text_style: <REGULAR_TEXT> {font_size: 8.0},
@@ -721,7 +721,7 @@ live_design! {
                                 }
                             }
                         }
-                        <Frame> {
+                        <View> {
                             walk: {width: Fill, height: Fit}
                             layout: {flow: Right, spacing: 5., align: {x: 0.5}}
                             <Box> {
@@ -733,7 +733,7 @@ live_design! {
                                 }
                                 <Label> {
                                     walk: {width: Fit, height: Fit}
-                                    label: "每每每每"
+                                    text: "每每每每"
                                     draw_label: {
                                         color: (ORANGE_COLOR)
                                         text_style: <TITLE_TEXT> {font_size: 14.0},
@@ -749,7 +749,7 @@ live_design! {
                                 }
                                 <Label> {
                                     walk: {width: Fit, height: Fit}
-                                    label: "每每每每"
+                                    text: "每每每每"
                                     draw_label: {
                                         color: (ORANGE_COLOR)
                                         text_style: <TITLE_TEXT> {font_size: 14.0},
@@ -759,15 +759,15 @@ live_design! {
                         }
                     }
 
-                    <Frame> {
+                    <View> {
                         walk: {width: Fill, height: Fit}
                         layout: {flow: Down, spacing: 10., padding: 10.}
-                        <Frame> {
+                        <View> {
                             walk: {width: Fill, height: Fit}
                             layout: {flow: Right, spacing: 10., align: {y: 0.5}}
 
                             <Label> {
-                                label: "每减每 (5)"
+                                text: "每减每 (5)"
                                 draw_label: {
                                     color: #0
                                     text_style: <TITLE_TEXT> {font_size: 11},
@@ -778,7 +778,7 @@ live_design! {
 
                             <Label> {
                                 walk: {width: Fit, height: Fit}
-                                label: "每减 >"
+                                text: "每减 >"
                                 draw_label: {
                                     color: (ORANGE_COLOR)
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -787,18 +787,18 @@ live_design! {
                         }
                     }
 
-                    <Frame> {
+                    <View> {
                         walk: {width: Fill, height: Fit}
                         layout: {flow: Down, spacing: 5., align: {x: 0.5}}
 
-                        <Frame> {
+                        <View> {
                             walk: {width: Fit, height: Fit}
                             layout: {flow: Right, spacing: 5.}
                             <RecomendedItem> {}
                             <RecomendedItem> {}
                             <RecomendedItem> {}
                         }
-                        <Frame> {
+                        <View> {
                             walk: {width: Fit, height: Fit}
                             layout: {flow: Right, spacing: 5.}
                             <RecomendedItem> {}
@@ -819,7 +819,7 @@ live_design! {
         }
     }
 
-    CatalogItemScreen = <Frame> {
+    CatalogItemScreen = <View> {
         walk: {width: Fill, height: Fill}
         layout: {flow: Down}
         show_bg: true,
@@ -836,7 +836,7 @@ pub struct CatalogItem {
     layout: Layout,
 
     #[live]
-    frame: Frame,
+    view: View,
     #[rust]
     catalog_item_id: u64,
 }
@@ -854,7 +854,7 @@ impl Widget for CatalogItem {
         event: &Event,
         dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
     ) {
-        let actions = self.frame.handle_widget_event(cx, event);
+        let actions = self.view.handle_widget_event(cx, event);
 
         for action in actions {
             dispatch_action(cx, action);
@@ -862,19 +862,19 @@ impl Widget for CatalogItem {
     }
 
     fn redraw(&mut self, cx: &mut Cx) {
-        self.frame.redraw(cx);
+        self.view.redraw(cx);
     }
 
-    fn get_walk(&self) -> Walk {
-        self.frame.get_walk()
+    fn walk(&self) -> Walk {
+        self.view.walk()
     }
 
     fn find_widgets(&mut self, path: &[LiveId], cached: WidgetCache, results: &mut WidgetSet) {
-        self.frame.find_widgets(path, cached, results);
+        self.view.find_widgets(path, cached, results);
     }
 
     fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
-        let _ = self.frame.draw_walk_widget(cx, walk);
+        let _ = self.view.draw_walk_widget(cx, walk);
         WidgetDraw::done()
     }
 }
@@ -920,7 +920,7 @@ impl Widget for CatalogItemScrollable {
         }
     }
 
-    fn get_walk(&self) -> Walk {
+    fn walk(&self) -> Walk {
         self.walk
     }
 
@@ -946,7 +946,7 @@ impl CatalogItemScrollable {
                     continue;
                 }
                 let template = id!(catalog_item);
-                let item = self.list_view.get_item(cx, item_id, template[0]).unwrap();
+                let item = self.list_view.item(cx, item_id, template[0]).unwrap();
 
                 item.draw_widget_all(cx);
             }

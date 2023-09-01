@@ -1,10 +1,10 @@
 use makepad_widgets::*;
 
 live_design! {
-    import makepad_widgets::frame::*;
+    import makepad_widgets::view::*;
     import crate::shared::styles::*;
 
-    Divider = <Frame> {
+    Divider = <View> {
         walk: {width: Fill, height: Fit}
         layout: {flow: Down}
         <Box> {
@@ -19,6 +19,6 @@ live_design! {
         draw_bg: {color: (COLOR_DIVIDER)}
     }
 
-    FillerX = <Frame> {walk: {width: Fill, height: Fit}}
-    FillerY = <Frame> {walk: {width: Fit, height: Fill}}
+    FillerX = <View> {walk: {width: Fill, height: Fit}}
+    FillerY = <View> {walk: {width: Fit, height: Fill}}
 }

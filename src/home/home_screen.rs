@@ -1,8 +1,8 @@
 use makepad_widgets::*;
 
 live_design! {
-    import makepad_widgets::frame::*;
-    import makepad_widgets::label::*;
+    import makepad_widgets::view::*;
+    import makepad_widgets::text::*;
     import makepad_widgets::image::*;
     import makepad_widgets::text_input::TextInput;
     import makepad_widgets::list_view::ListView;
@@ -19,20 +19,20 @@ live_design! {
     SCAN_ICON = dep("crate://self/resources/scan.png")
     CAMERA_ICON = dep("crate://self/resources/camera.png")
 
-    TopBar = <Frame> {
+    TopBar = <View> {
         walk: {width: Fill, height: Fit}
         layout: {flow: Right, align: {x: 0.0, y: 0.5}, spacing: 10.0, padding: {left: 10., right: 10.}}
 
         <IconWithText> {
             image = { source: (WORLDWIDE_ICON) }
-            caption = { label: "全球" }
+            caption = { text: "全球" }
         }
 
         <FillerX> {}
 
         <Label> {
             walk: {width: Fit, height: Fit}
-            label: "推荐"
+            text: "推荐"
             draw_label: {
                 color: #000
                 text_style: <REGULAR_TEXT> {},
@@ -40,7 +40,7 @@ live_design! {
         }
         <Label> {
             walk: {width: Fit, height: Fit}
-            label: "特价"
+            text: "特价"
             draw_label: {
                 color: #000
                 text_style: <REGULAR_TEXT> {},
@@ -51,7 +51,7 @@ live_design! {
 
         <IconWithText> {
             image = { source: (MEMBERSHIP_CODE_ICON) }
-            caption = { label: "会员码" }
+            caption = { text: "会员码" }
         }
     }
 
@@ -92,7 +92,7 @@ live_design! {
 
             <Label> {
                 walk: {width: Fit, height: Fit}
-                label: "搜索"
+                text: "搜索"
                 draw_label: {
                     color: #fff
                     text_style: <REGULAR_TEXT> {font_size: 10.0},
@@ -101,7 +101,7 @@ live_design! {
         }
     }
 
-    HomeScreen = <Frame> {
+    HomeScreen = <View> {
         walk: {width: Fill, height: Fill}
         layout: {flow: Down}
         draw_bg: {

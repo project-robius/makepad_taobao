@@ -1,13 +1,13 @@
 use makepad_widgets::*;
 
 live_design! {
-    import makepad_widgets::frame::*;
-    import makepad_widgets::label::*;
+    import makepad_widgets::view::*;
+    import makepad_widgets::text::*;
     import makepad_widgets::image::*;
     import crate::shared::styles::*;
     import crate::shared::helpers::*;
     
-    IconWithText = <Frame> {
+    IconWithText = <View> {
         walk: {width: Fit, height: Fit}
         layout: {flow: Down, align: {x: 0.5, y: 0.5}, spacing: 5.0}
         
@@ -32,7 +32,7 @@ live_design! {
             radius: 4.
         }
 
-        header = <Frame> {
+        header = <View> {
             walk: {width: Fill, height: Fit}
             label = <Label> {
                 walk: {width: Fit, height: Fit, margin: {top: 1.0}}
@@ -43,7 +43,7 @@ live_design! {
             }
         }
 
-        content = <Frame> {
+        content = <View> {
             walk: {width: Fill, height: Fill }
             layout: {
                 flow: Right,
@@ -52,7 +52,7 @@ live_design! {
                 padding: {right: 18.0, left: 18.0}
             }
 
-            image_container_1 = <Frame> {
+            image_container_1 = <View> {
                 walk: {width: 60, height: Fill}
                 layout: {flow: Down, align: {x: 0.5, y: 0.0}, spacing: 5.0}
                 <FillerY> {}
@@ -68,7 +68,7 @@ live_design! {
                 }
             }
 
-            image_container_2 = <Frame> {
+            image_container_2 = <View> {
                 walk: {width: 60, height: Fill}
                 layout: {flow: Down, align: {x: 0.5, y: 0.0}, spacing: 5.0}
                 <FillerY> {}
