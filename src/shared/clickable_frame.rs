@@ -2,9 +2,9 @@ use makepad_widgets::widget::WidgetCache;
 use makepad_widgets::*;
 
 live_design! {
-    import makepad_widgets::view::*;
+    import makepad_widgets::frame::*;
 
-    ClickableView = {{ClickableView}} {
+    ClickableFrame = {{ClickableFrame}} {
         width: Fit
         height: Fit
         show_bg: true
@@ -15,24 +15,24 @@ live_design! {
 }
 
 #[derive(Live)]
-pub struct ClickableView {
+pub struct ClickableFrame {
     #[deref]
-    view: View,
+    frame: Frame,
 }
 
-impl LiveHook for ClickableView {
+impl LiveHook for ClickableFrame {
     fn before_live_design(cx: &mut Cx) {
-        register_widget!(cx, ClickableView);
+        register_widget!(cx, ClickableFrame);
     }
 }
 
 #[derive(Clone, WidgetAction)]
-pub enum ClickableViewAction {
+pub enum ClickableFrameAction {
     None,
     Click,
 }
 
-impl Widget for ClickableView {
+impl Widget for ClickableFrame {
     fn handle_widget_event_with(
         &mut self,
         cx: &mut Cx,
@@ -46,43 +46,43 @@ impl Widget for ClickableView {
     }
 
     fn redraw(&mut self, cx: &mut Cx) {
-        self.view.redraw(cx);
+        self.frame.redraw(cx);
     }
 
-    fn walk(&self) -> Walk {
-        self.view.walk()
+    fn get_walk(&self) -> Walk {
+        self.frame.get_walk()
     }
 
     fn find_widgets(&mut self, path: &[LiveId], cached: WidgetCache, results: &mut WidgetSet) {
-        self.view.find_widgets(path, cached, results);
+        self.frame.find_widgets(path, cached, results);
     }
 
     fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
-        let _ = self.view.draw_walk_widget(cx, walk);
+        let _ = self.frame.draw_walk_widget(cx, walk);
         WidgetDraw::done()
     }
 }
 
-impl ClickableView {
+impl ClickableFrame {
     pub fn handle_event_with(
         &mut self,
         cx: &mut Cx,
         event: &Event,
-        dispatch_action: &mut dyn FnMut(&mut Cx, ClickableViewAction),
+        dispatch_action: &mut dyn FnMut(&mut Cx, ClickableFrameAction),
     ) {
-        match event.hits(cx, self.view.area()) {
+        match event.hits(cx, self.frame.area()) {
             Hit::FingerUp(fe) => {
                 if fe.is_over {
-                    dispatch_action(cx, ClickableViewAction::Click);
+                    dispatch_action(cx, ClickableFrameAction::Click);
                 }
             }
             Hit::FingerHoverIn(_) => {
                 cx.set_cursor(MouseCursor::Hand);
-                //self.animator_play(cx, id!(hover.on));
+                //self.animate_state(cx, id!(hover.on));
             }
             Hit::FingerHoverOut(_) => {
                 cx.set_cursor(MouseCursor::Arrow);
-                //self.animator_play(cx, id!(hover.off));
+                //self.animate_state(cx, id!(hover.off));
             }
             _ => (),
         }
@@ -90,12 +90,12 @@ impl ClickableView {
 }
 
 #[derive(Debug, Clone, PartialEq, WidgetRef)]
-pub struct ClickableViewRef(WidgetRef);
+pub struct ClickableFrameRef(WidgetRef);
 
-impl ClickableViewRef {
+impl ClickableFrameRef {
     pub fn clicked(&self, actions: &WidgetActions) -> bool {
         if let Some(item) = actions.find_single_action(self.widget_uid()) {
-            if let ClickableViewAction::Click = item.action() {
+            if let ClickableFrameAction::Click = item.action() {
                 return true;
             }
         }
@@ -104,12 +104,12 @@ impl ClickableViewRef {
 }
 
 #[derive(Debug, Clone, WidgetSet)]
-pub struct ClickableViewSet(WidgetSet);
+pub struct ClickableFrameSet(WidgetSet);
 
-impl ClickableViewSet {
+impl ClickableFrameSet {
     pub fn clicked(&self, actions: &WidgetActions) -> bool {
-        for clickable_view in self.iter() {
-            if clickable_view.clicked(actions) {
+        for clickable_frame in self.iter() {
+            if clickable_frame.clicked(actions) {
                 return true;
             }
         }

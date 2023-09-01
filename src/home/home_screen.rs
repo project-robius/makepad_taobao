@@ -2,7 +2,7 @@ use makepad_widgets::*;
 
 live_design! {
     import makepad_widgets::view::*;
-    import makepad_widgets::text::*;
+    import makepad_widgets::label::*;
     import makepad_widgets::image::*;
     import makepad_widgets::text_input::TextInput;
     import makepad_widgets::list_view::ListView;
@@ -20,8 +20,12 @@ live_design! {
     CAMERA_ICON = dep("crate://self/resources/camera.png")
 
     TopBar = <View> {
-        walk: {width: Fill, height: Fit}
-        layout: {flow: Right, align: {x: 0.0, y: 0.5}, spacing: 10.0, padding: {left: 10., right: 10.}}
+        width: Fill
+        height: Fit
+        flow: Right
+        padding: {left: 10., right: 10.}
+        align: {x: 0.0, y: 0.5}
+        spacing: 10.0
 
         <IconWithText> {
             image = { source: (WORLDWIDE_ICON) }
@@ -31,17 +35,21 @@ live_design! {
         <FillerX> {}
 
         <Label> {
-            walk: {width: Fit, height: Fit}
+            width: Fit
+            height: Fit
+
             text: "推荐"
-            draw_label: {
+            draw_text: {
                 color: #000
                 text_style: <REGULAR_TEXT> {},
             }
         }
         <Label> {
-            walk: {width: Fit, height: Fit}
+            width: Fit
+            height: Fit
+
             text: "特价"
-            draw_label: {
+            draw_text: {
                 color: #000
                 text_style: <REGULAR_TEXT> {},
             }
@@ -55,45 +63,47 @@ live_design! {
         }
     }
 
-    SearchBar = <Box> {
-        walk: {width: Fill, height: Fit, margin: 10.0}
-        layout: {flow: Right, align: {x: 0.0, y: 0.5}, padding: {left: 10., right: 10.} spacing: 6.0}
+    SearchBar = <RoundedView> {
+        width: Fill
+        height: Fit
+        margin: 10.0
+        flow: Right
+        align: {x: 0.0, y: 0.5}
+        padding: {left: 10., right: 10.}
+        spacing: 6.0
+
         draw_bg: {
             color: #fff,
             radius: 10.
         }
 
-        <Image> {
-            walk: {width: 24, height: 24}
-            source: (SCAN_ICON)
-        }
+        <Image> { width: 24, height: 24, source: (SCAN_ICON) }
 
-        <LineH> {
-            walk: {width: 3.0, height: Fill}
-        }
+        <LineH> { width: 3.0, height: Fill }
 
         input = <SearchTerms> {}
 
-        <Image> {
-            walk: {width: 24, height: 24}
-            source: (CAMERA_ICON)
-        }
+        <Image> { width: 24, height: 24, source: (CAMERA_ICON) }
 
-        <Box> {
-            walk: {width: Fit, height: Fit}
-            layout: {
-                flow: Right, align: {x: 0.0, y: 0.5}, spacing: 10.0,
-                padding: {top: 9., left: 6., right: 6., bottom: 9.}
-            }
+        <RoundedView> {
+            width: Fit,
+            height: Fit
+            flow: Right,
+            align: {x: 0.0, y: 0.5},
+            spacing: 10.0
+            padding: {top: 9., left: 6., right: 6., bottom: 9.}
+
             draw_bg: {
                 color: (ORANGE_COLOR),
                 radius: 6.
             }
 
             <Label> {
-                walk: {width: Fit, height: Fit}
+                width: Fit,
+                height: Fit
+
                 text: "搜索"
-                draw_label: {
+                draw_text: {
                     color: #fff
                     text_style: <REGULAR_TEXT> {font_size: 10.0},
                 }
@@ -102,16 +112,23 @@ live_design! {
     }
 
     HomeScreen = <View> {
-        walk: {width: Fill, height: Fill}
-        layout: {flow: Down}
+        width: Fill
+        height: Fill
+        flow: Down
+
         draw_bg: {
             color: (BACKGROUND_COLOR)
         }
 
-        os_header_placeholder = <Box> {
-            walk: {width: Fill, height: 50, margin: 0}
-            layout: {flow: Right, spacing: 6.0, padding: 0}
+        os_header_placeholder = <RoundedView> {
+            width: Fill,
+            height: 50,
+            margin: 0
+            padding: 0
+            flow: Right,
+            spacing: 6.0,
         }
+
         <TopBar> {}
         <SearchBar> {}
         <HomeContent> {}

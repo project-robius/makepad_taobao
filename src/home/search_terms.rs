@@ -3,24 +3,26 @@ use makepad_widgets::widget::WidgetCache;
 
 live_design! {
     import makepad_widgets::view::*;
-    import makepad_widgets::text::*;
+    import makepad_widgets::label::*;
     import makepad_widgets::text_input::TextInput;
     
     import crate::shared::styles::*;
     import crate::shared::helpers::*;
 
     SearchTerms = {{SearchTerms}} {
-        walk: {width: Fill, height: 30.0}
-        layout: {
-            flow: Right,
-            align: {x: 0.0, y: 0.0},
-        }
+        width: Fill
+        height: 30.0
+        flow: Right,
+        align: {x: 0.0, y: 0.0}
 
         label = <Label> {
-            walk: {width: Fill, height: Fit, margin: { top: 10.0 } }
+            width: Fill
+            height: Fit
+            margin: { top: 10.0 }
+
             text: "通讯录"
 
-            draw_label: {
+            draw_text: {
                 color: #333,
                 text_style: <REGULAR_TEXT> {font_size: 10.0},
             }
@@ -31,17 +33,17 @@ live_design! {
                 default: show,
                 show = {
                     from: {all: Snap}
-                    apply: {label = {walk: {margin: {top: 10.0 }}}}
+                    apply: {label = {margin: {top: 10.0 }}}
                 }
 
                 keep = {
                     from: {all: Forward {duration: 3.0}}
-                    apply: {label = {walk: {margin: {top: 10.0 }}}}
+                    apply: {label = {margin: {top: 10.0 }}}
                 }
 
                 hide = {
                     from: {all: Forward {duration: 0.3}}
-                    apply: {label = {walk: {margin: {top: -30.0 }}}}
+                    apply: {label = {margin: {top: -30.0 }}}
                 }
             }
         }

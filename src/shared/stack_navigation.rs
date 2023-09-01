@@ -6,7 +6,7 @@ live_design! {
     import makepad_draw::shader::draw_icon::*;
     import makepad_widgets::view::*;
     import makepad_widgets::image::*;
-    import makepad_widgets::text::Label;
+    import makepad_widgets::label::Label;
     import makepad_widgets::button::Button;
 
     import crate::shared::helpers::*;
@@ -17,16 +17,22 @@ live_design! {
     SEARCH_ICON = dep("crate://self/resources/search.svg")
     CART_ICON = dep("crate://self/resources/cart.svg")
 
-    SearchBar = <Box> {
-        walk: {width: Fill, height: Fit, margin: 10.0}
-        layout: {flow: Right, align: {x: 0.0, y: 0.5}, padding: {left: 5., right: 5.}}
+    SearchBar = <RoundedView> {
+        width: Fill
+        height: Fit
+        margin: 10.0
+        padding: {left: 5., right: 5.}
+        flow: Right
+        align: {x: 0.0, y: 0.5}
+
         draw_bg: {
             color: #fff,
             radius: 10.
         }
 
         <Button> {
-            walk: {width: Fit, height: Fit}
+            width: Fit,
+            height: Fit
             icon_walk: {width: 16, height: 16}
             draw_bg: {
                 fn pixel(self) -> vec4 {
@@ -43,9 +49,9 @@ live_design! {
         }
 
         <Label> {
-            walk: {width: Fit, height: Fit}
+            width: Fit, height: Fit
             text: "搜索"
-            draw_label: {
+            draw_text: {
                 color: #8b
                 text_style:  {font_size: 10.0},
             }
@@ -56,23 +62,33 @@ live_design! {
     }
 
     Header = <View> {
-        walk: {width: Fill , height: Fit, margin: 0}
-        layout: {padding: {bottom: 15., top: 40.}, align: {x: 0.5, y: 0.0}, spacing: 0.0, flow: Overlay}
+        width: Fill
+        height: Fit
+        margin: 0
+        padding: {bottom: 15., top: 40.}
+        flow: Overlay
+        align: {x: 0.5, y: 0.0}
+        spacing: 0.0
+        
         show_bg: true
         draw_bg: {
             color: #f2
         }
 
         content = <View> {
-            walk: {width: Fill, height: Fit}
-            layout: {flow: Down, spacing: 8.}
+            width: Fill
+            height: Fit
+            flow: Down
+            spacing: 8.
 
             search_container = <View> {
-                walk: {width: Fill, height: Fit}
-                layout: {flow: Right, align: { y: 0.5}}
+                width: Fill
+                height: Fit
+                flow: Right
+                align: { y: 0.5}
 
                 back_button = <Button> {
-                    walk: {width: 32, height: 32}
+                    width: 32, height: 32
                     icon_walk: {width: 14, height: 14}
                     draw_bg: {
                         fn pixel(self) -> vec4 {
@@ -91,12 +107,11 @@ live_design! {
                 <SearchBar> {}
 
                 curved_arrow = <Image> {
-                    walk: {width: 32, height: 32}
-                    source: (CURVED_ARROW_IMG)
+                    width: 32, height: 32, source: (CURVED_ARROW_IMG)
                 }
 
                 <Button> {
-                    walk: {width: Fit, height: Fit}
+                    width: Fit, height: Fit
                     icon_walk: {width: 16, height: 16}
                     draw_bg: {
                         fn pixel(self) -> vec4 {
@@ -113,20 +128,20 @@ live_design! {
                 }
 
                 meatballs_menu = <Image> {
-                    walk: {width: 32, height: 32}
-                    source: (MEATBALLS_MENU_IMG)
+                    width: 32, height: 32, source: (MEATBALLS_MENU_IMG)
                 }
             }
 
             navigation_container = <View> {
-                walk: {width: Fill, height: Fit}
-                layout: {flow: Right}
+                width: Fill
+                height: Fit
+                flow: Right
 
                 <FillerX> {}
                 <Label> {
-                    walk: {width: Fit, height: Fit}
+                    width: Fit, height: Fit
                     text: "搜索"
-                    draw_label: {
+                    draw_text: {
                         color: #0
                         text_style:  {font_size: 14.0},
                     }
@@ -134,9 +149,9 @@ live_design! {
                 <FillerX> {}
 
                 <Label> {
-                    walk: {width: Fit, height: Fit}
+                    width: Fit, height: Fit
                     text: "搜索"
-                    draw_label: {
+                    draw_text: {
                         color: #0
                         text_style:  {font_size: 14.0},
                     }
@@ -144,9 +159,9 @@ live_design! {
                 <FillerX> {}
 
                 <Label> {
-                    walk: {width: Fit, height: Fit}
+                    width: Fit, height: Fit
                     text: "搜索"
-                    draw_label: {
+                    draw_text: {
                         color: #0
                         text_style:  {font_size: 14.0},
                     }
@@ -154,9 +169,9 @@ live_design! {
                 <FillerX> {}
 
                 <Label> {
-                    walk: {width: Fit, height: Fit}
+                    width: Fit, height: Fit
                     text: "搜索"
-                    draw_label: {
+                    draw_text: {
                         color: #0
                         text_style:  {font_size: 14.0},
                     }
@@ -167,9 +182,11 @@ live_design! {
     }
 
     StackNavigationView = {{StackNavigationView}} {
+        width: Fill,
+        height: Fill
+        flow: Down
+
         visible: false
-        walk: {width: Fill, height: Fill}
-        layout: {flow: Down}
         show_bg: true
         draw_bg: {
             color: #fff
@@ -198,9 +215,7 @@ live_design! {
     }
 
     StackNavigation = {{StackNavigation}} {
-        walk: {width: Fill, height: Fill}
-        layout: {flow: Overlay}
-
+        width: Fill, height: Fill, flow: Overlay
         root_view = <View> {}
     }
 }

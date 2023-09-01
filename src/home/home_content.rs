@@ -5,7 +5,7 @@ use makepad_widgets::*;
 
 live_design! {
     import makepad_widgets::view::*;
-    import makepad_widgets::text::*;
+    import makepad_widgets::label::*;
     import makepad_widgets::image::*;
     import makepad_widgets::list_view::ListView;
     import makepad_draw::shader::std::*;
@@ -44,83 +44,97 @@ live_design! {
     FEATURED_8_IMG = dep("crate://self/resources/featured/featured_8.png")
 
     Options = <View> {
-      walk: {width: Fill, height: Fit}
-      layout: {flow: Right, align: {x: 0.0, y: 0.5}, spacing: 10.0, padding: {left: 40., right: 40.}}
+        width: Fill
+        height: Fit
+        padding: {left: 40., right: 40.}
+        flow: Right
+        align: {x: 0.0, y: 0.5}
+        spacing: 10.0
 
-      <IconWithText> {
-          image = { source: (TAOBAO_COINS_IMG) }
-          caption = { text: "淘宝币" }
-      }
+        <IconWithText> {
+            image = { source: (TAOBAO_COINS_IMG) }
+            caption = { text: "淘宝币" }
+        }
 
-      <FillerX> {}
+        <FillerX> {}
 
-      <IconWithText> {
-          image = { source: (HELP_CENTER_IMG) }
-          caption = { text: "帮助中心" }
-      }
+        <IconWithText> {
+            image = { source: (HELP_CENTER_IMG) }
+            caption = { text: "帮助中心" }
+        }
 
-      <FillerX> {}
+        <FillerX> {}
 
-      <IconWithText> {
-          image = { source: (LOGISTICS_IMG) }
-          caption = { text: "物流中心" }
-      }
+        <IconWithText> {
+            image = { source: (LOGISTICS_IMG) }
+            caption = { text: "物流中心" }
+        }
 
-      <FillerX> {}
+        <FillerX> {}
 
-      <IconWithText> {
-          image = { source: (PAYMENTS_IMG) }
-          caption = { text: "支付中心" }
-      }
+        <IconWithText> {
+            image = { source: (PAYMENTS_IMG) }
+            caption = { text: "支付中心" }
+        }
 
-      <FillerX> {}
+        <FillerX> {}
 
-      <IconWithText> {
-          image = { source: (GLOBAL_DEALS_IMG) }
-          caption = { text: "全球优惠" }
-      }
+        <IconWithText> {
+            image = { source: (GLOBAL_DEALS_IMG) }
+            caption = { text: "全球优惠" }
+        }
   }
 
-  Payment = <Box> {
-      walk: {width: Fill, height: Fit, margin: 10.0}
-      layout: {flow: Right, align: {x: 0.0, y: 0.5}, padding: {left: 10., right: 10.} spacing: 6.0}
+  Payment = <RoundedView> {
+      width: Fill,
+      height: Fit,
+      margin: 10.0
+      padding: {left: 10., right: 10.}
+      flow: Right
+      align: {x: 0.0, y: 0.5}
+      spacing: 6.0
+
       draw_bg: {
           color: #fff,
           radius: 4.
       }
 
       <Label> {
-          walk: {width: Fit, height: Fit, margin: {top: 20., bottom: 20.}}
+          width: Fit
+          height: Fit
+          margin: {top: 20., bottom: 20.}
+
           text: "支付支持"
-          draw_label: {
+          draw_text: {
               color: #000
               text_style: <REGULAR_TEXT> {font_size: 10.0},
           }
       }
 
       <Image> {
-          walk: {width: 118, height: 18}
-          source: (CREDIT_CARDS_IMG)
+          width: 118, height: 18, source: (CREDIT_CARDS_IMG)
       }
 
       <FillerX> {}
 
-      <LineH> {
-          walk: {width: 2.0, height: Fill}
-      }
+      <LineH> { width: 2.0, height: Fill }
 
       <IconWithText> {
-          image = { source: (SHIPPING_ESTIMATE_IMG), walk: {width: 32, height: 32} }
+          image = { width: 32, height: 32, source: (SHIPPING_ESTIMATE_IMG) }
           caption = { text: "货运价格估计" }
       }
   }
 
     CatalogItem = <ClickableView> {
-        walk: {width: 166, height: Fit}
+        width: 166
+        height: Fit
 
-        container = <Box> {
-            walk: {width: Fill, height: Fit}
-            layout: {flow: Down, align: {x: 0.5, y: 0.0}, spacing: 2.0}
+        container = <RoundedView> {
+            width: Fill
+            height: Fit
+            flow: Down
+            align: {x: 0.5, y: 0.0}
+            spacing: 2.0
 
             draw_bg: {
                 color: #fff,
@@ -128,7 +142,7 @@ live_design! {
             }
 
             image = <Image> {
-                walk: {width: 166, height: 166}
+                width: 166, height: 166
                 source: (CATALOG_FLIP_FLOPS_IMG)
 
                 // Override to have the upper corners rounded
@@ -151,62 +165,87 @@ live_design! {
                 }
             }
             info = <View> {
-                walk: {width: Fill, height: Fit}
-                layout: {flow: Down, padding: 5., spacing: 3.}
+                width: Fill
+                height: Fit
+                flow: Down
+                padding: 5.
+                spacing: 3.
+
                 title = <Label> {
-                    walk: {width: Fill, height: Fit}
+                    width: Fill
+                    height: Fit
+
                     text: "男士人字拖 2023"
-                    draw_label: {
+                    draw_text: {
                         color: #000
                         text_style: <REGULAR_TEXT> {font_size: 12.0},
                     }
                 }
 
                 subtitle = <Label> {
-                    walk: {width: Fill, height: Fit}
+                    width: Fill
+                    height: Fit
+
                     text: "500+人付费"
-                    draw_label: {
+                    draw_text: {
                         color: #888
                         text_style: <REGULAR_TEXT> {font_size: 8.0},
                     }
                 }
 
                 <View> {
-                    walk: {width: 160, height: 40}
-                    layout: {flow: Overlay}
+                    width: 160
+                    height: 40
+                    flow: Overlay
 
                     <Image> {
-                        walk: {width: Fill, height: Fill}
+                        width: Fill
+                        height: Fill
                         source: (BUY_IT_BANNER_IMG)
                     }
 
                     <View> {
-                        walk: {width: Fill, height: Fill}
-                        layout: {flow: Down, spacing: 2., padding: 5.}
+                        width: Fill
+                        height: Fill
+                        padding: 5.
+                        flow: Down
+                        spacing: 2.
+
                         <View> {
-                            walk: {width: Fit, height: Fit}
-                            layout: {flow: Right, spacing: 1., align: {x: 0.0, y: 1.0}}
+                            width: Fit
+                            height: Fit
+                            flow: Right
+                            spacing: 1.
+                            align: {x: 0.0, y: 1.0}
+
                             <Label> {
-                                walk: {width: Fit, height: Fit, margin: {bottom: 2.}}
+                                width: Fit
+                                height: Fit
+                                margin: {bottom: 2.}
+
                                 text: "¥"
-                                draw_label: {
+                                draw_text: {
                                     color: #fff
                                     text_style: <REGULAR_TEXT> {font_size: 10.0},
                                 }
                             }
                             <Label> {
-                                walk: {width: Fit, height: Fit}
+                                width: Fit
+                                height: Fit
+
                                 text: "58"
-                                draw_label: {
+                                draw_text: {
                                     color: #fff
                                     text_style: <REGULAR_TEXT> {font_size: 14.0},
                                 }
                             }
                         }
                         <Label> {
-                            walk: {width: Fit, height: Fit}
+                            width: Fit
+                            height: Fit
+
                             text: "USD 8.11"
-                            draw_label: {
+                            draw_text: {
                                 color: #fff
                                 text_style: <REGULAR_TEXT> {font_size: 8.0},
                             }
@@ -220,17 +259,19 @@ live_design! {
     CatalogItemWithOffer = <CatalogItem> {
         container = {
             info = {
-                <Box> {
-                    walk: {width: Fit, height: Fit}
-                    layout: {padding: 3.0}
+                <RoundedView> {
+                    width: Fit
+                    height: Fit
+                    padding: 3.0
                     draw_bg: {
                         color: (LIGHT_ORANGE_COLOR),
                         radius: 2.
                     }
                     <Label> {
-                        walk: {width: Fit, height: Fit}
+                        width: Fit
+                        height: Fit
                         text: "每300减40"
-                        draw_label: {
+                        draw_text: {
                             color: (ORANGE_COLOR)
                             text_style: <REGULAR_TEXT> {font_size: 8.0},
                         }
@@ -241,8 +282,11 @@ live_design! {
     }
 
     CatalogPairBase = <View> {
-        walk: {width: Fill, height: Fit}
-        layout: {flow: Right, align: {x: 0.5, y: 0.0}, padding: {left: 10., right: 10., bottom: 5.}}
+        width: Fill
+        height: Fit
+        padding: {left: 10., right: 10., bottom: 5.}
+        flow: Right
+        align: {x: 0.5, y: 0.0}
     }
 
     CatalogPair1 = <CatalogPairBase> {
@@ -284,13 +328,20 @@ live_design! {
     }
 
     Featured1 = <View> {
-        walk: {width: Fill, height: Fit, margin: 10.}
-        layout: {flow: Right, align: {x: 0.0, y: 0.0}, spacing: 10.0}
+        width: Fill,
+        height: Fit,
+        margin: 10.
+        flow: Right,
+        align: {x: 0.0, y: 0.0},
+        spacing: 10.0
 
         <Carrousel> {}
         <View> {
-            walk: {width: Fill, height: Fit}
-            layout: {flow: Down, spacing: 0}
+            width: Fill
+            height: Fit
+            flow: Down
+            spacing: 0
+
             <FeaturedBoxWithHighlightBox> {
                 header = {
                     label = {
@@ -305,8 +356,7 @@ live_design! {
                 content = {
                     image_container_1 = {
                         image = {
-                            source: (FEATURED_1_IMG)
-                            walk: {width: 60, height: 56}
+                            width: 60, height: 56, source: (FEATURED_1_IMG)
                         }
                         label = {
                             text: "爆款直降"
@@ -315,8 +365,7 @@ live_design! {
 
                     image_container_2 = {
                         image = {
-                            source: (FEATURED_2_IMG)
-                            walk: {width: 46, height: 60}
+                            width: 46, height: 60, source: (FEATURED_2_IMG)
                         }
                         label = {
                             text: "优质好货"
@@ -333,8 +382,7 @@ live_design! {
                 content = {
                     image_container_1 = {
                         image = {
-                            source: (FEATURED_3_IMG)
-                            walk: {width: 60, height: 62}
+                            width: 60, height: 62, source: (FEATURED_3_IMG)
                         }
                         label = {
                             text: "爆款直降"
@@ -343,8 +391,7 @@ live_design! {
 
                     image_container_2 = {
                         image = {
-                            source: (FEATURED_4_IMG)
-                            walk: {width: 60, height: 49}
+                            width: 60, height: 49, source: (FEATURED_4_IMG)
                         }
                         label = {
                             text: "抢大红包"
@@ -356,8 +403,12 @@ live_design! {
     }
 
     Featured2 = <View> {
-        walk: {width: Fill, height: Fit, margin: 10.}
-        layout: {flow: Right, align: {x: 0.0, y: 0.0}, spacing: 10.0}
+        width: Fill
+        height: Fit
+        margin: 10.
+        flow: Right
+        align: {x: 0.0, y: 0.0}
+        spacing: 10.0
 
         <FeaturedBoxWithHighlightLabel> {
             header = {
@@ -371,8 +422,7 @@ live_design! {
             content = {
                 image_container_1 = {
                     image = {
-                        source: (FEATURED_5_IMG)
-                        walk: {width: 54, height: 60}
+                        width: 54, height: 60, source: (FEATURED_5_IMG)
                     }
                     label = {
                         text: "爆款直降"
@@ -381,8 +431,7 @@ live_design! {
 
                 image_container_2 = {
                     image = {
-                        source: (FEATURED_6_IMG)
-                        walk: {width: 60, height: 36}
+                        width: 60, height: 36, source: (FEATURED_6_IMG)
                     }
                     label = {
                         text: "优质好货"
@@ -397,7 +446,7 @@ live_design! {
                 }
                 highlight = {
                     text: "用过才好说"
-                    draw_label: {
+                    draw_text: {
                         color: #x93edea
                     }
                 }
@@ -405,8 +454,7 @@ live_design! {
             content = {
                 image_container_1 = {
                     image = {
-                        source: (FEATURED_7_IMG)
-                        walk: {width: 54, height: 62}
+                        width: 54, height: 62, source: (FEATURED_7_IMG)
                     }
                     label = {
                         text: "爆款直降"
@@ -415,8 +463,7 @@ live_design! {
 
                 image_container_2 = {
                     image = {
-                        source: (FEATURED_8_IMG)
-                        walk: {width: 60, height: 28}
+                        width: 60, height: 28, source: (FEATURED_8_IMG)
                     }
                     label = {
                         text: "优质好货"
@@ -427,10 +474,11 @@ live_design! {
     }
 
     HomeContent = {{HomeContent}} {
-        layout: {flow: Down}
         list_view: <ListView> {
-            walk: {width: Fill, height: Fill}
-            layout: {flow: Down, spacing: 0.0}
+            width: Fill
+            height: Fill
+            flow: Down
+            spacing: 0.0
 
             options = <Options> {}
             payments = <Payment> {}
@@ -447,9 +495,9 @@ live_design! {
 
 #[derive(Live)]
 pub struct HomeContent {
-    #[live]
+    #[walk]
     walk: Walk,
-    #[live]
+    #[layout]
     layout: Layout,
     #[live]
     list_view: ListView,

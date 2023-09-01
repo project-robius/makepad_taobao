@@ -15,62 +15,67 @@ live_design! {
     IMAGE_WIDTH: 166.0
     
     Carrousel = {{Carrousel}} {
-        walk: {width: (IMAGE_WIDTH), height: Fit}
-        layout: {
-            flow: Overlay,
-            align: {x: 0.0, y: 0.0},
-        }
+        width: (IMAGE_WIDTH)
+        height: Fit
+        flow: Overlay,
+        align: {x: 0.0, y: 0.0}
 
         image1 = <View> {
-            walk: {width: Fit, height: Fit}
+            width: Fit, height: Fit
             <Image> {
-                walk: {width: (IMAGE_WIDTH), height: 226}
+                width: (IMAGE_WIDTH)
+                height: 226
                 source: (CARROUSEL_1_IMG)
             }
         }
 
         image2 = <View> {
-            walk: {width: Fit, height: Fit}
+            width: Fit, height: Fit
             <Image> {
-                walk: {width: (IMAGE_WIDTH), height: 226}
+                width: (IMAGE_WIDTH)
+                height: 226
                 source: (CARROUSEL_2_IMG)
             }
         }
 
         image3 = <View> {
-            walk: {width: Fit, height: Fit}
+            width: Fit, height: Fit
             <Image> {
-                walk: {width: (IMAGE_WIDTH), height: 226}
+                width: (IMAGE_WIDTH)
+                height: 226
                 source: (CARROUSEL_3_IMG)
             }
         }
 
         <View> {
-            walk: {width: Fill, height: Fit, margin: {top: 205.}}
-            layout: {
-                flow: Right,
-                align: {x: 0.5, y: 0.0},
-                spacing: 5.0,
-            }
+            width: Fill
+            height: Fit
+            margin: {top: 205.}
+            flow: Right,
+            align: {x: 0.5, y: 0.0}
+            spacing: 5.0
 
-            indicator1 = <Box> {
-                walk: {width: 10.0, height: 10.0}
+            indicator1 = <RoundedView> {
+                width: 10.0
+                height: 10.0
                 draw_bg: {
                     color: #f60,
                     radius: 2.5
                 }
             }
 
-            indicator2 = <Box> {
-                walk: {width: 20.0, height: 10.0}
+            indicator2 = <RoundedView> {
+                width: 20.0
+                height: 10.0
                 draw_bg: {
                     color: #f60,
                     radius: 2.5
                 }
             }
 
-            indicator3 = <Box> {
-                walk: {width: 10.0, height: 10.0}
+            indicator3 = <RoundedView> {
+                width: 10.0
+                height: 10.0
                 draw_bg: {
                     color: #f60,
                     radius: 2.5
@@ -266,15 +271,15 @@ impl Carrousel {
     }
 
     fn set_horizontal_margin(image_ref: &mut ViewRef, offset: f64, cx: &mut Cx) {
-        image_ref.apply_over(cx, live!{walk: {margin: {left: (offset) }}});
+        image_ref.apply_over(cx, live!{margin: {left: (offset) }});
     }
 
     fn adjust_indicators_width(&mut self, cx: &mut Cx) {
         for (i, indicator) in self.indicators_widgets.iter_mut().enumerate() {
             if i == self.current_image_index as usize {
-                indicator.apply_over(cx, live!{walk: {width: 20.0}});
+                indicator.apply_over(cx, live!{width: 20.0});
             } else {
-                indicator.apply_over(cx, live!{walk: {width: 10.0}});
+                indicator.apply_over(cx, live!{width: 10.0});
             }
         }
     }

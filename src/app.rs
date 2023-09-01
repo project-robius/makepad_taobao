@@ -20,14 +20,16 @@ live_design! {
     MY_TAOBAO_ICON = dep("crate://self/resources/my_taobao.svg")
 
     AppTab = <RadioButton> {
-        walk: {height: Fill, width: Fit}
-        layout: {align: {x: 0.0, y: 0.0}}
+        height: Fill
+        width: Fit
+        align: {x: 0.0, y: 0.0}
+
         draw_radio: {
             radio_type: Tab,
             color_active: (BACKGROUND_COLOR),
             color_inactive: (BACKGROUND_COLOR),
         }
-        draw_label: {
+        draw_text: {
             color_selected: #0b0,
             color_unselected: #000,
             color_unselected_hover: #111,
@@ -43,12 +45,16 @@ live_design! {
 
             navigation = <StackNavigation> {
                 root_view = {
-                    walk: {width: Fill, height: Fill}
-                    layout: {padding: 0, align: {x: 0.0, y: 0.0}, spacing: 0., flow: Down}
+                    width: Fill
+                    height: Fill
+                    padding: 0
+                    flow: Down
+                    align: {x: 0.0, y: 0.0}
+                    spacing: 0
 
                     application_pages = <View> {
-                        walk: {margin: 0.0}
-                        layout: {padding: 0.0}
+                        margin: 0
+                        padding: 0
 
                         tab1_frame = <HomeScreen> {visible: true}
                         tab2_frame = <View> {visible: false}
@@ -57,9 +63,12 @@ live_design! {
                         tab5_frame = <View> {visible: false}
                     }
 
-                    mobile_menu = <Box> {
-                        walk: {width: Fill, height: 80}
-                        layout: {flow: Right, spacing: 6.0, padding: 10}
+                    mobile_menu = <RoundedView> {
+                        width: Fill
+                        height: 80
+                        padding: 10
+                        flow: Right
+                        spacing: 6.0
                         draw_bg: {
                             instance radius: 0.0,
                             instance border_width: 1.0,
@@ -69,7 +78,7 @@ live_design! {
 
                         mobile_modes = <View> {
                             tab1 = <AppTab> {
-                                text: "首页"
+                                label: "首页"
                                 draw_icon: {
                                     svg_file: (HOME_ICON),
                                     fn get_color(self) -> vec4 {
@@ -80,13 +89,16 @@ live_design! {
                                         )
                                     }
                                 }
-                                walk: {width: Fill}
+                                width: Fill
+                                flow: Down
+                                spacing: 5.0
+                                align: {x: 0.5, y: 0.5}
+
                                 icon_walk: {width: 20, height: 20}
-                                layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
                             }
                             tab2 = <AppTab> {
-                                state: {selected = {default: on}}
-                                text: "发现",
+                                animator: {selected = {default: on}}
+                                label: "发现",
                                 draw_icon: {
                                     svg_file: (DISCOVER_ICON),
                                     fn get_color(self) -> vec4 {
@@ -97,12 +109,15 @@ live_design! {
                                         )
                                     }
                                 }
-                                walk: {width: Fill}
+                                width: Fill
+                                flow: Down
+                                spacing: 5.0
+                                align: {x: 0.5, y: 0.5}
+
                                 icon_walk: {width: 20, height: 20}
-                                layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
                             }
                             tab3 = <AppTab> {
-                                text: "消息",
+                                label: "消息",
                                 draw_icon: {
                                     svg_file: (INFO_ICON),
                                     fn get_color(self) -> vec4 {
@@ -113,12 +128,15 @@ live_design! {
                                         )
                                     }
                                 }
-                                walk: {width: Fill}
+                                width: Fill
+                                flow: Down
+                                spacing: 5.0
+                                align: {x: 0.5, y: 0.5}
+
                                 icon_walk: {width: 20, height: 20}
-                                layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
                             }
                             tab4 = <AppTab> {
-                                text: "购物车",
+                                label: "购物车",
                                 draw_icon: {
                                     svg_file: (CART_ICON),
                                     fn get_color(self) -> vec4 {
@@ -129,12 +147,15 @@ live_design! {
                                         )
                                     }
                                 }
-                                walk: {width: Fill}
+                                width: Fill
+                                flow: Down
+                                spacing: 5.0
+                                align: {x: 0.5, y: 0.5}
+
                                 icon_walk: {width: 20, height: 20}
-                                layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
                             }
                             tab5 = <AppTab> {
-                                text: "我的淘宝",
+                                label: "我的淘宝",
                                 draw_icon: {
                                     svg_file: (MY_TAOBAO_ICON),
                                     fn get_color(self) -> vec4 {
@@ -145,16 +166,18 @@ live_design! {
                                         )
                                     }
                                 }
-                                walk: {width: Fill}
+                                width: Fill
+                                flow: Down
+                                spacing: 5.0
+                                align: {x: 0.5, y: 0.5}
+
                                 icon_walk: {width: 20, height: 20}
-                                layout: {flow: Down, spacing: 5.0, align: {x: 0.5, y: 0.5}}
                             }
                         }
                     }
                 }
 
                 catalog_item_stack_view = <StackNavigationView> {
-
                     catalog_item_screen = <CatalogItemScreen> {}
                 }
             }
