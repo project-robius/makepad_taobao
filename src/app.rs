@@ -4,9 +4,8 @@ use crate::shared::stack_navigation::StackNavigationWidgetRefExt;
 use makepad_widgets::*;
 
 live_design! {
-    import makepad_widgets::desktop_window::DesktopWindow
-    import makepad_widgets::view::*
-    import makepad_widgets::radio_button::RadioButton
+    import makepad_widgets::base::*;
+    import makepad_widgets::theme_desktop_dark::*;
 
     import crate::shared::styles::*
     import crate::shared::stack_navigation::*

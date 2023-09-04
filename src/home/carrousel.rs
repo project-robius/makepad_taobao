@@ -4,9 +4,9 @@ use makepad_widgets::widget::WidgetCache;
 const IMAGE_WIDTH: f64 = 166.0;
 
 live_design! {
-    import makepad_widgets::view::*;
-    import makepad_widgets::image::*;
     import makepad_draw::shader::std::*;
+    import makepad_widgets::base::*;
+    import makepad_widgets::theme_desktop_dark::*;
 
     CARROUSEL_1_IMG = dep("crate://self/resources/catalog/carrousel_1.png")
     CARROUSEL_2_IMG = dep("crate://self/resources/catalog/carrousel_2.png")
