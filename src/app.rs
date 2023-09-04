@@ -29,7 +29,7 @@ live_design! {
             color_inactive: (BACKGROUND_COLOR),
         }
         draw_text: {
-            color_selected: #0b0,
+            color_selected: (ORANGE_COLOR),
             color_unselected: #000,
             color_unselected_hover: #111,
             text_style: <APP_NAVIGATION_FONT> {}
@@ -77,13 +77,14 @@ live_design! {
 
                         mobile_modes = <View> {
                             tab1 = <AppTab> {
+                                animator: {selected = {default: on}}
                                 label: "首页"
                                 draw_icon: {
                                     svg_file: (HOME_ICON),
                                     fn get_color(self) -> vec4 {
                                         return mix(
                                             #000,
-                                            #0b0,
+                                            ORANGE_COLOR,
                                             self.selected
                                         )
                                     }
@@ -96,14 +97,13 @@ live_design! {
                                 icon_walk: {width: 20, height: 20}
                             }
                             tab2 = <AppTab> {
-                                animator: {selected = {default: on}}
                                 label: "发现",
                                 draw_icon: {
                                     svg_file: (DISCOVER_ICON),
                                     fn get_color(self) -> vec4 {
                                         return mix(
                                             #000,
-                                            #0b0,
+                                            ORANGE_COLOR,
                                             self.selected
                                         )
                                     }
@@ -122,7 +122,7 @@ live_design! {
                                     fn get_color(self) -> vec4 {
                                         return mix(
                                             #000,
-                                            #0b0,
+                                            ORANGE_COLOR,
                                             self.selected
                                         )
                                     }
@@ -141,7 +141,7 @@ live_design! {
                                     fn get_color(self) -> vec4 {
                                         return mix(
                                             #000,
-                                            #0b0,
+                                            ORANGE_COLOR,
                                             self.selected
                                         )
                                     }
@@ -160,7 +160,7 @@ live_design! {
                                     fn get_color(self) -> vec4 {
                                         return mix(
                                             #000,
-                                            #0b0,
+                                            ORANGE_COLOR,
                                             self.selected
                                         )
                                     }
