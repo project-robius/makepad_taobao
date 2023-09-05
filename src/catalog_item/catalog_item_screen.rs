@@ -154,6 +154,29 @@ live_design! {
         }
     }
 
+    StoreProfileImage = <Image> {
+        width: 50, height: 50
+        source: (CATALOG_RING_IMG)
+        draw_bg: {
+            instance radius: 2.
+            fn pixel(self) -> vec4 {
+                let sdf = Sdf2d::viewport(self.pos * self.rect_size);
+                sdf.box(
+                    1,
+                    1,
+                    self.rect_size.x - 2.0,
+                    self.rect_size.y - 2.0,
+                    max(1.0, self.radius)
+                )
+                sdf.fill_keep(self.get_color())
+                return sdf.result
+            }
+        }
+    }
+    VariantImage = <StoreProfileImage> {
+        width: 30, height: 30
+    }
+
     RecomendedItem = <View> {
         width: Fit
         height: Fit
@@ -162,6 +185,21 @@ live_design! {
 
         <Image> {
             width: 100, height: 100, source: (CATALOG_RING_IMG)
+            draw_bg: {
+                instance radius: 5.
+                fn pixel(self) -> vec4 {
+                    let sdf = Sdf2d::viewport(self.pos * self.rect_size);
+                    sdf.box(
+                        1,
+                        1,
+                        self.rect_size.x - 2.0,
+                        self.rect_size.y - 2.0,
+                        max(1.0, self.radius)
+                    )
+                    sdf.fill_keep(self.get_color())
+                    return sdf.result
+                }
+            }
         }
         <Label> {
             width: Fill, height: Fit
@@ -348,18 +386,9 @@ live_design! {
                                 height: Fit
                                 flow: Right
                                 spacing: 3.
-                                <Image> {
-                                    width: 30, height: 30
-                                    source: (CATALOG_RING_IMG)
-                                }
-                                <Image> {
-                                    width: 30, height: 30
-                                    source: (CATALOG_RING_IMG)
-                                }
-                                <Image> {
-                                    width: 30, height: 30
-                                    source: (CATALOG_RING_IMG)
-                                }
+                                <VariantImage> {}
+                                <VariantImage> {}
+                                <VariantImage> {}
                             }
                         }
 
@@ -755,7 +784,6 @@ live_design! {
                                     max(1.0, self.radius)
                                 )
                                 sdf.fill_keep(self.get_color())
-                                sdf.stroke(#a6213e, 1);
                                 return sdf.result
                             }
                         }
@@ -763,11 +791,8 @@ live_design! {
                         <View> {
                             width: Fill, height: Fit
                             flow: Right, spacing: 5.
-                            // TODO: Make rounded
-                            <Image> {
-                                width: 50, height: 50
-                                source: (CATALOG_RING_IMG)
-                            }
+
+                            <StoreProfileImage> {}
 
                             <View> {
                                 width: Fill, height: Fit
