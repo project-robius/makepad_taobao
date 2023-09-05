@@ -223,7 +223,7 @@ impl AppMain for App {
         }
 
         let ui = self.ui.clone();
-        let actions = ui.handle_widget_event(cx, event);
+        let actions = self.ui.handle_widget_event(cx, event);
 
         ui.radio_button_set(ids!(
             mobile_modes.tab1,

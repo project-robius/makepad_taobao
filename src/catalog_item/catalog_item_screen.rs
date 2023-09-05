@@ -872,6 +872,7 @@ live_design! {
 
     CatalogItemScrollable = {{CatalogItemScrollable}} {
         list_view: <ListView> {
+            tail_range: false,
             width: Fill
             height: Fill
             flow: Down
@@ -1000,7 +1001,7 @@ impl CatalogItemScrollable {
     pub fn draw_walk(&mut self, cx: &mut Cx2d, walk: Walk) {
         cx.begin_turtle(walk, self.layout);
 
-        self.list_view.set_item_range(0, 2, 0);
+        self.list_view.set_item_range(cx, 0, 2);
 
         while self.list_view.draw_widget(cx).hook_widget().is_some() {
             while let Some(item_id) = self.list_view.next_visible_item(cx) {

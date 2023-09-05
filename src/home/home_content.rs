@@ -473,6 +473,7 @@ live_design! {
 
     HomeContent = {{HomeContent}} {
         list_view: <ListView> {
+            tail_range: false,
             width: Fill
             height: Fill
             flow: Down
@@ -573,7 +574,7 @@ impl HomeContent {
 
         cx.begin_turtle(walk, self.layout);
 
-        self.list_view.set_item_range(0, pairs_count + 3, 1);
+        self.list_view.set_item_range(cx, 0, pairs_count + 3);
 
         while self.list_view.draw_widget(cx).hook_widget().is_some() {
             while let Some(item_id) = self.list_view.next_visible_item(cx) {
@@ -589,9 +590,9 @@ impl HomeContent {
                 };
                 let item = self.list_view.item(cx, item_id, template[0]).unwrap();
 
-                if item_id > 2 && item_id < pairs_count + 4 {
-                    let data_left = &self.data[((item_id - 3) * 3) as usize];
-                    let data_right = &self.data[((item_id - 3) * 3 + 1) as usize];
+                if item_id > 3 && item_id < pairs_count + 4 {
+                    let data_left = &self.data[((item_id - 4) * 2) as usize];
+                    let data_right = &self.data[((item_id - 4) * 2 + 1) as usize];
 
                     self.catalog_item_view_map
                         .insert(item.widget(id!(left)).widget_uid().0, data_left.id);
