@@ -473,7 +473,6 @@ live_design! {
 
     HomeContent = {{HomeContent}} {
         list_view: <ListView> {
-            tail_range: false,
             width: Fill
             height: Fill
             flow: Down

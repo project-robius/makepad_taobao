@@ -1023,7 +1023,6 @@ live_design! {
 
     CatalogItemScrollable = {{CatalogItemScrollable}} {
         list_view: <ListView> {
-            tail_range: false,
             width: Fill
             height: Fill
             flow: Down
