@@ -14,6 +14,132 @@ live_design! {
     CATALOG_RING_IMG = dep("crate://self/resources/catalog/ring.png")
     AVATAR_IMG = dep("crate://self/resources/default_avatar.png")
     STAR_IMG = dep("crate://self/resources/star.png")
+    ROUNDED_STAR_IMG = dep("crate://self/resources/rounded_star.png")
+    CHAT_BUBBLE_IMG = dep("crate://self/resources/chat_bubble.png")
+    STORE_IMG = dep("crate://self/resources/store.png")
+
+    BottomBar = <View> {
+        width: Fill
+        height: Fit
+        flow: Right
+        spacing: 15.
+        padding: 5.
+        align: {y:0.5}
+        draw_bg: {
+            color: #fff
+        }
+
+        <View> {
+            width: Fit
+            height: Fit
+            flow: Right
+            spacing: 25.
+            <View> {
+                width: Fit
+                height: Fit
+                flow: Down
+                spacing: 5.
+                <Image> {
+                    width: 25, height: 25
+                    source: (STORE_IMG)
+                }
+                <Label> {
+                    width: Fit, height: Fit
+                    text: "每每"
+                    draw_text: {
+                        color: #9d
+                        text_style: <REGULAR_TEXT> {font_size: 10.0},
+                    }
+                }
+            }
+            <View> {
+                width: Fit
+                height: Fit
+                flow: Down
+                spacing: 5.
+                <Image> {
+                    width: 25, height: 25
+                    source: (CHAT_BUBBLE_IMG)
+                }
+                <Label> {
+                    width: Fit, height: Fit
+                    text: "每每"
+                    draw_text: {
+                        color: #9d
+                        text_style: <REGULAR_TEXT> {font_size: 10.0},
+                    }
+                }
+            }
+            <View> {
+                width: Fit
+                height: Fit
+                flow: Down
+                spacing: 5.
+                <Image> {
+                    width: 25, height: 25
+                    source: (ROUNDED_STAR_IMG)
+                }
+                <Label> {
+                    width: Fit, height: Fit
+                    text: "每每"
+                    draw_text: {
+                        color: #9d
+                        text_style: <REGULAR_TEXT> {font_size: 10.0},
+                    }
+                }
+            }
+        }
+
+        <View> {
+            width: Fit
+            height: Fit
+            flow: Right
+            padding: {top: 10., right: 25, bottom: 10, left: 25.}
+            spacing: 25.
+            show_bg: true
+            draw_bg: {
+                color: #ffad01
+                instance radius: 8.
+                fn pixel(self) -> vec4 {
+                    let sdf = Sdf2d::viewport(self.pos * self.rect_size);
+
+                    sdf.box(
+                        1,
+                        1,
+                        self.rect_size.x - 2.0,
+                        self.rect_size.y - 2.0,
+                        max(1.0, self.radius)
+                    );
+
+                    if self.pos.x < 0.5 {
+                        sdf.fill_keep(#ffad01);
+                    } else {
+                        sdf.fill_keep(#ff6103);
+                    }
+
+                    return sdf.result;
+                }
+
+            }
+            <Label> {
+                width: Fit, height: Fit
+                text: "每每每"
+                draw_text: {
+                    color: #fff
+                    text_style: <TITLE_TEXT> {font_size: 12.0},
+                }
+            }
+            <FillerX> {}
+            <Label> {
+                width: Fit, height: Fit
+                text: "每每每"
+                draw_text: {
+                    color: #fff
+                    text_style: <TITLE_TEXT> {font_size: 12.0},
+                }
+            }
+        }
+    }
 
     Section = <RoundedView> {
         width: Fill
@@ -28,6 +154,29 @@ live_design! {
         }
     }
 
+    StoreProfileImage = <Image> {
+        width: 50, height: 50
+        source: (CATALOG_RING_IMG)
+        draw_bg: {
+            instance radius: 2.
+            fn pixel(self) -> vec4 {
+                let sdf = Sdf2d::viewport(self.pos * self.rect_size);
+                sdf.box(
+                    1,
+                    1,
+                    self.rect_size.x - 2.0,
+                    self.rect_size.y - 2.0,
+                    max(1.0, self.radius)
+                )
+                sdf.fill_keep(self.get_color())
+                return sdf.result
+            }
+        }
+    }
+    VariantImage = <StoreProfileImage> {
+        width: 30, height: 30
+    }
+
     RecomendedItem = <View> {
         width: Fit
         height: Fit
@@ -36,6 +185,21 @@ live_design! {
 
         <Image> {
             width: 100, height: 100, source: (CATALOG_RING_IMG)
+            draw_bg: {
+                instance radius: 5.
+                fn pixel(self) -> vec4 {
+                    let sdf = Sdf2d::viewport(self.pos * self.rect_size);
+                    sdf.box(
+                        1,
+                        1,
+                        self.rect_size.x - 2.0,
+                        self.rect_size.y - 2.0,
+                        max(1.0, self.radius)
+                    )
+                    sdf.fill_keep(self.get_color())
+                    return sdf.result
+                }
+            }
         }
         <Label> {
             width: Fill, height: Fit
@@ -222,18 +386,9 @@ live_design! {
                                 height: Fit
                                 flow: Right
                                 spacing: 3.
-                                <Image> {
-                                    width: 30, height: 30
-                                    source: (CATALOG_RING_IMG)
-                                }
-                                <Image> {
-                                    width: 30, height: 30
-                                    source: (CATALOG_RING_IMG)
-                                }
-                                <Image> {
-                                    width: 30, height: 30
-                                    source: (CATALOG_RING_IMG)
-                                }
+                                <VariantImage> {}
+                                <VariantImage> {}
+                                <VariantImage> {}
                             }
                         }
 
@@ -629,7 +784,6 @@ live_design! {
                                     max(1.0, self.radius)
                                 )
                                 sdf.fill_keep(self.get_color())
-                                sdf.stroke(#a6213e, 1);
                                 return sdf.result
                             }
                         }
@@ -637,11 +791,8 @@ live_design! {
                         <View> {
                             width: Fill, height: Fit
                             flow: Right, spacing: 5.
-                            // TODO: Make rounded
-                            <Image> {
-                                width: 50, height: 50
-                                source: (CATALOG_RING_IMG)
-                            }
+
+                            <StoreProfileImage> {}
 
                             <View> {
                                 width: Fill, height: Fit
@@ -888,6 +1039,7 @@ live_design! {
         show_bg: true,
 
         catalog_item_scrollable = <CatalogItemScrollable> {}
+        bottom_bar = <BottomBar> {}
     }
 }
 
