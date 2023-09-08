@@ -67,7 +67,7 @@ live_design! {
         flow: Overlay
         align: {x: 0.5, y: 0.0}
         spacing: 0.0
-        
+
         show_bg: true
         draw_bg: {
             color: #f2
@@ -237,8 +237,8 @@ impl LiveHook for StackNavigationView {
 }
 
 impl Widget for StackNavigationView {
-    fn walk(&self) -> Walk {
-        self.view.walk()
+    fn walk(&mut self, cx: &mut Cx) -> Walk {
+        self.view.walk(cx)
     }
 
     fn redraw(&mut self, cx: &mut Cx) {

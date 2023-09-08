@@ -528,7 +528,7 @@ impl Widget for HomeContent {
         });
     }
 
-    fn walk(&self) -> Walk {
+    fn walk(&mut self, cx: &mut Cx) -> Walk {
         self.walk
     }
 
