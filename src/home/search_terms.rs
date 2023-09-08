@@ -1,10 +1,10 @@
-use makepad_widgets::*;
 use makepad_widgets::widget::WidgetCache;
+use makepad_widgets::*;
 
 live_design! {
     import makepad_widgets::base::*;
     import makepad_widgets::theme_desktop_dark::*;
-    
+
     import crate::shared::styles::*;
     import crate::shared::helpers::*;
 
@@ -105,7 +105,8 @@ impl Widget for SearchTerms {
                     if self.current_term_index >= self.terms.len() as i32 {
                         self.current_term_index = 0;
                     }
-                    self.label(id!(label)).set_text(&self.terms[self.current_term_index as usize]);
+                    self.label(id!(label))
+                        .set_text(&self.terms[self.current_term_index as usize]);
 
                     self.animator_play(cx, id!(carrousel.show));
                 }
@@ -120,8 +121,8 @@ impl Widget for SearchTerms {
         }
     }
 
-    fn walk(&self) -> Walk {
-        self.view.walk()
+    fn walk(&mut self, cx: &mut Cx) -> Walk {
+        self.view.walk(cx)
     }
 
     fn redraw(&mut self, cx: &mut Cx) {

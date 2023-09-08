@@ -1,5 +1,5 @@
-use makepad_widgets::*;
 use makepad_widgets::widget::WidgetCache;
+use makepad_widgets::*;
 
 const IMAGE_WIDTH: f64 = 166.0;
 
@@ -13,7 +13,7 @@ live_design! {
     CARROUSEL_3_IMG = dep("crate://self/resources/catalog/carrousel_3.png")
 
     IMAGE_WIDTH: 166.0
-    
+
     Carrousel = {{Carrousel}} {
         width: (IMAGE_WIDTH)
         height: Fit
@@ -183,8 +183,8 @@ impl Widget for Carrousel {
         self.handle_mouse_event(cx, event);
     }
 
-    fn walk(&self) -> Walk {
-        self.view.walk()
+    fn walk(&mut self, cx: &mut Cx) -> Walk {
+        self.view.walk(cx)
     }
 
     fn redraw(&mut self, cx: &mut Cx) {
@@ -224,7 +224,7 @@ impl Carrousel {
         let curr_index = self.current_image_index as usize;
         (
             self.image_containers[prev_index].clone(),
-            self.image_containers[curr_index].clone()
+            self.image_containers[curr_index].clone(),
         )
     }
 
@@ -239,7 +239,7 @@ impl Carrousel {
                 CarrouselDirection::Forward => {
                     Self::set_horizontal_margin(&mut current_image, offset, cx);
                     Self::set_horizontal_margin(&mut prev_image, offset - IMAGE_WIDTH, cx);
-                },
+                }
                 CarrouselDirection::Backward => {
                     Self::set_horizontal_margin(&mut current_image, -offset, cx);
                     Self::set_horizontal_margin(&mut prev_image, IMAGE_WIDTH - offset, cx);
@@ -271,15 +271,15 @@ impl Carrousel {
     }
 
     fn set_horizontal_margin(image_ref: &mut ViewRef, offset: f64, cx: &mut Cx) {
-        image_ref.apply_over(cx, live!{margin: {left: (offset) }});
+        image_ref.apply_over(cx, live! {margin: {left: (offset) }});
     }
 
     fn adjust_indicators_width(&mut self, cx: &mut Cx) {
         for (i, indicator) in self.indicators_widgets.iter_mut().enumerate() {
             if i == self.current_image_index as usize {
-                indicator.apply_over(cx, live!{width: 20.0});
+                indicator.apply_over(cx, live! {width: 20.0});
             } else {
-                indicator.apply_over(cx, live!{width: 10.0});
+                indicator.apply_over(cx, live! {width: 10.0});
             }
         }
     }
@@ -307,7 +307,7 @@ impl Carrousel {
 
                     self.animator_play(cx, id!(carrousel.restart));
                 }
-            },
+            }
             _ => {}
         }
     }
@@ -317,10 +317,12 @@ impl Carrousel {
         self.previous_image_index = self.current_image_index;
         match direction {
             CarrouselDirection::Forward => {
-                self.current_image_index = (self.current_image_index + 1).rem_euclid(self.image_containers.len() as i32);
-            },
+                self.current_image_index =
+                    (self.current_image_index + 1).rem_euclid(self.image_containers.len() as i32);
+            }
             CarrouselDirection::Backward => {
-                self.current_image_index = (self.current_image_index - 1).rem_euclid(self.image_containers.len() as i32);
+                self.current_image_index =
+                    (self.current_image_index - 1).rem_euclid(self.image_containers.len() as i32);
             }
         }
     }
