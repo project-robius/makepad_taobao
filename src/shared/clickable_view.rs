@@ -59,8 +59,7 @@ impl Widget for ClickableView {
     }
 
     fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
-        let _ = self.view.draw_walk_widget(cx, walk);
-        WidgetDraw::done()
+        self.view.draw_walk_widget(cx, walk)
     }
 }
 
@@ -79,33 +78,5 @@ impl ClickableView {
             }
             _ => (),
         }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, WidgetRef)]
-pub struct ClickableViewRef(WidgetRef);
-
-impl ClickableViewRef {
-    pub fn clicked(&self, actions: &WidgetActions) -> bool {
-        if let Some(item) = actions.find_single_action(self.widget_uid()) {
-            if let ClickableViewAction::Click = item.action() {
-                return true;
-            }
-        }
-        false
-    }
-}
-
-#[derive(Debug, Clone, WidgetSet)]
-pub struct ClickableViewSet(WidgetSet);
-
-impl ClickableViewSet {
-    pub fn clicked(&self, actions: &WidgetActions) -> bool {
-        for clickable_view in self.iter() {
-            if clickable_view.clicked(actions) {
-                return true;
-            }
-        }
-        false
     }
 }

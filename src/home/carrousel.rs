@@ -196,9 +196,8 @@ impl Widget for Carrousel {
     }
 
     fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
-        let _ = self.view.draw_walk_widget(cx, walk);
         self.next_view = cx.new_next_frame();
-        WidgetDraw::done()
+        self.view.draw_walk_widget(cx, walk)
     }
 }
 

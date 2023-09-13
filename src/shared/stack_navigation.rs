@@ -259,14 +259,13 @@ impl Widget for StackNavigationView {
     }
 
     fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
-        let _ = self.view.draw_walk_widget(
+        self.view.draw_walk_widget(
             cx,
             walk.with_abs_pos(DVec2 {
                 x: self.offset,
                 y: 0.,
             }),
-        );
-        WidgetDraw::done()
+        )
     }
 }
 

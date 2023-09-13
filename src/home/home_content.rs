@@ -124,7 +124,7 @@ live_design! {
   }
 
     CatalogItem = <ClickableView> {
-        width: 166
+        width: Fill
         height: Fit
 
         container = <RoundedView> {
@@ -140,7 +140,7 @@ live_design! {
             }
 
             image = <Image> {
-                width: 166, height: 166
+                width: Fill, height: 166
                 source: (CATALOG_FLIP_FLOPS_IMG)
 
                 // Override to have the upper corners rounded
@@ -289,7 +289,9 @@ live_design! {
 
     CatalogPair1 = <CatalogPairBase> {
         left = <CatalogItem> {}
-        <FillerX> {}
+        <FillerX> {
+            width: 10.
+        }
         right = <CatalogItemWithOffer> {
             container = { image = { source: (CATALOG_COSMETICS_IMG) } }
         }
@@ -299,7 +301,9 @@ live_design! {
         left = <CatalogItemWithOffer> {
             container = { image = { source: (CATALOG_LIVING_FURNITURE_IMG) } }
         }
-        <FillerX> {}
+        <FillerX> {
+            width: 10.
+        }
         right = <CatalogItemWithOffer> {
             container = { image = { source: (CATALOG_SEUL_COLLECTION_IMG) } }
         }
@@ -309,7 +313,9 @@ live_design! {
         left = <CatalogItem> {
             container = { image = { source: (CATALOG_MEAL_IMG) } }
         }
-        <FillerX> {}
+        <FillerX> {
+            width: 10.
+        }
         right = <CatalogItem> {
             container = { image = { source: (CATALOG_PROTEIN_IMG) } }
         }
@@ -319,7 +325,9 @@ live_design! {
         left = <CatalogItemWithOffer> {
             container = { image = { source: (CATALOG_RING_IMG) } }
         }
-        <FillerX> {}
+        <FillerX> {
+            width: 10.
+        }
         right = <CatalogItem> {
             container = { image = { source: (CATALOG_ROUTER_IMG) } }
         }
@@ -526,9 +534,9 @@ impl Widget for HomeContent {
         self.handle_event_with(cx, event, &mut |cx, action| {
             dispatch_action(cx, WidgetActionItem::new(action.into(), widget_uid));
         });
-    }
+    }   
 
-    fn walk(&mut self, cx: &mut Cx) -> Walk {
+    fn walk(&mut self, _cx: &mut Cx) -> Walk {
         self.walk
     }
 
