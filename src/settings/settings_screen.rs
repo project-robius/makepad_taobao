@@ -64,9 +64,9 @@ live_design! {
         height: Fit
         flow: Right
         align: {y: 0.5}
-        <Label> {
+        padding: {left: 10}
+        label = <Label> {
             width: Fit, height: Fit
-            text: "国浓缩缩乳乳"
             draw_text: {
                 color: #000
                 text_style: <REGULAR_TEXT> {font_size: 10.},
@@ -76,7 +76,7 @@ live_design! {
         <Toggle> {}
     }
 
-    DiscoverScreen = <View> {
+    SettingsScreen = <View> {
         width: Fill
         height: Fill
         flow: Down
@@ -91,7 +91,7 @@ live_design! {
 
         <Label> {
             width: Fit, height: Fit
-            text: "国浓缩乳"
+            text: "负载开关"
             draw_text: {
                 color: #000
                 text_style: <TITLE_TEXT> {font_size: 12.},
@@ -100,7 +100,7 @@ live_design! {
 
         <Label> {
             width: Fit, height: Fit
-            text: "国浓缩乳: 2.0.0.1"
+            text: "应用版本: 2.0.0.1"
             draw_text: {
                 color: #000
                 text_style: <REGULAR_TEXT> {font_size: 10.},
@@ -117,12 +117,25 @@ live_design! {
             draw_bg: {
                 color: #fff
             }
-            <OptionToggle> {}
-            <OptionToggle> {}
+            <OptionToggle> {
+                label = {
+                    text: "启动类加载5000类"
+                }
+            }
+            <OptionToggle> {
+                label = {
+                    text: "启动调用通信线程"
+                }
+            }
+            <OptionToggle> {
+                label = {
+                    text: "启动心跳worker"
+                }
+            }
             <Label> {
                 padding: {top: 10, left: 10}
                 width: Fit, height: Fit
-                text: "国浓缩缩乳乳"
+                text: "注意：修改设置后退出应用，重新启动生效"
                 draw_text: {
                     color: #fa0322
                     text_style: <REGULAR_TEXT> {font_size: 10.},

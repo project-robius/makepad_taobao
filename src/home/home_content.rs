@@ -127,6 +127,8 @@ live_design! {
         width: Fill
         height: Fit
 
+        show_bg: false
+
         container = <RoundedView> {
             width: Fill
             height: Fit
