@@ -11,6 +11,7 @@ live_design! {
     import crate::shared::stack_navigation::*
     import crate::home::home_screen::HomeScreen
     import crate::catalog_item::catalog_item_screen::*
+    import crate::discover::discover_screen::DiscoverScreen
 
     HOME_ICON = dep("crate://self/resources/home.svg")
     DISCOVER_ICON = dep("crate://self/resources/discover.svg")
@@ -56,7 +57,7 @@ live_design! {
                         padding: 0
 
                         tab1_frame = <HomeScreen> {visible: true}
-                        tab2_frame = <View> {visible: false}
+                        tab2_frame = <DiscoverScreen> {visible: false}
                         tab3_frame = <View> {visible: false}
                         tab4_frame = <View> {visible: false}
                         tab5_frame = <View> {visible: false}
@@ -211,8 +212,11 @@ impl LiveHook for App {
         crate::home::search_terms::live_design(cx);
         crate::home::carrousel::live_design(cx);
 
+        crate::discover::discover_screen::live_design(cx);
         // catalog_item
         crate::catalog_item::catalog_item_screen::live_design(cx);
+
+        // discover
     }
 }
 
