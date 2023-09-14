@@ -193,19 +193,21 @@ live_design! {
         header = <Header> {}
 
         // TBD Adjust this based on actual screen size
-        offset: 600.0
+        offset: 400.0
 
         animator: {
             slide = {
                 default: hide,
                 hide = {
-                    from: {all: Forward {duration: 0.3}}
+                    ease: ExpDecay {d1: 0.80, d2: 0.97}
+                    from: {all: Forward {duration: 0.5}}
                     // Bug: Constants are not working as part of an live state value
-                    apply: {offset: 600.0}
+                    apply: {offset: 400.0}
                 }
 
                 show = {
-                    from: {all: Forward {duration: 0.3}}
+                    ease: ExpDecay {d1: 0.82, d2: 0.95}
+                    from: {all: Forward {duration: 0.5}}
                     apply: {offset: 0.0}
                 }
             }
