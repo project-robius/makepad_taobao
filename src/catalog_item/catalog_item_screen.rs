@@ -1022,11 +1022,14 @@ live_design! {
     }
 
     CatalogItemScrollable = {{CatalogItemScrollable}} {
-        list_view: <ListView> {
+        list: <PortalList> {
             width: Fill
             height: Fill
             flow: Down
             spacing: 0.0
+
+            allow_empty: true
+
             catalog_item = <CatalogItem> {}
         }
     }
@@ -1110,7 +1113,7 @@ pub struct CatalogItemScrollable {
     #[layout]
     layout: Layout,
     #[live]
-    list_view: ListView,
+    list: PortalList,
 }
 
 impl LiveHook for CatalogItemScrollable {
@@ -1126,7 +1129,7 @@ impl Widget for CatalogItemScrollable {
         event: &Event,
         dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
     ) {
-        let actions = self.list_view.handle_widget_event(cx, event);
+        let actions = self.list.handle_widget_event(cx, event);
 
         for action in actions {
             dispatch_action(cx, action);
@@ -1138,7 +1141,7 @@ impl Widget for CatalogItemScrollable {
     }
 
     fn redraw(&mut self, cx: &mut Cx) {
-        self.list_view.redraw(cx)
+        self.list.redraw(cx)
     }
 
     fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
@@ -1151,15 +1154,15 @@ impl CatalogItemScrollable {
     pub fn draw_walk(&mut self, cx: &mut Cx2d, walk: Walk) {
         cx.begin_turtle(walk, self.layout);
 
-        self.list_view.set_item_range(cx, 0, 2);
+        self.list.set_item_range(cx, 0, 2);
 
-        while self.list_view.draw_widget(cx).hook_widget().is_some() {
-            while let Some(item_id) = self.list_view.next_visible_item(cx) {
+        while self.list.draw_widget(cx).hook_widget().is_some() {
+            while let Some(item_id) = self.list.next_visible_item(cx) {
                 if item_id > 0 {
                     continue;
                 }
                 let template = id!(catalog_item);
-                let item = self.list_view.item(cx, item_id, template[0]).unwrap();
+                let item = self.list.item(cx, item_id, template[0]).unwrap();
 
                 item.draw_widget_all(cx);
             }

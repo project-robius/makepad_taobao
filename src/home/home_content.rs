@@ -482,11 +482,13 @@ live_design! {
     }
 
     HomeContent = {{HomeContent}} {
-        list_view: <ListView> {
+        list: <PortalList> {
             width: Fill
             height: Fill
             flow: Down
             spacing: 0.0
+
+            allow_empty: true
 
             options = <Options> {}
             payments = <Payment> {}
@@ -508,7 +510,7 @@ pub struct HomeContent {
     #[layout]
     layout: Layout,
     #[live]
-    list_view: ListView,
+    list: PortalList,
     #[rust]
     data: Vec<CatalogDataItem>,
     #[rust]
@@ -543,7 +545,7 @@ impl Widget for HomeContent {
     }
 
     fn redraw(&mut self, cx: &mut Cx) {
-        self.list_view.redraw(cx)
+        self.list.redraw(cx)
     }
 
     fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
@@ -560,7 +562,7 @@ impl HomeContent {
         dispatch_action: &mut dyn FnMut(&mut Cx, CatalogItemListAction),
     ) {
         let mut actions = Vec::new();
-        self.list_view
+        self.list
             .handle_widget_event_with(cx, event, &mut |_, action| {
                 if let Some(catalog_item_id) = self.catalog_item_view_map.get(&action.widget_uid.0)
                 {
@@ -583,10 +585,10 @@ impl HomeContent {
 
         cx.begin_turtle(walk, self.layout);
 
-        self.list_view.set_item_range(cx, 0, pairs_count + 3);
+        self.list.set_item_range(cx, 0, pairs_count + 3);
 
-        while self.list_view.draw_widget(cx).hook_widget().is_some() {
-            while let Some(item_id) = self.list_view.next_visible_item(cx) {
+        while self.list.draw_widget(cx).hook_widget().is_some() {
+            while let Some(item_id) = self.list.next_visible_item(cx) {
                 let template = match item_id {
                     0 => id!(options),
                     1 => id!(payments),
@@ -597,7 +599,7 @@ impl HomeContent {
                     x if (x - 2) % 4 == 2 => id!(catalog_pair_3),
                     _ => id!(catalog_pair_4),
                 };
-                let item = self.list_view.item(cx, item_id, template[0]).unwrap();
+                let item = self.list.item(cx, item_id, template[0]).unwrap();
 
                 if item_id > 3 && item_id < pairs_count + 4 {
                     let data_left = &self.data[((item_id - 4) * 2) as usize];
