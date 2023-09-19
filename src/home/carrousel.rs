@@ -125,7 +125,7 @@ pub struct Carrousel {
     animator: Animator,
 
     #[rust]
-    next_view: NextFrame,
+    next_frame: NextFrame,
 
     #[rust]
     last_abs: f64,
@@ -166,7 +166,7 @@ impl LiveHook for Carrousel {
 
         self.reset_images_visibility();
 
-        self.next_view = cx.new_next_frame();
+        self.next_frame = cx.new_next_frame();
         self.animator_play(cx, id!(carrousel.keep));
     }
 }
@@ -196,25 +196,25 @@ impl Widget for Carrousel {
     }
 
     fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
-        self.next_view = cx.new_next_frame();
+        self.next_frame = cx.new_next_frame();
         self.view.draw_walk_widget(cx, walk)
     }
 }
 
 impl Carrousel {
     fn control_animation(&mut self, cx: &mut Cx, event: &Event) {
-        if let Some(_ne) = self.next_view.is_event(event) {
+        if let Some(_ne) = self.next_frame.is_event(event) {
             if self.animator_handle_event(cx, event).is_animating() {
                 self.update_image_positions(cx);
             } else {
                 self.fire_next_animation(cx);
             }
-            self.next_view = cx.new_next_frame();
+            self.next_frame = cx.new_next_frame();
         }
 
         // Fixes a bug where the carrousel would not animate returning from stack navigation
         if let Event::NextFrame(_) = event {
-            self.next_view = cx.new_next_frame();
+            self.next_frame = cx.new_next_frame();
         }
     }
 
