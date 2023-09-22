@@ -1028,8 +1028,6 @@ live_design! {
             flow: Down
             spacing: 0.0
 
-            allow_empty: true
-
             catalog_item = <CatalogItem> {}
         }
     }

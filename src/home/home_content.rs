@@ -488,8 +488,6 @@ live_design! {
             flow: Down
             spacing: 0.0
 
-            allow_empty: true
-
             options = <Options> {}
             payments = <Payment> {}
             featured_1 = <Featured1> {}
