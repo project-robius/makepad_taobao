@@ -27,7 +27,7 @@ cargo install --path ./tools/cargo_makepad
 
 ### Clone the makepad_taobao repo
 ```
-git clone https://github.com/mobilerust/makepad_taobao
+git clone https://github.com/project-robius/makepad_taobao
 ```
 
 ## 3. Android Build
