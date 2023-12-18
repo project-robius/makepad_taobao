@@ -56,8 +56,8 @@ live_design! {
                             margin: 0
                             padding: 0
 
-                            tab1_frame = <HomeScreen> {visible: true}
-                            tab2_frame = <SettingsScreen> {visible: false}
+                            home_screen = <HomeScreen> {visible: true}
+                            settings_screen = <SettingsScreen> {visible: false}
                             tab3_frame = <View> {visible: false}
                             tab4_frame = <View> {visible: false}
                             tab5_frame = <View> {visible: false}
@@ -188,7 +188,7 @@ live_design! {
 
 app_main!(App);
 
-#[derive(Live)]
+#[derive(Live, LiveHook)]
 pub struct App {
     #[live]
     ui: WidgetRef,
@@ -196,8 +196,8 @@ pub struct App {
 
 impl App {}
 
-impl LiveHook for App {
-    fn before_live_design(cx: &mut Cx) {
+impl LiveRegister for App {
+    fn live_register(cx: &mut Cx) {
         makepad_widgets::live_design(cx);
 
         // shared
@@ -221,12 +221,14 @@ impl LiveHook for App {
 
 impl AppMain for App {
     fn handle_event(&mut self, cx: &mut Cx, event: &Event) {
-        if let Event::Draw(event) = event {
-            return self.ui.draw_widget_all(&mut Cx2d::new(cx, event));
-        }
+        self.match_event(cx, event);
+        self.ui.handle_event(cx, event, &mut Scope::empty());
+    }
+}
 
+impl MatchEvent for App {
+    fn handle_actions(&mut self, cx: &mut Cx, actions: &Actions) {
         let ui = self.ui.clone();
-        let actions = self.ui.handle_widget_event(cx, event);
 
         ui.radio_button_set(ids!(
             mobile_modes.tab1,
@@ -238,10 +240,10 @@ impl AppMain for App {
         .selected_to_visible(
             cx,
             &ui,
-            &actions,
+            actions,
             ids!(
-                application_pages.tab1_frame,
-                application_pages.tab2_frame,
+                application_pages.home_screen,
+                application_pages.settings_screen,
                 application_pages.tab3_frame,
                 application_pages.tab4_frame,
                 application_pages.tab5_frame,
@@ -249,21 +251,16 @@ impl AppMain for App {
         );
 
         for action in actions {
-            match action.action() {
-                CatalogItemListAction::Click(id) => {
-                    let mut stack_navigation = ui.stack_navigation(id!(navigation));
+            if let CatalogItemListAction::Click(id) = action.as_widget_action().cast() {
+                let mut stack_navigation = ui.stack_navigation(id!(navigation));
 
-                    // TODO: Set stack navigation data, like header title, etc
+                let catalog_item_ref = stack_navigation
+                    .view(id!(catalog_item_stack_view.catalog_item_screen))
+                    .catalog_item(id!(catalog_item));
+                catalog_item_ref.set_catalog_item_id(id);
 
-                    let catalog_item_ref = stack_navigation
-                        .view(id!(catalog_item_stack_view.catalog_item_screen))
-                        .catalog_item(id!(catalog_item));
-                    catalog_item_ref.set_catalog_item_id(id);
-
-                    stack_navigation
-                        .show_stack_view_by_id(LiveId::from_str("catalog_item_stack_view"), cx);
-                }
-                _ => {}
+                stack_navigation
+                    .show_stack_view_by_id(LiveId::from_str("catalog_item_stack_view"), cx);
             }
         }
     }

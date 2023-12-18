@@ -482,13 +482,13 @@ live_design! {
     }
 
     HomeContent = {{HomeContent}} {
-        list: <PortalList> {
+        list = <PortalList> {
             width: Fill
             height: Fill
             flow: Down
             spacing: 0.0
 
-            options = <Options> {}
+        options = <Options> {}
             payments = <Payment> {}
             featured_1 = <Featured1> {}
             featured_2 = <Featured2> {}
@@ -501,14 +501,10 @@ live_design! {
     }
 }
 
-#[derive(Live)]
+#[derive(Live, Widget)]
 pub struct HomeContent {
-    #[walk]
-    walk: Walk,
-    #[layout]
-    layout: Layout,
-    #[live]
-    list: PortalList,
+    #[deref]
+    view: View,
     #[rust]
     data: Vec<CatalogDataItem>,
     #[rust]
@@ -516,125 +512,89 @@ pub struct HomeContent {
 }
 
 impl LiveHook for HomeContent {
-    fn before_live_design(cx: &mut Cx) {
-        register_widget!(cx, HomeContent);
-    }
-
     fn after_new_from_doc(&mut self, _cx: &mut Cx) {
         self.data = CatalogData::new().items;
     }
 }
 
 impl Widget for HomeContent {
-    fn handle_widget_event_with(
-        &mut self,
-        cx: &mut Cx,
-        event: &Event,
-        dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
-    ) {
+    fn handle_event(&mut self, cx: &mut Cx, event: &Event, scope: &mut Scope) {
         let widget_uid = self.widget_uid();
-        self.handle_event_with(cx, event, &mut |cx, action| {
-            dispatch_action(cx, WidgetActionItem::new(action.into(), widget_uid));
-        });
-    }   
-
-    fn walk(&mut self, _cx: &mut Cx) -> Walk {
-        self.walk
-    }
-
-    fn redraw(&mut self, cx: &mut Cx) {
-        self.list.redraw(cx)
-    }
-
-    fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
-        self.draw_walk(cx, walk);
-        WidgetDraw::done()
-    }
-}
-
-impl HomeContent {
-    fn handle_event_with(
-        &mut self,
-        cx: &mut Cx,
-        event: &Event,
-        dispatch_action: &mut dyn FnMut(&mut Cx, CatalogItemListAction),
-    ) {
-        let mut actions = Vec::new();
-        self.list
-            .handle_widget_event_with(cx, event, &mut |_, action| {
-                if let Some(catalog_item_id) = self.catalog_item_view_map.get(&action.widget_uid.0)
-                {
-                    actions.push((catalog_item_id, action));
-                }
-            });
-
-        for (catalog_item_id, action) in actions {
-            match action.action() {
+        for list_action in cx.capture_actions(|cx| self.view.handle_event(cx, event, scope)) {
+            match list_action.as_widget_action().cast() {
                 ClickableViewAction::Click => {
-                    dispatch_action(cx, CatalogItemListAction::Click(*catalog_item_id))
-                }
-                _ => (),
-            }
-        }
-    }
+                    let widget_action = list_action.as_widget_action().unwrap();
 
-    pub fn draw_walk(&mut self, cx: &mut Cx2d, walk: Walk) {
-        let pairs_count: u64 = (self.data.len() / 2_usize) as u64;
-
-        cx.begin_turtle(walk, self.layout);
-
-        self.list.set_item_range(cx, 0, pairs_count + 3);
-
-        while self.list.draw_widget(cx).hook_widget().is_some() {
-            while let Some(item_id) = self.list.next_visible_item(cx) {
-                let template = match item_id {
-                    0 => id!(options),
-                    1 => id!(payments),
-                    2 => id!(featured_1),
-                    3 => id!(featured_2),
-                    x if (x - 2) % 4 == 0 => id!(catalog_pair_1),
-                    x if (x - 2) % 4 == 1 => id!(catalog_pair_2),
-                    x if (x - 2) % 4 == 2 => id!(catalog_pair_3),
-                    _ => id!(catalog_pair_4),
-                };
-                let item = self.list.item(cx, item_id, template[0]).unwrap();
-
-                if item_id > 3 && item_id < pairs_count + 4 {
-                    let data_left = &self.data[((item_id - 4) * 2) as usize];
-                    let data_right = &self.data[((item_id - 4) * 2 + 1) as usize];
-
-                    self.catalog_item_view_map
-                        .insert(item.widget(id!(left)).widget_uid().0, data_left.id);
-                    self.catalog_item_view_map
-                        .insert(item.widget(id!(right)).widget_uid().0, data_right.id);
-
-                    if let Some(mut catalog_pair) = item.borrow_mut::<View>() {
-                        catalog_pair
-                            .label(id!(left.info.title))
-                            .set_text(&data_left.title);
-                        catalog_pair
-                            .label(id!(left.info.subtitle))
-                            .set_text(&data_left.subtitle);
-
-                        catalog_pair
-                            .label(id!(right.info.title))
-                            .set_text(&data_right.title);
-                        catalog_pair
-                            .label(id!(right.info.subtitle))
-                            .set_text(&data_right.subtitle);
+                    if let Some(catalog_item_id) =
+                        self.catalog_item_view_map.get(&widget_action.widget_uid.0)
+                    {
+                        cx.widget_action(
+                            widget_uid,
+                            &scope.path,
+                            CatalogItemListAction::Click(*catalog_item_id),
+                        );
                     }
                 }
-                item.draw_widget_all(cx);
+                ClickableViewAction::None => (),
             }
         }
+    }
 
-        cx.end_turtle();
+    fn draw_walk(&mut self, cx: &mut Cx2d, scope: &mut Scope, walk: Walk) -> DrawStep {
+        let pairs_count: u64 = (self.data.len() / 2_usize) as u64;
+
+        while let Some(item) = self.view.draw_walk(cx, scope, walk).step() {
+            if let Some(mut list) = item.as_portal_list().borrow_mut() {
+                list.set_item_range(cx, 0, pairs_count + 3);
+                while let Some(item_id) = list.next_visible_item(cx) {
+                    let template = match item_id {
+                        0 => id!(options),
+                        1 => id!(payments),
+                        2 => id!(featured_1),
+                        3 => id!(featured_2),
+                        x if (x - 2) % 4 == 0 => id!(catalog_pair_1),
+                        x if (x - 2) % 4 == 1 => id!(catalog_pair_2),
+                        x if (x - 2) % 4 == 2 => id!(catalog_pair_3),
+                        _ => id!(catalog_pair_4),
+                    };
+                    let item = list.item(cx, item_id, template[0]).unwrap();
+
+                    if item_id > 3 && item_id < pairs_count + 4 {
+                        let data_left = &self.data[((item_id - 4) * 2) as usize];
+                        let data_right = &self.data[((item_id - 4) * 2 + 1) as usize];
+
+                        self.catalog_item_view_map
+                            .insert(item.widget(id!(left)).widget_uid().0, data_left.id);
+                        self.catalog_item_view_map
+                            .insert(item.widget(id!(right)).widget_uid().0, data_right.id);
+
+                        if let Some(mut catalog_pair) = item.borrow_mut::<View>() {
+                            catalog_pair
+                                .label(id!(left.info.title))
+                                .set_text(&data_left.title);
+                            catalog_pair
+                                .label(id!(left.info.subtitle))
+                                .set_text(&data_left.subtitle);
+
+                            catalog_pair
+                                .label(id!(right.info.title))
+                                .set_text(&data_right.title);
+                            catalog_pair
+                                .label(id!(right.info.subtitle))
+                                .set_text(&data_right.subtitle);
+                        }
+                    }
+                    item.draw_all(cx, scope);
+                }
+            }
+        }
+        DrawStep::done()
     }
 }
 
 pub type CatalogItemId = u64;
 
-#[derive(Debug, Clone, WidgetAction)]
+#[derive(Clone, Debug, DefaultNone)]
 pub enum CatalogItemListAction {
     Click(CatalogItemId),
     None,

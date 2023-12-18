@@ -220,7 +220,7 @@ live_design! {
     }
 }
 
-#[derive(Live)]
+#[derive(Live, LiveHook, Widget)]
 pub struct StackNavigationView {
     #[deref]
     view: View,
@@ -232,63 +232,15 @@ pub struct StackNavigationView {
     animator: Animator,
 }
 
-impl LiveHook for StackNavigationView {
-    fn before_live_design(cx: &mut Cx) {
-        register_widget!(cx, StackNavigationView);
-    }
-}
-
 impl Widget for StackNavigationView {
-    fn walk(&mut self, cx: &mut Cx) -> Walk {
-        self.view.walk(cx)
-    }
-
-    fn redraw(&mut self, cx: &mut Cx) {
-        self.view.redraw(cx)
-    }
-
-    fn find_widgets(&mut self, path: &[LiveId], cached: WidgetCache, results: &mut WidgetSet) {
-        self.view.find_widgets(path, cached, results);
-    }
-
-    fn handle_widget_event_with(
-        &mut self,
-        cx: &mut Cx,
-        event: &Event,
-        dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
-    ) {
-        self.handle_event_with(cx, event, dispatch_action);
-    }
-
-    fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
-        self.view.draw_walk_widget(
-            cx,
-            walk.with_abs_pos(DVec2 {
-                x: self.offset,
-                y: 0.,
-            }),
-        )
-    }
-}
-
-impl StackNavigationView {
-    pub fn handle_event_with(
-        &mut self,
-        cx: &mut Cx,
-        event: &Event,
-        dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
-    ) {
+    fn handle_event(&mut self, cx: &mut Cx, event: &Event, scope: &mut Scope) {
         if self.animator_handle_event(cx, event).is_animating() {
             self.view.redraw(cx);
         }
 
-        let actions = self.view.handle_widget_event(cx, event);
+        let actions = cx.capture_actions(|cx| self.view.handle_event(cx, event, scope));
         if self.button(id!(back_button)).clicked(&actions) {
             self.animator_play(cx, id!(slide.hide));
-        }
-
-        for action in actions.into_iter() {
-            dispatch_action(cx, action);
         }
 
         if self.animator.animator_in_state(cx, id!(slide.hide))
@@ -296,11 +248,21 @@ impl StackNavigationView {
         {
             self.apply_over(cx, live! {visible: false});
         }
+
+        self.view.handle_event(cx, event, scope);
+    }
+
+    fn draw_walk(&mut self, cx: &mut Cx2d, scope: &mut Scope, walk: Walk) -> DrawStep {
+        self.view.draw_walk(
+            cx,
+            scope,
+            walk.with_abs_pos(DVec2 {
+                x: self.offset,
+                y: 0.,
+            }),
+        )
     }
 }
-
-#[derive(Clone, PartialEq, WidgetRef)]
-pub struct StackNavigationViewRef(pub WidgetRef);
 
 impl StackNavigationViewRef {
     pub fn show(&mut self, cx: &mut Cx) {
@@ -335,42 +297,39 @@ enum ActiveStackView {
     Active(LiveId),
 }
 
-#[derive(Live)]
+#[derive(Live, LiveRegisterWidget, WidgetRef)]
 pub struct StackNavigation {
     #[deref]
     view: View,
+
     #[rust]
     active_stack_view: ActiveStackView,
 }
 
 impl LiveHook for StackNavigation {
-    fn before_live_design(cx: &mut Cx) {
-        register_widget!(cx, StackNavigation);
-    }
-
     fn after_new_from_doc(&mut self, _cx: &mut Cx) {
         self.active_stack_view = ActiveStackView::None;
     }
 }
 
 impl Widget for StackNavigation {
-    fn handle_widget_event_with(
-        &mut self,
-        cx: &mut Cx,
-        event: &Event,
-        dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
-    ) {
-        let mut actions = vec![];
-
+    fn handle_event(&mut self, cx: &mut Cx, event: &Event, scope: &mut Scope) {
         for widget_ref in self.get_active_views(cx).iter() {
-            for a in widget_ref.handle_widget_event(cx, event) {
-                actions.push(a);
-            }
+            widget_ref.handle_event(cx, event, scope);
         }
+    }
 
-        for action in actions.into_iter() {
-            dispatch_action(cx, action);
+    fn draw_walk(&mut self, cx: &mut Cx2d, scope: &mut Scope, walk: Walk) -> DrawStep {
+        for widget_ref in self.get_active_views(cx.cx).iter() {
+            widget_ref.draw_walk(cx, scope, walk)?;
         }
+        DrawStep::done()
+    }
+}
+
+impl WidgetNode for StackNavigation {
+    fn walk(&mut self, cx: &mut Cx) -> Walk {
+        self.view.walk(cx)
     }
 
     fn redraw(&mut self, cx: &mut Cx) {
@@ -380,24 +339,18 @@ impl Widget for StackNavigation {
     }
 
     fn find_widgets(&mut self, path: &[LiveId], cached: WidgetCache, results: &mut WidgetSet) {
-        // We're only using View widget ability to find widgets
         self.view.find_widgets(path, cached, results);
-    }
-
-    fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
-        for widget_ref in self.get_active_views(cx.cx).iter() {
-            let _ = widget_ref.draw_walk_widget(cx, walk);
-        }
-        WidgetDraw::done()
     }
 }
 
 impl StackNavigation {
     pub fn show_stack_view_by_id(&mut self, stack_view_id: LiveId, cx: &mut Cx) {
-        let mut stack_view_ref = self.stack_navigation_view(&[stack_view_id]);
-        stack_view_ref.show(cx);
-        self.active_stack_view = ActiveStackView::Active(stack_view_id);
-        self.redraw(cx);
+        if let ActiveStackView::None = self.active_stack_view {
+            let mut stack_view_ref = self.stack_navigation_view(&[stack_view_id]);
+            stack_view_ref.show(cx);
+            self.active_stack_view = ActiveStackView::Active(stack_view_id);
+            self.redraw(cx);
+        }
     }
 
     fn get_active_views(&mut self, cx: &mut Cx) -> Vec<WidgetRef> {
@@ -423,9 +376,6 @@ impl StackNavigation {
         }
     }
 }
-
-#[derive(Clone, PartialEq, WidgetRef, Debug)]
-pub struct StackNavigationRef(pub WidgetRef);
 
 impl StackNavigationRef {
     pub fn show_stack_view_by_id(&mut self, stack_view_id: LiveId, cx: &mut Cx) {

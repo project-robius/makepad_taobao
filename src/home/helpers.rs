@@ -5,14 +5,14 @@ live_design! {
     import makepad_widgets::theme_desktop_dark::*;
     import crate::shared::styles::*;
     import crate::shared::helpers::*;
-    
+
     IconWithText = <View> {
         width: Fit
         height: Fit
         flow: Down
         align: {x: 0.5, y: 0.5}
         spacing: 5.0
-        
+
         image = <Image> {
             width: 24, height: 24
         }

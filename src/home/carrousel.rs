@@ -113,7 +113,7 @@ enum CarrouselDirection {
     Backward,
 }
 
-#[derive(Live)]
+#[derive(Live, Widget)]
 pub struct Carrousel {
     #[deref]
     view: View,
@@ -147,10 +147,6 @@ pub struct Carrousel {
 }
 
 impl LiveHook for Carrousel {
-    fn before_live_design(cx: &mut Cx) {
-        register_widget!(cx, Carrousel);
-    }
-
     fn after_new_from_doc(&mut self, cx: &mut Cx) {
         self.image_containers = vec![
             self.view(id!(image1)),
@@ -172,32 +168,15 @@ impl LiveHook for Carrousel {
 }
 
 impl Widget for Carrousel {
-    fn handle_widget_event_with(
-        &mut self,
-        cx: &mut Cx,
-        event: &Event,
-        _dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
-    ) {
+    fn handle_event(&mut self, cx: &mut Cx, event: &Event, _scope: &mut Scope) {
         self.control_animation(cx, event);
         self.adjust_indicators_width(cx);
         self.handle_mouse_event(cx, event);
     }
 
-    fn walk(&mut self, cx: &mut Cx) -> Walk {
-        self.view.walk(cx)
-    }
-
-    fn redraw(&mut self, cx: &mut Cx) {
-        self.view.redraw(cx);
-    }
-
-    fn find_widgets(&mut self, path: &[LiveId], cached: WidgetCache, results: &mut WidgetSet) {
-        self.view.find_widgets(path, cached, results);
-    }
-
-    fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
+    fn draw_walk(&mut self, cx: &mut Cx2d, scope: &mut Scope, walk: Walk) -> DrawStep {
         self.next_frame = cx.new_next_frame();
-        self.view.draw_walk_widget(cx, walk)
+        self.view.draw_walk(cx, scope, walk)
     }
 }
 

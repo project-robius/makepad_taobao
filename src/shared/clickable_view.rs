@@ -6,8 +6,7 @@ live_design! {
     import makepad_widgets::theme_desktop_dark::*;
 
     ClickableView = {{ClickableView}} {
-        width: Fit
-        height: Fit
+        width: Fit, height: Fit
         show_bg: true
         draw_bg: {
             color: #fff
@@ -15,68 +14,36 @@ live_design! {
     }
 }
 
-#[derive(Live)]
+#[derive(Live, LiveHook, Widget)]
 pub struct ClickableView {
     #[deref]
     view: View,
 }
-
-impl LiveHook for ClickableView {
-    fn before_live_design(cx: &mut Cx) {
-        register_widget!(cx, ClickableView);
-    }
-}
-
-#[derive(Clone, WidgetAction)]
+#[derive(Clone, DefaultNone, Debug)]
 pub enum ClickableViewAction {
     None,
     Click,
 }
 
 impl Widget for ClickableView {
-    fn handle_widget_event_with(
-        &mut self,
-        cx: &mut Cx,
-        event: &Event,
-        dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
-    ) {
+    fn handle_event(&mut self, cx: &mut Cx, event: &Event, scope: &mut Scope) {
         let uid = self.widget_uid();
-        self.handle_event_with(cx, event, &mut |cx, action| {
-            dispatch_action(cx, WidgetActionItem::new(action.into(), uid));
-        });
-    }
 
-    fn redraw(&mut self, cx: &mut Cx) {
-        self.view.redraw(cx);
-    }
-
-    fn walk(&mut self, cx: &mut Cx) -> Walk {
-        self.view.walk(cx)
-    }
-
-    fn find_widgets(&mut self, path: &[LiveId], cached: WidgetCache, results: &mut WidgetSet) {
-        self.view.find_widgets(path, cached, results);
-    }
-
-    fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
-        self.view.draw_walk_widget(cx, walk)
-    }
-}
-
-impl ClickableView {
-    pub fn handle_event_with(
-        &mut self,
-        cx: &mut Cx,
-        event: &Event,
-        dispatch_action: &mut dyn FnMut(&mut Cx, ClickableViewAction),
-    ) {
         match event.hits(cx, self.view.area()) {
+            Hit::FingerDown(_fe) => {
+                cx.set_key_focus(self.view.area());
+            }
             Hit::FingerUp(fe) => {
                 if fe.was_tap() {
-                    dispatch_action(cx, ClickableViewAction::Click);
+                    cx.widget_action(uid, &scope.path, ClickableViewAction::Click);
                 }
             }
             _ => (),
         }
+        self.view.handle_event(cx, event, scope);
+    }
+
+    fn draw_walk(&mut self, cx: &mut Cx2d, scope: &mut Scope, walk: Walk) -> DrawStep {
+        self.view.draw_walk(cx, scope, walk)
     }
 }
