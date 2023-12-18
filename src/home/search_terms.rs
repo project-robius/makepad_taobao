@@ -49,7 +49,7 @@ live_design! {
     }
 }
 
-#[derive(Live)]
+#[derive(Live, Widget)]
 pub struct SearchTerms {
     #[deref]
     view: View,
@@ -68,10 +68,6 @@ pub struct SearchTerms {
 }
 
 impl LiveHook for SearchTerms {
-    fn before_live_design(cx: &mut Cx) {
-        register_widget!(cx, SearchTerms);
-    }
-
     fn after_new_from_doc(&mut self, cx: &mut Cx) {
         self.terms = vec![
             "平安果包装盒".to_string(),
@@ -86,12 +82,7 @@ impl LiveHook for SearchTerms {
 }
 
 impl Widget for SearchTerms {
-    fn handle_widget_event_with(
-        &mut self,
-        cx: &mut Cx,
-        event: &Event,
-        _dispatch_action: &mut dyn FnMut(&mut Cx, WidgetActionItem),
-    ) {
+    fn handle_event(&mut self, cx: &mut Cx, event: &Event, _scope: &mut Scope) {
         if let Some(_ne) = self.next_view.is_event(event) {
             // Control animations when they are done
             if !self.animator_handle_event(cx, event).is_animating() {
@@ -121,19 +112,7 @@ impl Widget for SearchTerms {
         }
     }
 
-    fn walk(&mut self, cx: &mut Cx) -> Walk {
-        self.view.walk(cx)
-    }
-
-    fn redraw(&mut self, cx: &mut Cx) {
-        self.view.redraw(cx)
-    }
-
-    fn find_widgets(&mut self, path: &[LiveId], cached: WidgetCache, results: &mut WidgetSet) {
-        self.view.find_widgets(path, cached, results);
-    }
-
-    fn draw_walk_widget(&mut self, cx: &mut Cx2d, walk: Walk) -> WidgetDraw {
-        self.view.draw_walk_widget(cx, walk)
+    fn draw_walk(&mut self, cx: &mut Cx2d, scope: &mut Scope, walk: Walk) -> DrawStep {
+        self.view.draw_walk(cx, scope, walk)
     }
 }

@@ -1,6 +1,6 @@
 pub mod app;
 
 mod catalog_item;
-mod settings;
 mod home;
+mod settings;
 mod shared;
