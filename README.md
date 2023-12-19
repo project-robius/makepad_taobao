@@ -12,7 +12,7 @@ TaoBao-like application implemented with Makepad
 git clone git@github.com:makepad/makepad.git
 ```
 
-### Change to latest 'rik' branch
+### Change to latest 'rik' branch (Optional)
 ```
 git branch rik
 ```
@@ -87,10 +87,6 @@ This is the same value used to setup the initial skeleton app above. For this ex
 
 The name of the application or the project. This is the same as the Product Name used to setup the initial skeleton app above. In this case:
 > `TaoBao`
-    
-`--ios-version` (optional)
-    
-defaults to 17. Set it to 16 or other values if the device is not running iOS 17.
 
 ### Example
 
@@ -99,13 +95,13 @@ For this example, we have the Bundle Identifier of **`rs.robius.TaoBao`**
 ### Install app on IOS simulator
 ```
 cd ~/makepad_taobao
-cargo makepad ios --org=rs.robius --app=TaoBao run-sim -p makepad_taobao --release
+cargo makepad apple ios --org=rs.robius --app=TaoBao run-sim -p makepad_taobao --release
 ```
 
 ### Install app on IOS device
 ```
 cd ~/makepad_taobao
-cargo makepad ios --ios-version=16 --org-id=<ORGIDVALUE> --org=rs.robius --app=TaoBao run-device -p makepad_taobao --release
+cargo makepad apple ios --org-id=<ORGIDVALUE> --org=rs.robius --app=TaoBao run-device -p makepad_taobao --release
 ```
 
 ## 5. WASM Build
