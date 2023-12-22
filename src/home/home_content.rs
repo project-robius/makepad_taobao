@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use crate::home::catalog_data::*;
 use crate::home::home_content::icon_atlas::HashMap;
 use crate::shared::clickable_view::ClickableViewAction;
@@ -31,6 +33,9 @@ live_design! {
     CATALOG_PROTEIN_IMG = dep("crate://self/resources/catalog/protein.png")
     CATALOG_RING_IMG = dep("crate://self/resources/catalog/ring.png")
     CATALOG_ROUTER_IMG = dep("crate://self/resources/catalog/router.png")
+    CATALOG_PROTEIN_VIDEO = dep("crate://self/resources/catalog/protein.mp4")
+    SHOES_VIDEO = dep("crate://self/resources/catalog/shoes.mp4")
+    CATALOG_CUPS_VIDEO = dep("crate://self/resources/catalog/cups.mp4")
 
     FEATURED_1_IMG = dep("crate://self/resources/featured/featured_1.png")
     FEATURED_2_IMG = dep("crate://self/resources/featured/featured_2.png")
@@ -281,6 +286,32 @@ live_design! {
         }
     }
 
+    ItemVideo = <Video> {
+        autoplay: false,
+        mute: true,
+        is_looping: true
+        width: 180, height: 180
+
+        draw_bg: {
+            instance radius: 8.
+            image_pan: vec2(0.3, 0.3)
+
+            fn pixel(self) -> vec4 {
+                let sdf = Sdf2d::viewport(self.pos * self.rect_size);
+                sdf.box(
+                    1,
+                    1,
+                    self.rect_size.x - 2.0,
+                    self.rect_size.y + self.radius * 2.0,
+                    max(1.0, self.radius)
+                )
+                sdf.fill_keep(self.get_color())
+                sdf.stroke(#fff, 1);
+                return sdf.result
+            }
+        }
+    }
+
     CatalogPairBase = <View> {
         width: Fill
         height: Fit
@@ -289,8 +320,13 @@ live_design! {
         align: {x: 0.5, y: 0.0}
     }
 
-    CatalogPair1 = <CatalogPairBase> {
-        left = <CatalogItem> {}
+    CatalogPairShoes = <CatalogPairBase> {
+        left = <CatalogItem> {
+            container = { image = <ItemVideo> {
+                source: Dependency { path: (SHOES_VIDEO)}
+                width: 180, height: 180
+            } }
+        }
         <FillerX> {
             width: 10.
         }
@@ -299,19 +335,23 @@ live_design! {
         }
     }
 
-    CatalogPair2 = <CatalogPairBase> {
+    CatalogPairCups = <CatalogPairBase> {
+        align: {x: 0.5, y: 0.5}
         left = <CatalogItemWithOffer> {
-            container = { image = { source: (CATALOG_LIVING_FURNITURE_IMG) } }
-        }
-        <FillerX> {
-            width: 10.
-        }
-        right = <CatalogItemWithOffer> {
-            container = { image = { source: (CATALOG_SEUL_COLLECTION_IMG) } }
+            width: Fill
+            height: Fit
+            container = {
+                width: Fill
+                height: Fit
+                image = <ItemVideo> {
+                    source: Dependency { path: (CATALOG_CUPS_VIDEO)}
+                    height: 203.4, width: 383.4
+                }
+            }
         }
     }
 
-    CatalogPair3 = <CatalogPairBase> {
+    CatalogPairProtein = <CatalogPairBase> {
         left = <CatalogItem> {
             container = { image = { source: (CATALOG_MEAL_IMG) } }
         }
@@ -319,11 +359,14 @@ live_design! {
             width: 10.
         }
         right = <CatalogItem> {
-            container = { image = { source: (CATALOG_PROTEIN_IMG) } }
+            container = { image = <ItemVideo> {
+                source: Dependency { path: (CATALOG_PROTEIN_VIDEO)}
+                width: 180, height: 180
+            } }
         }
     }
 
-    CatalogPair4 = <CatalogPairBase> {
+    CatalogPairRing = <CatalogPairBase> {
         left = <CatalogItemWithOffer> {
             container = { image = { source: (CATALOG_RING_IMG) } }
         }
@@ -332,6 +375,18 @@ live_design! {
         }
         right = <CatalogItem> {
             container = { image = { source: (CATALOG_ROUTER_IMG) } }
+        }
+    }
+
+    CatalogPairCouch = <CatalogPairBase> {
+        left = <CatalogItemWithOffer> {
+            container = { image = { source: (CATALOG_LIVING_FURNITURE_IMG) } }
+        }
+        <FillerX> {
+            width: 10.
+        }
+        right = <CatalogItemWithOffer> {
+            container = { image = { source: (CATALOG_SEUL_COLLECTION_IMG) } }
         }
     }
 
@@ -487,16 +542,21 @@ live_design! {
             height: Fill
             flow: Down
             spacing: 0.0
+            // FIXME(julian): keep_invisible introduces UB with Video widget because the widget instances
+            // get implicitly destroyed before stopping decoding on the platform.
+            // We need to introduce lazy deleting of the widget instances.
+            keep_invisible: true
 
         options = <Options> {}
             payments = <Payment> {}
             featured_1 = <Featured1> {}
             featured_2 = <Featured2> {}
 
-            catalog_pair_1 = <CatalogPair1> {}
-            catalog_pair_2 = <CatalogPair2> {}
-            catalog_pair_3 = <CatalogPair3> {}
-            catalog_pair_4 = <CatalogPair4> {}
+            catalog_pair_shoes = <CatalogPairShoes> {}
+            catalog_pair_cups = <CatalogPairCups> {}
+            catalog_pair_protein = <CatalogPairProtein> {}
+            catalog_pair_ring = <CatalogPairRing> {}
+            catalog_pair_couch = <CatalogPairCouch> {}
         }
     }
 }
@@ -509,6 +569,8 @@ pub struct HomeContent {
     data: Vec<CatalogDataItem>,
     #[rust]
     catalog_item_view_map: HashMap<u64, u64>,
+    #[rust]
+    currently_playing_videos: VecDeque<(u64, VideoRef)>,
 }
 
 impl LiveHook for HomeContent {
@@ -524,6 +586,11 @@ impl Widget for HomeContent {
             match list_action.as_widget_action().cast() {
                 ClickableViewAction::Click => {
                     let widget_action = list_action.as_widget_action().unwrap();
+
+                    for (_id, videoref) in self.currently_playing_videos.iter_mut() {
+                        // FIXME(julian): we might want to stop and reset videos instead
+                        videoref.pause_playback(cx);
+                    }
 
                     if let Some(catalog_item_id) =
                         self.catalog_item_view_map.get(&widget_action.widget_uid.0)
@@ -545,21 +612,24 @@ impl Widget for HomeContent {
 
         while let Some(item) = self.view.draw_walk(cx, scope, walk).step() {
             if let Some(mut list) = item.as_portal_list().borrow_mut() {
-                list.set_item_range(cx, 0, pairs_count + 3);
+                list.set_item_range(cx, 0, 1_000);
                 while let Some(item_id) = list.next_visible_item(cx) {
                     let template = match item_id {
                         0 => id!(options),
                         1 => id!(payments),
                         2 => id!(featured_1),
                         3 => id!(featured_2),
-                        x if (x - 2) % 4 == 0 => id!(catalog_pair_1),
-                        x if (x - 2) % 4 == 1 => id!(catalog_pair_2),
-                        x if (x - 2) % 4 == 2 => id!(catalog_pair_3),
-                        _ => id!(catalog_pair_4),
+                        x if (x - 2) % 5 == 0 => id!(catalog_pair_cups),
+                        x if (x - 2) % 5 == 1 => id!(catalog_pair_ring),
+                        x if (x - 2) % 5 == 2 => id!(catalog_pair_protein),
+                        x if (x - 2) % 5 == 3 => id!(catalog_pair_couch),
+                        x if (x - 2) % 5 == 4 => id!(catalog_pair_shoes),
+                        _ => id!(catalog_pair_protein),
                     };
+
                     let item = list.item(cx, item_id, template[0]).unwrap();
 
-                    if item_id > 3 && item_id < pairs_count + 4 {
+                    if item_id > 3 && item_id < pairs_count + 5 {
                         let data_left = &self.data[((item_id - 4) * 2) as usize];
                         let data_right = &self.data[((item_id - 4) * 2 + 1) as usize];
 
@@ -582,6 +652,45 @@ impl Widget for HomeContent {
                             catalog_pair
                                 .label(id!(right.info.subtitle))
                                 .set_text(&data_right.subtitle);
+
+                                let mut started_video = false;
+
+                                //left
+                                let mut video = catalog_pair.video(id!(left.image));
+                                if video.is_unprepared() && !video.is_preparing() {
+                                    video.begin_playback(cx);
+    
+                                    self.currently_playing_videos.push_back((item_id, video));
+                                    started_video = true;
+                                } else if video.is_paused() {
+                                    // video.resume_playback(cx);
+                                }
+    
+                                //right
+                                let mut video = catalog_pair.video(id!(right.image));
+                                if video.is_unprepared() && !video.is_preparing() {
+                                    video.begin_playback(cx);
+                                    self.currently_playing_videos.push_back((item_id, video));
+                                    started_video = true;
+                                } else if video.is_paused() {
+                                    // video.resume_playback(cx);
+                                }
+    
+                                if started_video {
+                                    // Pause the earliest video that is still playing
+                                    if self.currently_playing_videos.len() > 2 {
+                                        if let Some((earliest_id, videoref)) =
+                                            self.currently_playing_videos.pop_front()
+                                        {
+                                            if earliest_id != item_id {
+                                                videoref.pause_playback(cx);
+                                                // FIXME(julian): we might want to stop and reset videos instead, can't keep more than ~ 10 paused videos
+                                                // videoref.stop_and_cleanup_resources(cx);
+                                                // however that introduces performance hits, need to investigate further
+                                            }
+                                        }
+                                    }
+                                }
                         }
                     }
                     item.draw_all(cx, scope);
