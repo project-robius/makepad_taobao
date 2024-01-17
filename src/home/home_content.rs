@@ -392,6 +392,18 @@ live_design! {
         }
     }
 
+    CatalogPairFlipFlops = <CatalogPairBase> {
+        left = <CatalogItemWithOffer> {
+            container = { image = { source: (CATALOG_FLIP_FLOPS_IMG) } }
+        }
+        <FillerX> {
+            width: 10.
+        }
+        right = <CatalogItem> {
+            container = { image = { source: (CATALOG_PROTEIN_IMG) } }
+        }
+    }
+
     Featured1 = <View> {
         width: Fill,
         height: Fit,
@@ -560,6 +572,7 @@ live_design! {
             catalog_pair_protein = <CatalogPairProtein> {}
             catalog_pair_ring = <CatalogPairRing> {}
             catalog_pair_couch = <CatalogPairCouch> {}
+            catalog_pair_flip_flops = <CatalogPairFlipFlops> {}
         }
     }
 }
@@ -689,11 +702,12 @@ impl Widget for HomeContent {
                         1 => (id!(payments), None),
                         2 => (id!(featured_1), None),
                         3 => (id!(featured_2), None),
-                        x if (x - 2) % 5 == 0 => (id!(catalog_pair_cups), Some(id!(left.image))),
-                        x if (x - 2) % 5 == 1 => (id!(catalog_pair_ring), None),
-                        x if (x - 2) % 5 == 2 => (id!(catalog_pair_protein), Some(id!(right.image))),
-                        x if (x - 2) % 5 == 3 => (id!(catalog_pair_couch), None),
-                        x if (x - 2) % 5 == 4 => (id!(catalog_pair_shoes), Some(id!(left.image))),
+                        x if (x - 2) % 6 == 0 => (id!(catalog_pair_cups), Some(id!(left.image))),
+                        x if (x - 2) % 6 == 1 => (id!(catalog_pair_ring), None),
+                        x if (x - 2) % 6 == 2 => (id!(catalog_pair_protein), Some(id!(right.image))),
+                        x if (x - 2) % 6 == 3 => (id!(catalog_pair_couch), None),
+                        x if (x - 2) % 6 == 4 => (id!(catalog_pair_shoes), Some(id!(left.image))),
+                        x if (x - 2) % 6 == 5 => (id!(catalog_pair_flip_flops), None),
                         _ => (id!(catalog_pair_protein), Some(id!(right.image))),
                     };
 
