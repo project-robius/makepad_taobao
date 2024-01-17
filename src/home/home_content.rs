@@ -569,37 +569,41 @@ pub struct HomeContent {
     #[deref]
     view: View,
 
-    // Catalog item information to be displayed.
+    /// Catalog item information to be displayed.
     #[rust]
     data: Vec<CatalogDataItem>,
 
-    // Used for keeping tracking of selected item.
+    /// Used for keeping tracking of selected item.
     #[rust]
     catalog_item_view_map: HashMap<u64, u64>,
 
-    // Range of items displayed in the latest draw call.
+    /// Range of items displayed in the latest draw call.
     #[rust]
-    current_visible_items_range: (u64, u64),
+    current_visible_items_range: (ItemId, ItemId),
 
-    // Direction in which the items are currently being scrolled.
+    /// Direction in which the items are currently being scrolled.
     #[rust]
     scroll_direction: ScrollDirection,
 
-    // Video widget items that are currently being scrolled.
-    // The `back` of the queue represent the newest (on screen) video when scrolling down.
-    // When scrolling up, the `front` of the queue wil be the newest (on screen) video (earliest video we've kept track of).
+    /// Video widget items that are currently being scrolled.
+    /// The `back` of the queue represent the newest (on screen) video when scrolling down.
+    /// When scrolling up, the `front` of the queue wil be the newest (on screen) video (earliest video we've kept track of).
     #[rust]
-    current_draw_videos: VecDeque<(u64, VideoRef)>,
+    current_draw_videos_buffer: VecDeque<(ItemId, VideoRef)>,
 
-    // Video widget items that have been scrolled off screen.
+    /// Item IDs of the videos that were drawn in the latest draw_walk call.
     #[rust]
-    invisible_initialized_videos: VecDeque<(u64, VideoRef)>,
+    last_drawn_videos: Vec<ItemId>,
 
-    // Video widget items that must be paused after they load their first frame.
+    /// Video widget items that have been initialized but are not currently playing.
     #[rust]
-    videos_to_pause_on_first_frame: HashMap<u64, (u64, VideoRef)>,
+    initialized_videos: HashMap<VideoWidgetId, (ItemId, VideoRef)>,
 
-    // First time the portal list is rendered, no scroll has happened yet.
+    /// Video widget items that must be paused after they load their first frame.
+    #[rust]
+    videos_to_pause_on_first_frame: HashMap<VideoWidgetId, (ItemId, VideoRef)>,
+
+    /// First time the portal list is rendered, no scroll has happened yet.
     #[rust(true)]
     first_render: bool
 }
@@ -620,7 +624,6 @@ impl Widget for HomeContent {
                 VideoAction::TextureUpdated => {
                     let tex_update_action = list_action.as_widget_action().unwrap();
                     if let Some((_item_id, video)) = self.videos_to_pause_on_first_frame.get(&tex_update_action.widget_uid.0) {
-                        log!("Pausing queued video: {}", _item_id);
                         video.pause_playback(cx);
                         self.videos_to_pause_on_first_frame.remove(&tex_update_action.widget_uid.0);
                     }
@@ -633,7 +636,7 @@ impl Widget for HomeContent {
                 ClickableViewAction::Click => {
                     let widget_action = list_action.as_widget_action().unwrap();
 
-                    for (_id, videoref) in self.invisible_initialized_videos.iter_mut() {
+                    for (_video_uid, (_id, videoref)) in &self.initialized_videos {
                         videoref.stop_and_cleanup_resources(cx);
                     }
 
@@ -653,7 +656,8 @@ impl Widget for HomeContent {
     }
 
     fn draw_walk(&mut self, cx: &mut Cx2d, scope: &mut Scope, walk: Walk) -> DrawStep {
-        self.current_draw_videos.clear();
+        self.current_draw_videos_buffer.clear();
+        self.last_drawn_videos.clear();
 
         let pairs_count: u64 = (self.data.len() / 2_usize) as u64;
 
@@ -723,7 +727,8 @@ impl Widget for HomeContent {
                                 if let Some(video_path) = video_path {
                                     // TODO: To prevent seeing black frames on videos, begin playback here with pausing at the first frame.
                                     let video = catalog_pair.video(video_path);
-                                    self.current_draw_videos.push_back((item_id, video));
+                                    self.current_draw_videos_buffer.push_back((item_id, video));
+                                    self.last_drawn_videos.push(item_id);
                                 }
                             }
                         }        
@@ -756,22 +761,20 @@ impl Widget for HomeContent {
 
 impl HomeContent {
 
-    // Updates video playback so that the most recent (on screen) video is playing.
-    // Traverses the current_draw_videos buffer, if scrolling down then it plays/resumes the latest, 
-    // if scrolling up then plays/resume the earliest.
+    /// Updates video playback so that the most recent (on screen) video is playing.
+    /// Traverses the current_draw_videos_buffer buffer, if scrolling down then it plays/resumes the latest, 
+    /// if scrolling up then plays/resume the earliest.
     fn update_video_items_playback(&mut self, cx: &mut Cx) {
-        // TODO: Sometimes scrolling back up doesn't correctly resume video playback.
         let mut started_video = false;
+        
+        // Scrolling Downwards
         if self.scroll_direction == ScrollDirection::Down || self.first_render {
-            log!("current draw videos item ids: {:?}", self.current_draw_videos.iter().map(|(id, _)| *id).collect::<Vec<u64>>());
-
             // Begin playback and immediately pause the upcoming video at the edge of the screen.
-            if self.current_draw_videos.len() > 2 {
-                if let Some((item_id, mut video)) = self.current_draw_videos.pop_back() {
+            if self.current_draw_videos_buffer.len() > 2 {
+                if let Some((item_id, mut video)) = self.current_draw_videos_buffer.pop_back() {
                     if video.is_unprepared() &&!video.is_preparing() {
                         video.should_dispatch_texture_updates(true);
                         video.begin_playback(cx);
-                        log!("Playing video and queueing for pause: {:?}", item_id);
                     }
                     // queue to pause when ready
                     self.videos_to_pause_on_first_frame.insert(video.widget_uid().0, (item_id, video));
@@ -780,36 +783,37 @@ impl HomeContent {
 
             // Now, since we removed the upcoming video, calling pop_back will return the current, 
             // most visible (closer to center of the screen) video. We make sure to play it.
-            if let Some((item_id, mut video)) = self.current_draw_videos.pop_back() {
+            if let Some((_item_id, mut video)) = self.current_draw_videos_buffer.pop_back() {
                 if video.is_paused() {
                     video.resume_playback(cx);
-                    log!("Resuming video: {:?}", item_id);
                     started_video = true; 
                 } else if video.is_unprepared() &&!video.is_preparing() {
                     video.begin_playback(cx);
-                    log!("Playing video: {:?}", item_id);
                     started_video = true;
                 }
             }
-        } else if self.scroll_direction == ScrollDirection::Up {
 
+        // Scrolling Upwards
+        } else if self.scroll_direction == ScrollDirection::Up {
             // Begin playback and immediately pause the upcoming video at the bottom edge of the screen.
-            if self.current_draw_videos.len() > 2 {
-                if let Some((item_id, video)) = self.current_draw_videos.pop_front() {
-                    log!("Pausing video: {:?}", item_id);                        
-                    video.pause_playback(cx);
+            if self.current_draw_videos_buffer.len() > 1 {
+                if let Some((item_id, mut video)) = self.current_draw_videos_buffer.pop_front() {
+                    if video.is_unprepared() &&!video.is_preparing() {
+                        video.should_dispatch_texture_updates(true);
+                        video.begin_playback(cx);
+                    }
+                    // queue to pause when ready
+                    self.videos_to_pause_on_first_frame.insert(video.widget_uid().0, (item_id, video));
                 }
             }
 
             // Now since we removed the upcoming video, calling pop_front will return the current (most visible) video
-            if let Some((item_id, mut video)) = self.current_draw_videos.pop_front() {
+            if let Some((_item_id, mut video)) = self.current_draw_videos_buffer.pop_front() {
                 if video.is_paused() {
                     video.resume_playback(cx);
-                    log!("Resuming video: {:?}", item_id);
                     started_video = true; 
                 } else if video.is_unprepared() &&!video.is_preparing() {
                     video.begin_playback(cx);
-                    log!("Playing video: {:?}", item_id);
                     started_video = true;
                 }
             }
@@ -817,33 +821,36 @@ impl HomeContent {
         
         // If a new video playback began in this draw, pause all other videos.
         if started_video {
-            while let Some((item_id, video)) = self.current_draw_videos.pop_front() {
-                log!("Pausing video: {:?}", item_id);
+            while let Some((item_id, video)) = self.current_draw_videos_buffer.pop_front() {
                 video.pause_playback(cx);
 
-                // push into list of invisible but initialized videos for later cleanup
-                self.invisible_initialized_videos.push_back((item_id, video));
+                // put into list of invisible but initialized videos for later cleanup
+                // self.initialized_videos.push_back((item_id, video));
+                self.initialized_videos.insert(video.widget_uid().0, (item_id, video));
             }
         }
     }
 
-    // Cleanup videos that are no longer visible and less likely to be played next.
+    /// Cleanup videos that are no longer visible and less likely to be played next.
     fn cleanup_video_items(&mut self, cx: &mut Cx) {
-        if self.invisible_initialized_videos.len() > MAX_INITIALIZED_VIDEOS {
-            if self.scroll_direction == ScrollDirection::Down {
-                if let Some((_item_id, mut video)) = self.invisible_initialized_videos.pop_front() {
+        if self.initialized_videos.len() > MAX_INITIALIZED_VIDEOS {
+            // Release videos that are initialized but not visible anymore.
+            let mut stopped_video_ids = Vec::new();
+            for (widget_uid, (item_id, video)) in &mut self.initialized_videos {
+                if !self.last_drawn_videos.iter().any(|id| *id == *item_id) {
                     video.stop_and_cleanup_resources(cx);
-                    log!("Released video: {:?}", _item_id);
+                    stopped_video_ids.push(*widget_uid);
                 }
-            } else {
-                if let Some((_item_id, mut video)) = self.invisible_initialized_videos.pop_back() {
-                    video.stop_and_cleanup_resources(cx);
-                    log!("Released video: {:?}", _item_id);
-                }
+            }
+            for widget_uid in &stopped_video_ids {
+                self.initialized_videos.remove(widget_uid);
             }
         }
     }
 }
+
+type VideoWidgetId = u64;
+type ItemId = u64;
 
 pub type CatalogItemId = u64;
 
