@@ -683,7 +683,7 @@ impl Widget for HomeContent {
 
         while let Some(item) = self.view.draw_walk(cx, scope, walk).step() {
             if let Some(mut list) = item.as_portal_list().borrow_mut() {
-                list.set_item_range(cx, 0, 50);
+                list.set_item_range(cx, 0, 200);
 
                 let mut earliest_visible_item_id = None;
                 let mut latest_visible_item_id = self.current_visible_items_range.1;
@@ -790,11 +790,12 @@ impl HomeContent {
 
         // Scrolling Downwards
         if self.scroll_direction == ScrollDirection::Down || self.first_render {
-            // Begin playback and immediately pause the upcoming video at the edge of the screen.
+            // Prepare playback for the upcoming video at the edge of the screen.
             if self.current_draw_videos_buffer.len() > 2 || self.first_render {
                 if let Some((_item_id, mut video)) = self.current_draw_videos_buffer.pop_back() {
                     if video.is_unprepared() &&!video.is_preparing() {
                         video.prepare_playback(cx);
+                        self.initialized_videos.insert(video.widget_uid().0, (_item_id, video));
                     }
                 }
             }
@@ -806,24 +807,20 @@ impl HomeContent {
                 // We wait for videos to have been on the screen for long enough before playing them.
                 if let Some(first_time_on_screen) = self.video_items_current_time_on_screen.get(&item_id) {
                     if first_time_on_screen.elapsed() > Duration::from_millis(TIME_BEFORE_PLAYING_VIDEO_MS) {
-                        if video.is_paused() {
-                            video.resume_playback(cx);
-                            started_video = true;
-                        } else {
-                            video.begin_playback(cx);
-                            started_video = true;
-                        }
+                        resume_or_start_video(cx, &mut video);
+                        started_video = true;
                     }
                 }
             }
 
         // Scrolling Upwards
         } else if self.scroll_direction == ScrollDirection::Up {
-            // Begin playback and immediately pause the upcoming video at the bottom edge of the screen.
+            // Prepare playback for the upcoming video at the edge of the screen.
             if self.current_draw_videos_buffer.len() > 1 {
                 if let Some((_item_id, mut video)) = self.current_draw_videos_buffer.pop_front() {
                     if video.is_unprepared() &&!video.is_preparing() {
                         video.prepare_playback(cx);
+                        self.initialized_videos.insert(video.widget_uid().0, (_item_id, video));
                     }
                 }
             }
@@ -834,13 +831,8 @@ impl HomeContent {
                 // We wait for videos to have been on the screen for long enough before playing them.
                 if let Some(first_time_on_screen) = self.video_items_current_time_on_screen.get(&item_id) {
                     if first_time_on_screen.elapsed() > Duration::from_millis(TIME_BEFORE_PLAYING_VIDEO_MS) {
-                        if video.is_paused() {
-                            video.resume_playback(cx);
-                            started_video = true;
-                        } else {
-                            video.begin_playback(cx);
-                            started_video = true;
-                        }
+                        resume_or_start_video(cx, &mut video);
+                        started_video = true;
                     }
                 }
             }
@@ -849,7 +841,9 @@ impl HomeContent {
         // If a new video playback began in this draw, pause all other videos.
         if started_video {
             while let Some((item_id, video)) = self.current_draw_videos_buffer.pop_front() {
-                video.pause_playback(cx);
+                if video.is_playing() {
+                    video.pause_playback(cx);
+                }
                 self.initialized_videos.insert(video.widget_uid().0, (item_id, video));
             }
         }
@@ -870,6 +864,14 @@ impl HomeContent {
                 self.initialized_videos.remove(widget_uid);
             }
         }
+    }
+}
+
+fn resume_or_start_video(cx: &mut Cx, video: &mut VideoRef) {
+    if video.is_paused() {
+        video.resume_playback(cx);
+    } else if !video.is_playing() {
+        video.begin_playback(cx);
     }
 }
 
