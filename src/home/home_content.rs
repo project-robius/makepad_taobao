@@ -30,7 +30,6 @@ live_design! {
     BUY_IT_BANNER_IMG = dep("crate://self/resources/buy_it_banner.png")
 
     // CATALOG
-    CATALOG_FLIP_FLOPS_IMG = dep("crate://self/resources/catalog/flip_flops.png")
     CATALOG_COSMETICS_IMG = dep("crate://self/resources/catalog/cosmetics.png")
     CATALOG_LIVING_FURNITURE_IMG = dep("crate://self/resources/catalog/living_furniture.png")
     CATALOG_SEUL_COLLECTION_IMG = dep("crate://self/resources/catalog/seul_collection.png")
@@ -41,11 +40,15 @@ live_design! {
     CATALOG_PROTEIN_VIDEO = dep("crate://self/resources/catalog/protein.mp4")
     SHOES_VIDEO = dep("crate://self/resources/catalog/shoes.mp4")
     CATALOG_CUPS_VIDEO = dep("crate://self/resources/catalog/cups.mp4")
+    CATALOG_JUICER_VIDEO = dep("crate://self/resources/catalog/juicer.mp4")
+    CATALOG_APPLIANCES_VIDEO = dep("crate://self/resources/catalog/appliances.mp4")
 
     // CATALOG THUMBNAILS
     CATALOG_PROTEIN_THUMBNAIL = dep("crate://self/resources/catalog/protein_thumbnail.png")
     CATALOG_SHOES_THUMBNAIL = dep("crate://self/resources/catalog/shoes_thumbnail.png")
     CATALOG_CUPS_THUMBNAIL = dep("crate://self/resources/catalog/cups_thumbnail.png")
+    CATALOG_JUICER_THUMBNAIL = dep("crate://self/resources/catalog/juicer_thumbnail.png")
+    CATALOG_APPLIANCES_THUMBNAIL = dep("crate://self/resources/catalog/appliances_thumbnail.png")
 
     FEATURED_1_IMG = dep("crate://self/resources/featured/featured_1.png")
     FEATURED_2_IMG = dep("crate://self/resources/featured/featured_2.png")
@@ -157,7 +160,7 @@ live_design! {
             }
 
             image = <Image> {
-                width: Fill, height: 166
+                width: Fill, height: 170
                 source: (CATALOG_FLIP_FLOPS_IMG)
 
                 // Override to have the upper corners rounded
@@ -300,7 +303,7 @@ live_design! {
         autoplay: false,
         mute: true,
         is_looping: true
-        width: 180, height: 180
+        width: 180, height: 170
         show_thumbnail_before_playback: true
         thumbnail_source: (CATALOG_PROTEIN_THUMBNAIL)
 
@@ -337,14 +340,14 @@ live_design! {
             container = { image = <ItemVideo> {
                 source: Dependency { path: (SHOES_VIDEO)}
                 thumbnail_source: (CATALOG_SHOES_THUMBNAIL)
-                width: 180, height: 180
+                width: 180, height: 160
             } }
         }
         <FillerX> {
             width: 10.
         }
         right = <CatalogItemWithOffer> {
-            container = { image = { source: (CATALOG_COSMETICS_IMG) } }
+            container = { image = { source: (CATALOG_COSMETICS_IMG), width: Fill, height: 185 } }
         }
     }
 
@@ -376,14 +379,17 @@ live_design! {
             container = { image = <ItemVideo> {
                 source: Dependency { path: (CATALOG_PROTEIN_VIDEO)}
                 thumbnail_source: (CATALOG_PROTEIN_THUMBNAIL)
-                width: 180, height: 180
             } }
         }
     }
 
-    CatalogPairRing = <CatalogPairBase> {
-        left = <CatalogItemWithOffer> {
-            container = { image = { source: (CATALOG_RING_IMG) } }
+    CatalogPairJuicer = <CatalogPairBase> {
+        left = <CatalogItem> {
+            container = { image = <ItemVideo> {
+                source: Dependency { path: (CATALOG_JUICER_VIDEO)}
+                thumbnail_source: (CATALOG_JUICER_THUMBNAIL)
+                width: 180, height: 170
+            } }
         }
         <FillerX> {
             width: 10.
@@ -395,25 +401,17 @@ live_design! {
 
     CatalogPairCouch = <CatalogPairBase> {
         left = <CatalogItemWithOffer> {
-            container = { image = { source: (CATALOG_LIVING_FURNITURE_IMG) } }
-        }
-        <FillerX> {
-            width: 10.
-        }
-        right = <CatalogItemWithOffer> {
-            container = { image = { source: (CATALOG_SEUL_COLLECTION_IMG) } }
-        }
-    }
-
-    CatalogPairFlipFlops = <CatalogPairBase> {
-        left = <CatalogItemWithOffer> {
-            container = { image = { source: (CATALOG_FLIP_FLOPS_IMG) } }
+            container = { image = { source: (CATALOG_LIVING_FURNITURE_IMG), width: Fill, height: 185 } }
         }
         <FillerX> {
             width: 10.
         }
         right = <CatalogItem> {
-            container = { image = { source: (CATALOG_PROTEIN_IMG) } }
+            container = { image = <ItemVideo> {
+                source: Dependency { path: (CATALOG_APPLIANCES_VIDEO)}
+                thumbnail_source: (CATALOG_APPLIANCES_THUMBNAIL)
+                width: 180, height: 160
+            } }
         }
     }
 
@@ -583,9 +581,8 @@ live_design! {
             catalog_pair_shoes = <CatalogPairShoes> {}
             catalog_pair_cups = <CatalogPairCups> {}
             catalog_pair_protein = <CatalogPairProtein> {}
-            catalog_pair_ring = <CatalogPairRing> {}
+            catalog_pair_juicer = <CatalogPairJuicer> {}
             catalog_pair_couch = <CatalogPairCouch> {}
-            catalog_pair_flip_flops = <CatalogPairFlipFlops> {}
         }
     }
 }
@@ -703,12 +700,11 @@ impl Widget for HomeContent {
                         1 => (id!(payments), None),
                         2 => (id!(featured_1), None),
                         3 => (id!(featured_2), None),
-                        x if (x - 2) % 6 == 0 => (id!(catalog_pair_cups), Some(id!(left.image))),
-                        x if (x - 2) % 6 == 1 => (id!(catalog_pair_ring), None),
-                        x if (x - 2) % 6 == 2 => (id!(catalog_pair_protein), Some(id!(right.image))),
-                        x if (x - 2) % 6 == 3 => (id!(catalog_pair_couch), None),
-                        x if (x - 2) % 6 == 4 => (id!(catalog_pair_shoes), Some(id!(left.image))),
-                        x if (x - 2) % 6 == 5 => (id!(catalog_pair_flip_flops), None),
+                        x if (x - 2) % 5 == 0 => (id!(catalog_pair_cups), Some(id!(left.image))),
+                        x if (x - 2) % 5 == 1 => (id!(catalog_pair_juicer), Some(id!(left.image))),
+                        x if (x - 2) % 5 == 2 => (id!(catalog_pair_protein), Some(id!(right.image))),
+                        x if (x - 2) % 5 == 3 => (id!(catalog_pair_couch), Some(id!(right.image))),
+                        x if (x - 2) % 5 == 4 => (id!(catalog_pair_shoes), Some(id!(left.image))),
                         _ => (id!(catalog_pair_protein), Some(id!(right.image))),
                     };
 
@@ -795,6 +791,10 @@ impl HomeContent {
                 if let Some((_item_id, mut video)) = self.current_draw_videos_buffer.pop_back() {
                     if video.is_unprepared() &&!video.is_preparing() {
                         video.prepare_playback(cx);
+                        if self.first_render {
+                            video.begin_playback(cx);
+                            started_video = true;
+                        }
                         self.initialized_videos.insert(video.widget_uid().0, (_item_id, video));
                     }
                 }
