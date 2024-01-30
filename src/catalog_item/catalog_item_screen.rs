@@ -1046,7 +1046,7 @@ pub struct CatalogItem {
     #[deref]
     view: View,
     #[rust]
-    catalog_item_id: u64,
+    catalog_item_id: usize,
 }
 
 impl Widget for CatalogItem {
@@ -1060,7 +1060,7 @@ impl Widget for CatalogItem {
 }
 
 impl CatalogItemRef {
-    pub fn set_catalog_item_id(&self, catalog_item_id: u64) {
+    pub fn set_catalog_item_id(&self, catalog_item_id: usize) {
         if let Some(mut inner) = self.borrow_mut() {
             inner.catalog_item_id = catalog_item_id;
         }

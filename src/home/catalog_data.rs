@@ -5,7 +5,7 @@ pub struct CatalogDataItem {
     pub title: String,
     pub subtitle: String,
     pub price: String,
-    pub id: u64,
+    pub id: usize,
 }
 
 pub struct CatalogData {

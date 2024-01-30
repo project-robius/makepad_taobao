@@ -598,11 +598,11 @@ pub struct HomeContent {
 
     /// Used for keeping tracking of selected item.
     #[rust]
-    catalog_item_view_map: HashMap<u64, u64>,
+    catalog_item_view_map: HashMap<u64, CatalogItemId>,
 
     /// Range of items displayed in the latest draw call.
     #[rust]
-    current_visible_items_range: (ItemId, ItemId),
+    current_visible_items_range: (CatalogItemId, CatalogItemId),
 
     /// Direction in which the items are currently being scrolled.
     #[rust]
@@ -612,18 +612,18 @@ pub struct HomeContent {
     /// The `back` of the queue represent the newest (on screen) video when scrolling down.
     /// When scrolling up, the `front` of the queue wil be the newest (on screen) video (earliest video we've kept track of).
     #[rust]
-    current_draw_videos_buffer: VecDeque<(ItemId, VideoRef)>,
+    current_draw_videos_buffer: VecDeque<(CatalogItemId, VideoRef)>,
 
     /// Item IDs of the videos that were drawn in the latest draw_walk call.
     #[rust]
-    last_drawn_videos: Vec<ItemId>,
+    last_drawn_videos: Vec<CatalogItemId>,
 
     /// Video widget items that have been initialized but are not currently playing.
     #[rust]
-    initialized_videos: HashMap<VideoWidgetId, (ItemId, VideoRef)>,
+    initialized_videos: HashMap<VideoWidgetId, (CatalogItemId, VideoRef)>,
 
     #[rust]
-    video_items_current_time_on_screen: HashMap<ItemId, Instant>,
+    video_items_current_time_on_screen: HashMap<CatalogItemId, Instant>,
 
     /// First time the portal list is rendered, no scroll has happened yet.
     #[rust(true)]
@@ -646,7 +646,7 @@ impl Widget for HomeContent {
                 ClickableViewAction::Click => {
                     let widget_action = list_action.as_widget_action().unwrap();
 
-                    for (_video_uid, (_id, videoref)) in &self.initialized_videos {
+                    for (_id, videoref) in self.initialized_videos.values() {
                         videoref.stop_and_cleanup_resources(cx);
                     }
 
@@ -669,7 +669,7 @@ impl Widget for HomeContent {
         self.current_draw_videos_buffer.clear();
         self.last_drawn_videos.clear();
 
-        let pairs_count: u64 = (self.data.len() / 2_usize) as u64;
+        let pairs_count = self.data.len() / 2;
 
         // When using Portal List's next_visible_item(cx), the item ids will be in increasing order
         // however, ocasionally the last item will be the earliest item in the list.
@@ -711,8 +711,8 @@ impl Widget for HomeContent {
                     let item = list.item(cx, item_id, template[0]).unwrap();
 
                     if item_id > 3 && item_id < pairs_count + 5 {
-                        let data_left = &self.data[((item_id - 4) * 2) as usize];
-                        let data_right = &self.data[((item_id - 4) * 2 + 1) as usize];
+                        let data_left = &self.data[(item_id - 4) * 2];
+                        let data_right = &self.data[(item_id - 4) * 2 + 1];
 
                         self.catalog_item_view_map
                             .insert(item.widget(id!(left)).widget_uid().0, data_left.id);
@@ -876,9 +876,8 @@ fn resume_or_start_video(cx: &mut Cx, video: &mut VideoRef) {
 }
 
 type VideoWidgetId = u64;
-type ItemId = u64;
 
-pub type CatalogItemId = u64;
+pub type CatalogItemId = usize;
 
 #[derive(Clone, Debug, DefaultNone)]
 pub enum CatalogItemListAction {
