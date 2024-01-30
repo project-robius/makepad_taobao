@@ -1077,7 +1077,7 @@ impl Widget for CatalogItemScrollable {
     fn draw_walk(&mut self, cx: &mut Cx2d, scope: &mut Scope, walk: Walk) -> DrawStep {
         while let Some(item) = self.view.draw_walk(cx, scope, walk).step() {
             if let Some(mut list) = item.as_portal_list().borrow_mut() {
-                list.set_item_range(cx, 0, 1000);
+                list.set_item_range(cx, 0, 100);
                 while let Some(item_id) = list.next_visible_item(cx) {
                     if item_id > 0 {
                         continue;
