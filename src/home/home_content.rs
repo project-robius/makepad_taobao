@@ -541,7 +541,7 @@ impl Widget for HomeContent {
     }
 
     fn draw_walk(&mut self, cx: &mut Cx2d, scope: &mut Scope, walk: Walk) -> DrawStep {
-        let pairs_count: u64 = (self.data.len() / 2_usize) as u64;
+        let pairs_count = self.data.len() / 2;
 
         while let Some(item) = self.view.draw_walk(cx, scope, walk).step() {
             if let Some(mut list) = item.as_portal_list().borrow_mut() {
@@ -560,8 +560,8 @@ impl Widget for HomeContent {
                     let item = list.item(cx, item_id, template[0]).unwrap();
 
                     if item_id > 3 && item_id < pairs_count + 4 {
-                        let data_left = &self.data[((item_id - 4) * 2) as usize];
-                        let data_right = &self.data[((item_id - 4) * 2 + 1) as usize];
+                        let data_left = &self.data[(item_id - 4) * 2];
+                        let data_right = &self.data[(item_id - 4) * 2 + 1];
 
                         self.catalog_item_view_map
                             .insert(item.widget(id!(left)).widget_uid().0, data_left.id);
