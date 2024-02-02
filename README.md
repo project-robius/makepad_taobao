@@ -69,17 +69,17 @@ For iOS, the process is slightly more complicated. The steps involved are:
 
 1. Enable your iPhone's Developer Mode, please see instructions here: [Enable Developer Mode](https://www.delasign.com/blog/how-to-turn-on-developer-mode-on-an-iphone/)
 1. Setup an Apple Developer account
-1. Setup an empty skeleton project in XCode
+1. Setup an empty skeleton project in Xcode
     1. File -> New -> Project to create a new "App"
-    1. Set the Product Name as **`TaoBao`**  (used in --app later)
-    1. Set the Organization Identifier to a value of your choice, for this example we will use **`rs.robius`**. (used in --org later)
+    1. Set the Product Name as **`makepad_taobao`** (used in --app later) (Due to Apple's name rule, the bundle id name will use hyphen - instead of underscore _)
+    1. Set the Organization Identifier to a value of your choice, for this example we will use **`rs.robius`** (used in --org later)
     1. Setup the Project Signing & Capabilities to select the proper team account
-1. In XCode, Build/Run this project to install and run the app on the simulator and device
+1. In Xcode, Build/Run this project to install and run the app on the simulator and device
 1. Once the simulator and device has the "skeleton" app installed and running properly, then it is ready for Makepad to install its application.
 
 ### Makepad Install
 
-We will run the `cargo makepad ios` command, similar to Android build above, but there are some 3 to 4 additional parameters that need to be filled in:
+We will run the `cargo makepad apple ios` command, similar to Android build above, but there are some 3 to 4 additional parameters that need to be filled in:
 
 `--org-id`
 
@@ -95,24 +95,24 @@ This is the same value used to setup the initial skeleton app above. For this ex
 `--app`
 
 The name of the application or the project. This is the same as the Product Name used to setup the initial skeleton app above. In this case:
-> `TaoBao`
+> `makepad-taobao`
 
 ### Example
 
-For this example, we have the Bundle Identifier of **`rs.robius.TaoBao`**
+For this example, we have the Bundle Identifier of **`rs.robius.makepad-taobao`**
 
 ### Install app on IOS simulator
 
 ```bash
 cd ~/makepad_taobao
-cargo makepad apple ios --org=rs.robius --app=TaoBao run-sim -p makepad_taobao --release
+cargo makepad apple ios --org=rs.robius --app=makepad-taobao run-sim -p makepad_taobao --release
 ```
 
 ### Install app on IOS device
 
 ```bash
 cd ~/makepad_taobao
-cargo makepad apple ios --org-id=<ORGIDVALUE> --org=rs.robius --app=TaoBao run-device -p makepad_taobao --release
+cargo makepad apple ios --org-id=<ORGIDVALUE> --org=rs.robius --app=makepad-taobao run-device -p makepad_taobao --release
 ```
 
 ## 5. WASM Build
