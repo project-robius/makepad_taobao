@@ -21,19 +21,50 @@ live_design! {
 
     AppTab = <RadioButton> {
         height: Fill
-        width: Fit
-        align: {x: 0.0, y: 0.0}
+        width: Fill
+        flow: Down
+        spacing: 5.0
+        align: {x: 0.5, y: 0.5}
+
+        icon_walk: {margin: { left: 0. }, width: 20, height: 20}
+        label_walk: {
+            width: Fit, height: Fit,
+            margin: { left: 0. }
+        }
+        label_align: { y: 0.0 }
 
         draw_radio: {
             radio_type: Tab,
-            color_active: (BACKGROUND_COLOR),
-            color_inactive: (BACKGROUND_COLOR),
+            fn pixel(self) -> vec4 {
+                return (BACKGROUND_COLOR)
+            }
         }
         draw_text: {
+            text_style: <APP_NAVIGATION_FONT> {}
             color_selected: (ORANGE_COLOR),
             color_unselected: #000,
             color_unselected_hover: #111,
-            text_style: <APP_NAVIGATION_FONT> {}
+            
+            fn get_color(self) -> vec4 {
+                return mix(
+                    mix(
+                        self.color_unselected,
+                        self.color_unselected_hover,
+                        self.hover
+                    ),
+                    self.color_selected,
+                    self.selected
+                )
+            }
+        }
+        draw_icon: {
+            fn get_color(self) -> vec4 {
+                return mix(
+                    #000,
+                    ORANGE_COLOR,
+                    self.selected
+                )
+            }
         }
     }
 
@@ -65,7 +96,7 @@ live_design! {
 
                         mobile_menu = <RoundedView> {
                             width: Fill
-                            height: 80
+                            height: 70
                             padding: 10
                             flow: Right
                             spacing: 6.0
@@ -79,99 +110,34 @@ live_design! {
                             mobile_modes = <View> {
                                 tab1 = <AppTab> {
                                     animator: {selected = {default: on}}
-                                    label: "首页"
+                                    text: "首页"
                                     draw_icon: {
                                         svg_file: (HOME_ICON),
-                                        fn get_color(self) -> vec4 {
-                                            return mix(
-                                                #000,
-                                                ORANGE_COLOR,
-                                                self.selected
-                                            )
-                                        }
                                     }
-                                    width: Fill
-                                    flow: Down
-                                    spacing: 5.0
-                                    align: {x: 0.5, y: 0.5}
-
-                                    icon_walk: {width: 20, height: 20}
                                 }
                                 tab2 = <AppTab> {
-                                    label: "逛逛",
+                                    text: "逛逛",
                                     draw_icon: {
                                         svg_file: (SETTINGS_ICON),
-                                        fn get_color(self) -> vec4 {
-                                            return mix(
-                                                #000,
-                                                ORANGE_COLOR,
-                                                self.selected
-                                            )
-                                        }
                                     }
-                                    width: Fill
-                                    flow: Down
-                                    spacing: 5.0
-                                    align: {x: 0.5, y: 0.5}
-
-                                    icon_walk: {width: 20, height: 20}
                                 }
                                 tab3 = <AppTab> {
-                                    label: "消息",
+                                    text: "消息",
                                     draw_icon: {
                                         svg_file: (INFO_ICON),
-                                        fn get_color(self) -> vec4 {
-                                            return mix(
-                                                #000,
-                                                ORANGE_COLOR,
-                                                self.selected
-                                            )
-                                        }
                                     }
-                                    width: Fill
-                                    flow: Down
-                                    spacing: 5.0
-                                    align: {x: 0.5, y: 0.5}
-
-                                    icon_walk: {width: 20, height: 20}
                                 }
                                 tab4 = <AppTab> {
-                                    label: "购物车",
+                                    text: "购物车",
                                     draw_icon: {
                                         svg_file: (CART_ICON),
-                                        fn get_color(self) -> vec4 {
-                                            return mix(
-                                                #000,
-                                                ORANGE_COLOR,
-                                                self.selected
-                                            )
-                                        }
                                     }
-                                    width: Fill
-                                    flow: Down
-                                    spacing: 5.0
-                                    align: {x: 0.5, y: 0.5}
-
-                                    icon_walk: {width: 20, height: 20}
                                 }
                                 tab5 = <AppTab> {
-                                    label: "我的淘宝",
+                                    text: "我的淘宝",
                                     draw_icon: {
                                         svg_file: (MY_TAOBAO_ICON),
-                                        fn get_color(self) -> vec4 {
-                                            return mix(
-                                                #000,
-                                                ORANGE_COLOR,
-                                                self.selected
-                                            )
-                                        }
                                     }
-                                    width: Fill
-                                    flow: Down
-                                    spacing: 5.0
-                                    align: {x: 0.5, y: 0.5}
-
-                                    icon_walk: {width: 20, height: 20}
                                 }
                             }
                         }
