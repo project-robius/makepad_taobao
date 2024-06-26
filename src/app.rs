@@ -1,16 +1,16 @@
 use crate::catalog_item::catalog_item_screen::CatalogItemWidgetRefExt;
 use crate::home::home_content::CatalogItemListAction;
-use crate::shared::stack_navigation::StackNavigationWidgetRefExt;
 use makepad_widgets::*;
 
 live_design! {
     import makepad_widgets::base::*;
     import makepad_widgets::theme_desktop_dark::*;
 
+    import makepad_draw::shader::std::*;
     import crate::shared::styles::*
-    import crate::shared::stack_navigation::*
     import crate::home::home_screen::HomeScreen
     import crate::catalog_item::catalog_item_screen::*
+    import crate::catalog_item::catalog_header::*
     import crate::settings::settings_screen::SettingsScreen
 
     HOME_ICON = dep("crate://self/resources/home.svg")
@@ -144,7 +144,44 @@ live_design! {
                     }
 
                     catalog_item_stack_view = <StackNavigationView> {
-                        catalog_item_screen = <CatalogItemScreen> {}
+                        header = {
+                            height: 110
+                            padding: 0
+                            content = {
+                                height: 110  
+                                // Override the full title widget in StackNavigationView, since we don't want it
+                                title_container = <View> { height: 0 }
+                                // Add our custom stuff in the stacked view header
+                                <CatalogHeader> {
+                                    // Uncover the Makepad StackNavigationView back button
+                                    margin: { left: 30 }
+                                }
+
+                                // We need to override most of the StackNavigationView back button to match our app designs
+                                button_container = {
+                                    width: Fit, height: 110,
+                                    padding: { left: 5, top: 10 },
+                                    show_bg: true,
+                                    draw_bg: {
+                                        color: #f2
+                                    }
+
+                                    left_button = {
+                                        icon_walk: {width: 12, height: 12}
+                                        draw_icon: {
+                                            svg_file: dep("crate://self/resources/back.svg"),
+                                            color: #000,
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        body = {
+                            // This top margin should be the equal to the CatalogHeader fixed height
+                            margin: {top: 110},
+                            catalog_item_screen = <CatalogItemScreen> {}
+                        }
                     }
                 }
             }
@@ -170,7 +207,6 @@ impl LiveRegister for App {
         crate::shared::styles::live_design(cx);
         crate::shared::helpers::live_design(cx);
         crate::shared::clickable_view::live_design(cx);
-        crate::shared::stack_navigation::live_design(cx);
 
         // home
         crate::home::helpers::live_design(cx);
@@ -182,6 +218,7 @@ impl LiveRegister for App {
         // others
         crate::settings::settings_screen::live_design(cx);
         crate::catalog_item::catalog_item_screen::live_design(cx);
+        crate::catalog_item::catalog_header::live_design(cx);
     }
 }
 
