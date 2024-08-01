@@ -2,6 +2,9 @@
 
 TaoBao-like application implemented with Makepad
 
+* currently it is mostly UI screens
+* actual business logic is not implemented
+
 ## Build Instructions
 
 ## 1. Setup Makepad
@@ -9,6 +12,7 @@ TaoBao-like application implemented with Makepad
 ### Clone the Makepad repository
 
 ```bash
+cd ~
 git clone git@github.com:makepad/makepad.git
 ```
 
@@ -21,8 +25,7 @@ git branch rik
 ### Install makepad subcommand for cargo
 
 ```bash
-cd ~/makepad
-cargo install --path ./tools/cargo_makepad
+cargo install --path ~/makepad/tools/cargo_makepad
 ```
 
 ## 2. Get Project
@@ -79,16 +82,12 @@ For iOS, the process is slightly more complicated. The steps involved are:
 
 ### Makepad Install
 
-We will run the `cargo makepad apple ios` command, similar to Android build above, but there are some 3 to 4 additional parameters that need to be filled in:
-
-`--org-id`
-
-This is the <string> value of the ApplicationIdentifierPrefix <key> in the `**.mobileprovision` file located in the `~/Library/MobileDevice/Provisioning Profiles` directory.
-It should be a 10 digit alphanumeric value.
+We will run the `cargo makepad apple ios` command, similar to Android build above, but there are some 2 to 6 additional parameters that need to be filled in:
 
 `--org`
 
 First few parts of the organization identifier (which makes up the Bundle Identifier). Usually in the form of **com.somecompany** or **org.someorg**
+
 This is the same value used to setup the initial skeleton app above. For this example:
 > `rs.robius`
 
@@ -97,24 +96,75 @@ This is the same value used to setup the initial skeleton app above. For this ex
 The name of the application or the project. This is the same as the Product Name used to setup the initial skeleton app above. In this case:
 > `makepad-taobao`
 
-### Example
-
-For this example, we have the Bundle Identifier of **`rs.robius.makepad-taobao`**
-
 ### Install app on IOS simulator
 
 ```bash
 cd ~/makepad_taobao
-cargo makepad apple ios --org=rs.robius --app=makepad-taobao run-sim -p makepad_taobao --release
+cargo makepad apple ios \
+  --org=rs.robius \
+  --app=makepad-taobao \
+  run-sim -p makepad_taobao --release
 ```
 
 ### Install app on IOS device
 
+First run the following command:
+
+```bash
+cargo makepad apple list
+```
+
+This command will print out the list of all provisioning profiles, signing identities, and device identifiers on the current system. The user has to decide and choose the ones that he/she needs to use for each type. (If you get an error from the command, please follow the iOS Setup instructions above first.)
+
+Once decided, run the folloiwng command and fill in the **unique starting characters** chosen from the output.
+
 ```bash
 cd ~/makepad_taobao
-cargo makepad apple ios --org-id=<ORGIDVALUE> --org=rs.robius --app=makepad-taobao run-device -p makepad_taobao --release
+cargo makepad apple ios \
+  --profile=unique-starting-hex-string \
+  --cert=UNIQUE_STARTING_HEX_STRING \
+  --device=UNIQUE-STARTING-HEX-STRING \
+  --org=rs.robius \
+  --app=makepad_taobao \
+  run-device -p makepad_taobao –release
 ```
 
 ## 5. WASM Build
 
-*Coming Soon*
+Running the Makepad application as a WASM build is as simple as a single command. The script will automatically generate the necessary index.html and other files and also start a local webserver at port 8010.
+
+### Demo
+
+<https://wasm.robius.rs/makepad_taobao>
+
+### Install WASM toolchain (First time)
+
+```bash
+cargo makepad wasm install-toolchain
+```
+
+### Install app as WASM binary for browsers
+
+```bash
+cargo makepad wasm run -p makepad_taobao --release
+```
+
+After running the command below, just open your browser to <http://127.0.0.1:8010/> in order for the app to load and run.
+
+## 6. MacOS / PC
+
+Running on Desktop is the quickest way to try out an example app.
+
+```bash
+cd ~/makepad_taobao
+cargo run
+```
+
+or
+
+```bash
+cd ~/makepad_taobao
+cargo run -p makepad_taobao --release
+```
+
+And there should be a desktop application window now running (may need to click on the icon on MacOS's Dock to show it)
